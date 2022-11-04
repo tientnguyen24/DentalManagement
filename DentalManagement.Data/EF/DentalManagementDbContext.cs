@@ -1,5 +1,6 @@
 ﻿using DentalManagement.Data.Configurations;
 using DentalManagement.Data.Entities;
+using DentalManagement.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace DentalManagement.Data.EF
             modelBuilder.ApplyConfiguration(new ProductCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new InvoiceDetailConfiguration());
+            modelBuilder.Seed();
             //base.OnModelCreating(modelBuilder);
         }
         public DbSet<Account> Accounts { get; set; }
