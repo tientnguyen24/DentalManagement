@@ -21,6 +21,7 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.TotalInvoiceAmount).HasMaxLength(100);
             builder.Property(x => x.ModifiedDate).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.ModifiedBy).HasMaxLength(100);
+            builder.Property(x => x.Description).HasMaxLength(300);
             builder.HasOne(x => x.Customer).WithMany(x => x.Invoices).HasForeignKey(x => x.CustomerId);
         }
     }
