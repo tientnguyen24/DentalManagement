@@ -31,7 +31,8 @@ namespace DentalManagement.Application.Catalog.Products
                 ProductCategoryId = request.ProductCategoryId
             };
             _context.Products.Add(product);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return product.Id;
         }
 
         public async Task<List<ProductViewModel>> GetAll()
@@ -40,6 +41,9 @@ namespace DentalManagement.Application.Catalog.Products
             var query = from pc in _context.ProductCategories
                         join p in _context.Products on pc.Id equals p.ProductCategoryId
                         select new { p, pc };
+            var productCategories = await (from pc in _context.ProductCategories
+                                           join p in _context.Products on pc.Id equals p.ProductCategoryId
+                                           select pc.Name).ToListAsync();
             var data = await query.Select(x => new ProductViewModel()
             {
                 Id = x.p.Id,
@@ -49,7 +53,8 @@ namespace DentalManagement.Application.Catalog.Products
                 CreatedBy = x.p.CreatedBy,
                 ModifiedDate = x.p.ModifiedDate,
                 ModifiedBy = x.p.ModifiedBy,
-                ProductCategoryName = x.pc.Name
+                ProductCategoryId = x.p.ProductCategoryId,
+                ProductCategories = productCategories
             }).ToListAsync();
             return data;
         }
@@ -71,6 +76,9 @@ namespace DentalManagement.Application.Catalog.Products
             }
             //paging
             int totalRow = await query.CountAsync();
+            var productCategories = await (from pc in _context.ProductCategories
+                                           join p in _context.Products on pc.Id equals p.ProductCategoryId
+                                           select pc.Name).ToListAsync();
 
             var data = await query.Skip((request.PageIndex - 1)*request.PageSize).Take(request.PageSize).Select(x=>new ProductViewModel()
             {
@@ -81,7 +89,8 @@ namespace DentalManagement.Application.Catalog.Products
                 CreatedBy = x.p.CreatedBy,
                 ModifiedDate = x.p.ModifiedDate,
                 ModifiedBy = x.p.ModifiedBy,
-                ProductCategoryName = x.pc.Name
+                ProductCategoryId = x.p.ProductCategoryId,
+                ProductCategories = productCategories
             }).ToListAsync();
             //select and projection
             var pagedResult = new PagedResult<ProductViewModel>()
@@ -106,6 +115,66 @@ namespace DentalManagement.Application.Catalog.Products
             }
             _context.Products.Remove(product);
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<ProductViewModel>> GetAllByProductCategoryId(GetProductPagingRequest request)
+        {
+            //select product record
+            var query = from pc in _context.ProductCategories
+                        join p in _context.Products on pc.Id equals p.ProductCategoryId
+                        select new { p, pc };
+            var productCategories = await (from pc in _context.ProductCategories
+                                           join p in _context.Products on pc.Id equals p.ProductCategoryId
+                                           select pc.Name).ToListAsync();
+            //filter product
+            if (request.ProductCategoryIds.Count > 0)
+            {
+                query = query.Where(x => request.ProductCategoryIds.Contains(x.p.ProductCategoryId));
+            }
+            //paging
+            int totalRow = await query.CountAsync();
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new ProductViewModel()
+            {
+                Id = x.p.Id,
+                Name = x.p.Name,
+                UnitPrice = x.p.UnitPrice,
+                CreatedDate = x.p.CreatedDate,
+                CreatedBy = x.p.CreatedBy,
+                ModifiedDate = x.p.ModifiedDate,
+                ModifiedBy = x.p.ModifiedBy,
+                ProductCategoryId = x.p.ProductCategoryId,
+                ProductCategories = productCategories
+            }).ToListAsync();
+            //select and projection
+            var pagedResult = new PagedResult<ProductViewModel>()
+            {
+                TotalRecord = totalRow,
+                Items = data,
+            };
+            return pagedResult;
+        }
+
+        public async Task<ProductViewModel> GetById(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            var productCategories = await (from pc in _context.ProductCategories
+                                      join p in _context.Products on pc.Id equals p.ProductCategoryId
+                                      where p.Id == productId
+                                      select pc.Name).ToListAsync();
+            var productViewModel = new ProductViewModel()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                UnitPrice = product.UnitPrice,
+                CreatedDate = product.CreatedDate,
+                CreatedBy = product.CreatedBy,
+                ModifiedDate = product.ModifiedDate,
+                ModifiedBy = product.ModifiedBy,
+                ProductCategoryId = product.ProductCategoryId,
+                ProductCategories = productCategories
+            };
+            return productViewModel;
         }
     }
 }

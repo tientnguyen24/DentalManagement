@@ -14,6 +14,6 @@ namespace DentalManagement.Application.Catalog.Products.DTOs
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
         public int ProductCategoryId { get; set; }
-        public string ProductCategoryName { get; set; }
+        public List<string> ProductCategories { get; set; } = new List<string>();
     }
 }

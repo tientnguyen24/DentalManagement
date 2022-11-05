@@ -23,7 +23,6 @@ namespace DentalManagement.Data.EF
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new InvoiceDetailConfiguration());
             modelBuilder.Seed();
-            //base.OnModelCreating(modelBuilder);
         }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Customer> Customers { get; set; }
