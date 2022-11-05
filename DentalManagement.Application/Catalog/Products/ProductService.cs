@@ -34,9 +34,24 @@ namespace DentalManagement.Application.Catalog.Products
             return await _context.SaveChangesAsync();
         }
 
-        public async List<ProductViewModel> GetAll()
+        public async Task<List<ProductViewModel>> GetAll()
         {
-            throw new NotImplementedException();
+            //select product record
+            var query = from pc in _context.ProductCategories
+                        join p in _context.Products on pc.Id equals p.ProductCategoryId
+                        select new { p, pc };
+            var data = await query.Select(x => new ProductViewModel()
+            {
+                Id = x.p.Id,
+                Name = x.p.Name,
+                UnitPrice = x.p.UnitPrice,
+                CreatedDate = x.p.CreatedDate,
+                CreatedBy = x.p.CreatedBy,
+                ModifiedDate = x.p.ModifiedDate,
+                ModifiedBy = x.p.ModifiedBy,
+                ProductCategoryName = x.pc.Name
+            }).ToListAsync();
+            return data;
         }
 
         public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request)
