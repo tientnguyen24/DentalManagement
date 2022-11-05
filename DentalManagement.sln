@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.WebApp", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Application", "DentalManagement.Application\DentalManagement.Application.csproj", "{992011A1-5C9D-48F1-A743-FE8764ACD789}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagement.Utillities", "DentalManagement.Utillities\DentalManagement.Utillities.csproj", "{6CBDD170-9218-4700-BD4F-14DB77994EBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
