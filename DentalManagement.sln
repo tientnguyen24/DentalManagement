@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Data", "De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.WebApp", "DentalManagement.WebApp\DentalManagement.WebApp.csproj", "{AF9F2D57-8508-469D-86FE-87EC81517CC6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Application", "DentalManagement.Application\DentalManagement.Application.csproj", "{992011A1-5C9D-48F1-A743-FE8764ACD789}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Utilities", "DentalManagement.Utillities\DentalManagement.Utilities.csproj", "{6CBDD170-9218-4700-BD4F-14DB77994EBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.BackendAPI", "DentalManagement.BackendAPI\DentalManagement.BackendAPI.csproj", "{129624DB-5DED-48CA-970D-352784B026CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,18 @@ Global
 		{AF9F2D57-8508-469D-86FE-87EC81517CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF9F2D57-8508-469D-86FE-87EC81517CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF9F2D57-8508-469D-86FE-87EC81517CC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992011A1-5C9D-48F1-A743-FE8764ACD789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CBDD170-9218-4700-BD4F-14DB77994EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{129624DB-5DED-48CA-970D-352784B026CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129624DB-5DED-48CA-970D-352784B026CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129624DB-5DED-48CA-970D-352784B026CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129624DB-5DED-48CA-970D-352784B026CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using DentalManagement.Data.Entities;
+using DentalManagement.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -17,9 +18,10 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.Password).IsRequired(true).HasMaxLength(50).IsUnicode(false);
             builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.CreatedBy).IsRequired(false).HasMaxLength(100);
-            builder.Property(x => x.ModifiedDate).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.ModifiedDate).IsRequired(false);
             builder.Property(x => x.ModifiedBy).IsRequired(false).HasMaxLength(100);
             builder.Property(x => x.Type).IsRequired(true);
+            builder.Property(x => x.Status).HasDefaultValue(Status.Active);
         }
     }
 }
