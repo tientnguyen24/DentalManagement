@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DentalManagement.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -21,6 +22,8 @@ namespace DentalManagement.Data.Entities
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
         public List<InvoiceDetail> InvoiceDetails { get; set; }
+
+        public Status Status { get; set; }
 
     }
 }

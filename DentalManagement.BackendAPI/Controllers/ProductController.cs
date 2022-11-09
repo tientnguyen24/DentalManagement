@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Products;
-using DentalManagement.Application.Catalog.Products.DTOs;
+using DentalManagement.Application.Catalog.Products.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,13 +25,23 @@ namespace DentalManagement.BackendAPI.Controllers
             var products = await _productService.GetAll();
             return Ok(products);
         }
-        //http://localhost:port/product/paging
-        [HttpGet("paging")]
+
+        //http://localhost:port/product/search
+        [HttpGet("search")]
         public async Task<IActionResult> Get([FromQuery]GetProductPagingRequest request)
+        {
+            var products = await _productService.GetAllPaging(request);
+            return Ok(products);
+        }
+
+        //http://localhost:port/product/filter
+        [HttpGet("filter")]
+        public async Task<IActionResult> Get([FromQuery]GetProductByCategoryIdRequest request)
         {
             var products = await _productService.GetAllByProductCategoryId(request);
             return Ok(products);
         }
+        
         //http://localhost:port/product/{id}
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetById(int productId)
@@ -39,7 +49,7 @@ namespace DentalManagement.BackendAPI.Controllers
             var product = await _productService.GetById(productId);
             if (product == null)
             {
-                return BadRequest("Không tìm thấy sản phẩm");
+                return BadRequest();
             }
             return Ok(product);
         }
@@ -66,10 +76,11 @@ namespace DentalManagement.BackendAPI.Controllers
             }
             return Ok();
         }
-        [HttpDelete("{productId}")]
-        public async Task<IActionResult> Delete(int productId)
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromForm]ProductDeleteRequest request)
         {
-            var affectedResult = await _productService.Delete(productId);
+            var affectedResult = await _productService.Delete(request);
             if (affectedResult == 0)
             {
                 return BadRequest();

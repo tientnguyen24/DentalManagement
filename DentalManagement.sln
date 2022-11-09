@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.WebApp", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Application", "DentalManagement.Application\DentalManagement.Application.csproj", "{992011A1-5C9D-48F1-A743-FE8764ACD789}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Utillities", "DentalManagement.Utillities\DentalManagement.Utillities.csproj", "{6CBDD170-9218-4700-BD4F-14DB77994EBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.Utilities", "DentalManagement.Utillities\DentalManagement.Utilities.csproj", "{6CBDD170-9218-4700-BD4F-14DB77994EBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DentalManagement.BackendAPI", "DentalManagement.BackendAPI\DentalManagement.BackendAPI.csproj", "{129624DB-5DED-48CA-970D-352784B026CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DentalManagement.BackendAPI", "DentalManagement.BackendAPI\DentalManagement.BackendAPI.csproj", "{129624DB-5DED-48CA-970D-352784B026CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

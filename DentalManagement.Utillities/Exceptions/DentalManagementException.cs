@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DentalManagement.Utillities.Exceptions
+namespace DentalManagement.Utilities.Exceptions
 {
     public class DentalManagementException : Exception
     {

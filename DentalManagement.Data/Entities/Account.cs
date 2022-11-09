@@ -37,5 +37,7 @@ namespace DentalManagement.Data.Entities
 
         [Required]
         public Type Type { get; set; }
+
+        public Status Status { get; set; }
     }
 }

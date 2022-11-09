@@ -1,6 +1,7 @@
+using DentalManagement.Application.Catalog.Customers;
 using DentalManagement.Application.Catalog.Products;
 using DentalManagement.Data.EF;
-using DentalManagement.Utillities.Constants;
+using DentalManagement.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace DentalManagement.BackendAPI
 
             //declare DI
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICustomerService, CustomerService>();
             services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>
