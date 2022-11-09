@@ -5,13 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Catalog\Customers\" />
     <Folder Include="Catalog\Invoices\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DentalManagement.Data\DentalManagement.Data.csproj" />
-    <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utillities.csproj" />
+    <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

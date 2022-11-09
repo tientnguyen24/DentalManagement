@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DentalManagement.Application.CommonDTO
+﻿namespace DentalManagement.Application.Common
 {
     public class PagingRequestBase
     {

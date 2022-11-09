@@ -4,14 +4,16 @@ using DentalManagement.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentalManagement.Data.Migrations
 {
     [DbContext(typeof(DentalManagementDbContext))]
-    partial class DentalManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221106082509_AddStatusAccount")]
+    partial class AddStatusAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace DentalManagement.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 40, 26, DateTimeKind.Local).AddTicks(1389));
+                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 9, 352, DateTimeKind.Local).AddTicks(9623));
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(100)")
@@ -66,7 +68,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             UserName = "admin",
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 53, DateTimeKind.Local).AddTicks(4614),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 388, DateTimeKind.Local).AddTicks(4147),
                             ModifiedBy = "",
                             Password = "123456",
                             Status = 0,
@@ -98,7 +100,7 @@ namespace DentalManagement.Data.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 40, 33, DateTimeKind.Local).AddTicks(1362));
+                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 9, 362, DateTimeKind.Local).AddTicks(3050));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(200)")
@@ -149,7 +151,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1997, 10, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(702),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(4886),
                             Description = "",
                             EmailAddress = "tientnguyen24@gmail.com",
                             FullName = "Nguyễn Trung Tiến",
@@ -165,7 +167,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1997, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(1956),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(6139),
                             Description = "",
                             EmailAddress = "thanhlamtran.32@gmail.com",
                             FullName = "Trần Thanh Lâm",
@@ -181,7 +183,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(2004, 5, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(2003),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(6204),
                             Description = "",
                             EmailAddress = "thuytrang160504@gmail.com",
                             FullName = "Nguyễn Thuỳ Trang",
@@ -197,7 +199,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1991, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(2006),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(6207),
                             Description = "",
                             EmailAddress = "luutrongtan1991@gmail.com",
                             FullName = "Lưu Trọng Tấn",
@@ -227,7 +229,7 @@ namespace DentalManagement.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 40, 34, DateTimeKind.Local).AddTicks(7524));
+                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 9, 364, DateTimeKind.Local).AddTicks(7250));
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -313,7 +315,7 @@ namespace DentalManagement.Data.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 40, 44, DateTimeKind.Local).AddTicks(8843));
+                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 9, 378, DateTimeKind.Local).AddTicks(2638));
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(100)")
@@ -350,7 +352,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(3210),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(7362),
                             ModifiedBy = "",
                             Name = "Khám và tư vấn",
                             ProductCategoryId = 1,
@@ -361,7 +363,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 2,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4561),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8641),
                             ModifiedBy = "",
                             Name = "Chụp phim",
                             ProductCategoryId = 1,
@@ -372,7 +374,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 3,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4664),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8701),
                             ModifiedBy = "",
                             Name = "Cạo vôi răng, đánh bóng răng",
                             ProductCategoryId = 1,
@@ -383,7 +385,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 4,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4668),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8703),
                             ModifiedBy = "",
                             Name = "Nhổ răng cửa (số 1, số 2, số 3)",
                             ProductCategoryId = 1,
@@ -394,7 +396,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 5,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4670),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8705),
                             ModifiedBy = "",
                             Name = "Nhổ răng cối nhỏ (số 4, số 5)",
                             ProductCategoryId = 1,
@@ -405,7 +407,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 6,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4672),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8706),
                             ModifiedBy = "",
                             Name = "Nhổ răng cối lớn (số 6, số 7)",
                             ProductCategoryId = 1,
@@ -416,7 +418,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 7,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4674),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8711),
                             ModifiedBy = "",
                             Name = "Nhổ răng khôn",
                             ProductCategoryId = 1,
@@ -427,7 +429,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 8,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4676),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8713),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng trẻ em",
                             ProductCategoryId = 1,
@@ -438,7 +440,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 9,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4681),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8715),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cửa (số 1, số 2, số 3)",
                             ProductCategoryId = 1,
@@ -449,7 +451,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 10,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4683),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8717),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cối nhỏ (số 4, số 5)",
                             ProductCategoryId = 1,
@@ -460,7 +462,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 11,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4685),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8718),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cối lớn (số 6, số 7)",
                             ProductCategoryId = 1,
@@ -471,7 +473,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 12,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4686),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8720),
                             ModifiedBy = "",
                             Name = "Tẩy trắng răng tại nhà",
                             ProductCategoryId = 1,
@@ -482,7 +484,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 13,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4688),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8724),
                             ModifiedBy = "",
                             Name = "Tẩy trắng răng tại phòng khám",
                             ProductCategoryId = 1,
@@ -493,7 +495,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 14,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4690),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8725),
                             ModifiedBy = "",
                             Name = "Chỉnh nha",
                             ProductCategoryId = 1,
@@ -504,7 +506,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 15,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4691),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8727),
                             ModifiedBy = "",
                             Name = "Implant",
                             ProductCategoryId = 1,
@@ -515,7 +517,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 16,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4702),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8730),
                             ModifiedBy = "",
                             Name = "Răng sứ - Kim loại Mỹ",
                             ProductCategoryId = 1,
@@ -526,7 +528,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 17,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4704),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8732),
                             ModifiedBy = "",
                             Name = "Răng sứ - Hợp kim Titan",
                             ProductCategoryId = 1,
@@ -537,7 +539,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 18,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4706),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8733),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Zirconia",
                             ProductCategoryId = 1,
@@ -548,7 +550,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 19,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4708),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8735),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - DDBio",
                             ProductCategoryId = 1,
@@ -559,7 +561,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 20,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4710),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8736),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Cercon HT",
                             ProductCategoryId = 1,
@@ -570,7 +572,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 21,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4711),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8737),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Lava Plus",
                             ProductCategoryId = 1,
@@ -581,7 +583,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 22,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4713),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8739),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Việt Nam",
                             ProductCategoryId = 1,
@@ -592,7 +594,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 23,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4715),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8740),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Nhật",
                             ProductCategoryId = 1,
@@ -603,7 +605,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 24,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4718),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8742),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Ý",
                             ProductCategoryId = 1,
@@ -614,7 +616,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 25,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4719),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8743),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Hàm khung kim loại",
                             ProductCategoryId = 1,
@@ -625,7 +627,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 26,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 55, DateTimeKind.Local).AddTicks(4721),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(8748),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Nền dẻo",
                             ProductCategoryId = 1,
@@ -650,7 +652,7 @@ namespace DentalManagement.Data.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 40, 43, DateTimeKind.Local).AddTicks(1618));
+                        .HasDefaultValue(new DateTime(2022, 11, 6, 15, 25, 9, 369, DateTimeKind.Local).AddTicks(7315));
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(100)")
@@ -673,7 +675,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 1,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 54, DateTimeKind.Local).AddTicks(6719),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(752),
                             ModifiedBy = "",
                             Name = "Dịch vụ nha khoa"
                         },
@@ -681,7 +683,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 2,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 54, DateTimeKind.Local).AddTicks(7911),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(1838),
                             ModifiedBy = "",
                             Name = "Vật tư nha khoa"
                         },
@@ -689,7 +691,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 3,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 40, 54, DateTimeKind.Local).AddTicks(7941),
+                            CreatedDate = new DateTime(2022, 11, 6, 15, 25, 9, 390, DateTimeKind.Local).AddTicks(1869),
                             ModifiedBy = "",
                             Name = "Khác"
                         });

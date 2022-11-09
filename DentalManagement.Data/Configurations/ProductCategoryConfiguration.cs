@@ -17,7 +17,7 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.CreatedBy).HasMaxLength(100);
-            builder.Property(x => x.ModifiedDate).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.ModifiedDate).IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasMaxLength(100);
         }
     }
