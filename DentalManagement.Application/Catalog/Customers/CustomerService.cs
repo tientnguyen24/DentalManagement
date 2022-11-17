@@ -39,6 +39,45 @@ namespace DentalManagement.Application.Catalog.Customers
             return customer.Id;
         }
 
+        public async Task<int> Update(CustomerUpdateRequest request)
+        {
+            var customer = await _context.Customers.FindAsync(request.Id);
+            if (customer == null)
+            {
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {request.Id}");
+            }
+            else
+            {
+                customer.FullName = request.FullName;
+                customer.Gender = request.Gender;
+                customer.BirthDay = request.BirthDay;
+                customer.Address = request.Address;
+                customer.PhoneNumber = request.PhoneNumber;
+                customer.EmailAddress = request.EmailAddress;
+                customer.IdentifyCard = request.IdentifyCard;
+                customer.Description = request.Description;
+                customer.ModifiedDate = DateTime.Now;
+                customer.ModifiedBy = request.ModifiedBy;
+            }
+            return await _context.SaveChangesAsync();
+        }
+        public async Task<bool> UpdateStatus (int customerId, Status updatedStatus)
+        {
+            var customer = await _context.Customers.FindAsync(customerId);
+            if (customer == null)
+            {
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
+            }
+            else if (customer.Status == updatedStatus)
+            {
+                throw new DentalManagementException($"Trạng thái hiện tại của khách hàng trùng với trạng thái cần cập nhật.");
+            }
+            else
+            {
+                customer.Status = updatedStatus;
+            }
+            return await _context.SaveChangesAsync() > 0;
+        }
         public async Task<int> Delete(CustomerDeleteRequest request)
         {
             var customer = await _context.Customers.FindAsync(request.Id);
@@ -146,41 +185,6 @@ namespace DentalManagement.Application.Catalog.Customers
                 };
                 return customerViewModel;
             }
-        }
-        public async Task<int> Update(CustomerUpdateRequest request)
-        {
-            var customer = await _context.Customers.FindAsync(request.Id);
-            if (customer == null)
-            {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {request.Id}");
-            }
-            else
-            {
-                customer.FullName = request.FullName;
-                customer.Gender = request.Gender;
-                customer.BirthDay = request.BirthDay;
-                customer.Address = request.Address;
-                customer.PhoneNumber = request.PhoneNumber;
-                customer.EmailAddress = request.EmailAddress;
-                customer.IdentifyCard = request.IdentifyCard;
-                customer.Description = request.Description;
-                customer.ModifiedDate = DateTime.Now;
-                customer.ModifiedBy = request.ModifiedBy;
-            }
-            return await _context.SaveChangesAsync();
-        }
-        public async Task<bool> UpdateStatus (int customerId, Status updatedStatus)
-        {
-            var customer = await _context.Customers.FindAsync(customerId);
-            if (customer == null)
-            {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
-            }
-            else
-            {
-                customer.Status = updatedStatus;
-            }
-            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

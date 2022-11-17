@@ -8,14 +8,16 @@ namespace DentalManagement.Data.Entities
     public class ProductCategory
     {
         [Required]
-        [ScaffoldColumn(false)]
         public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
+        [ScaffoldColumn(false)]
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
+
+        [ScaffoldColumn(false)]
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
 

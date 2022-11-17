@@ -1,5 +1,6 @@
 ﻿using DentalManagement.Application.Catalog.Products;
 using DentalManagement.Application.Catalog.Products.ViewModels;
+using DentalManagement.Data.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -71,6 +72,17 @@ namespace DentalManagement.BackendAPI.Controllers
         {
             var affectedResult = await _productService.Update(request);
             if (affectedResult == 0)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPatch("{productId}/{updatedStatus}")]
+        public async Task<IActionResult> UpdateStatus(int productId, Status updatedStatus)
+        {
+            var affectedResult = await _productService.UpdateStatus(productId, updatedStatus);
+            if (!affectedResult)
             {
                 return BadRequest();
             }

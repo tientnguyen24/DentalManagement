@@ -1,4 +1,5 @@
 ﻿using DentalManagement.Data.Entities;
+using DentalManagement.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,8 @@ namespace DentalManagement.Data.Extensions
 	{
 		public static void Seed(this ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Account>().HasData
+            #region
+            modelBuilder.Entity<Account>().HasData
 				(
 					new Account()
 					{
@@ -23,7 +25,9 @@ namespace DentalManagement.Data.Extensions
 						Type = Enums.Type.Administrator
 					}
 				);
-			modelBuilder.Entity<ProductCategory>().HasData
+            #endregion
+            #region
+            modelBuilder.Entity<ProductCategory>().HasData
 				(
 					new ProductCategory()
 					{
@@ -53,7 +57,9 @@ namespace DentalManagement.Data.Extensions
 						ModifiedBy = ""
 					}
 				);
-			modelBuilder.Entity<Customer>().HasData
+            #endregion
+            #region
+            modelBuilder.Entity<Customer>().HasData
 				(
 					new Customer()
 					{
@@ -124,7 +130,9 @@ namespace DentalManagement.Data.Extensions
 						ModifiedBy = ""
 					}
 				);
-			modelBuilder.Entity<Product>().HasData
+			#endregion
+            #region
+            modelBuilder.Entity<Product>().HasData
 				(
 					new Product()
 					{
@@ -413,6 +421,60 @@ namespace DentalManagement.Data.Extensions
 						ProductCategoryId = 000001
 					}
 				);
-		}
-	}
+			#endregion
+			#region
+			modelBuilder.Entity<Invoice>().HasData
+				(
+					new Invoice()
+					{
+						Id = 2,
+						CreatedDate = DateTime.Now,
+						CreatedBy = "admin",
+						TotalDiscountPercent = 0,
+						TotalDiscountAmount = 0,
+						TotalInvoiceAmount = 1500000,
+						CustomerId = 1,
+						Description = "",
+						Status = Status.Active,
+					}
+				);
+            #endregion
+            #region
+            modelBuilder.Entity<InvoiceDetail>().HasData
+				(
+					new InvoiceDetail()
+                    {
+						InvoiceId = 1,
+						ProductId = 2,
+						ItemDiscountPercent = 0,
+						ItemDiscountAmount = 0,
+						ItemAmount = 1,
+                    },
+                    new InvoiceDetail()
+                    {
+                        InvoiceId = 1,
+                        ProductId = 3,
+                        ItemDiscountPercent = 0,
+                        ItemDiscountAmount = 0,
+                        ItemAmount = 2,
+                    },
+                    new InvoiceDetail()
+                    {
+                        InvoiceId = 1,
+                        ProductId = 4,
+                        ItemDiscountPercent = 0,
+                        ItemDiscountAmount = 0,
+                        ItemAmount = 3,
+                    }, new InvoiceDetail()
+                    {
+                        InvoiceId = 1,
+                        ProductId = 5,
+                        ItemDiscountPercent = 0,
+                        ItemDiscountAmount = 0,
+                        ItemAmount = 2,
+                    }
+                );
+            #endregion
+        }
+    }
 }

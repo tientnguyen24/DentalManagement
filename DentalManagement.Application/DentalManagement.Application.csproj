@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Catalog\Invoices\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DentalManagement.Data\DentalManagement.Data.csproj" />
     <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utilities.csproj" />
   </ItemGroup>
