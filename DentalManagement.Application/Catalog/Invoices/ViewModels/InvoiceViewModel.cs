@@ -1,32 +1,25 @@
-﻿using DentalManagement.Data.Enums;
+﻿using DentalManagement.Data.Entities;
+using DentalManagement.Data.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace DentalManagement.Data.Entities
+namespace DentalManagement.Application.Catalog.Invoices.ViewModels
 {
-    public class Invoice
+    public class InvoiceViewModel
     {
-        [Required]
         public int Id { get; set; }
-
-        [ScaffoldColumn(false)]
-        [Required]
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public decimal TotalDiscountPercent { get; set; }
         public decimal TotalDiscountAmount { get; set; }
         public decimal TotalInvoiceAmount { get; set; }
-
-        [ScaffoldColumn(false)]
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-        public string Description { get; set; }
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
-        public List<InvoiceDetail> InvoiceDetails { get; set; }
+        public string Description { get; set; }
         public Status Status { get; set; }
-
+        public Task<List<InvoiceDetailViewModel>> InvoiceDetails { get; set; }
     }
 }

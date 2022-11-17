@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DentalManagement.Data.Enums;
 
 namespace DentalManagement.Application.Catalog.Products
 {
@@ -26,6 +27,8 @@ namespace DentalManagement.Application.Catalog.Products
             {
                 Name = request.Name,
                 UnitPrice = request.UnitPrice,
+                CreatedDate = DateTime.Now,
+                CreatedBy = request.CreatedBy,
                 ProductCategoryId = request.ProductCategoryId
             };
             _context.Products.Add(product);
@@ -106,6 +109,24 @@ namespace DentalManagement.Application.Catalog.Products
                 
             }
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateStatus(int productId, Status updatedStatus)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                throw new DentalManagementException($"Không tìm thấy sản phẩm: {productId}");
+            }
+            else if (product.Status == updatedStatus)
+            {
+                throw new DentalManagementException($"Trạng thái hiện tại của sản phẩm trùng với trạng thái cần cập nhật.");
+            }
+            else
+            {
+                product.Status = updatedStatus;
+            }
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<int> Delete(ProductDeleteRequest request)

@@ -71,15 +71,16 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok();
         }
 
+        //http://localhost:port/customer/{id}/{status}
         [HttpPatch("{customerId}/{updatedStatus}")]
         public async Task<IActionResult> UpdateStatus(int customerId, Status updatedStatus)
         {
             var affectedResult = await _customerService.UpdateStatus(customerId, updatedStatus);
             if (!affectedResult)
             {
-                return Ok();
+                return BadRequest();
             }
-            return BadRequest();
+            return Ok();
         }
 
         [HttpDelete]

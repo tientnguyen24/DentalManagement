@@ -1,4 +1,5 @@
 using DentalManagement.Application.Catalog.Customers;
+using DentalManagement.Application.Catalog.Invoices;
 using DentalManagement.Application.Catalog.Products;
 using DentalManagement.Data.EF;
 using DentalManagement.Utilities.Constants;
@@ -34,6 +35,7 @@ namespace DentalManagement.BackendAPI
             //declare DI
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>

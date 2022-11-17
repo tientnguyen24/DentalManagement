@@ -16,7 +16,7 @@ namespace DentalManagement.Data.Configurations
             builder.HasKey(x => x.UserName);
             builder.Property(x => x.UserName).IsRequired(true).HasMaxLength(50).IsUnicode(false);
             builder.Property(x => x.Password).IsRequired(true).HasMaxLength(50).IsUnicode(false);
-            builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.CreatedDate).IsRequired(true);
             builder.Property(x => x.CreatedBy).IsRequired(false).HasMaxLength(100);
             builder.Property(x => x.ModifiedDate).IsRequired(false);
             builder.Property(x => x.ModifiedBy).IsRequired(false).HasMaxLength(100);
