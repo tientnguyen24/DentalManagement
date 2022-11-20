@@ -18,7 +18,7 @@ namespace DentalManagement.BackendAPI.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+/*        public IActionResult Index()
         {
             return View();
         }
@@ -26,7 +26,7 @@ namespace DentalManagement.BackendAPI.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
+        }*/
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

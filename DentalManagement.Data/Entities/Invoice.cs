@@ -1,25 +1,18 @@
 ﻿using DentalManagement.Data.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DentalManagement.Data.Entities
 {
     public class Invoice
     {
-        [Required]
         public int Id { get; set; }
-
-        [ScaffoldColumn(false)]
-        [Required]
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public decimal TotalDiscountPercent { get; set; }
         public decimal TotalDiscountAmount { get; set; }
         public decimal TotalInvoiceAmount { get; set; }
-
-        [ScaffoldColumn(false)]
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
         public string Description { get; set; }
@@ -27,6 +20,5 @@ namespace DentalManagement.Data.Entities
         public Customer Customer { get; set; }
         public List<InvoiceDetail> InvoiceDetails { get; set; }
         public Status Status { get; set; }
-
     }
 }

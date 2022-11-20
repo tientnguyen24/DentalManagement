@@ -1,3 +1,4 @@
+using DentalManagement.Application.Catalog.Users;
 using DentalManagement.Application.Catalog.Customers;
 using DentalManagement.Application.Catalog.Invoices;
 using DentalManagement.Application.Catalog.Products;
@@ -6,6 +7,7 @@ using DentalManagement.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DentalManagement.Data.Entities;
 
 namespace DentalManagement.BackendAPI
 {
@@ -31,11 +34,22 @@ namespace DentalManagement.BackendAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DentalManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
+            services.AddIdentity<AppUser, AppRole>()
+                .AddEntityFrameworkStores<DentalManagementDbContext>()
+                .AddDefaultTokenProviders();
 
+            services.AddMvcCore().AddApiExplorer();
+            services.AddAuthorization();
             //declare DI
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IInvoiceService, InvoiceService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
+            services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+
             services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>

@@ -4,8 +4,6 @@ using System.Text;
 
 namespace DentalManagement.Data.Enums
 {
-
-    //public enum Customer { }
     public enum Gender
     {
         Male,
