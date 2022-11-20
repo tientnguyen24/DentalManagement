@@ -15,7 +15,7 @@ namespace DentalManagement.Data.Configurations
             builder.ToTable("Invoices");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
-            builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.CreatedDate).IsRequired(true);
             builder.Property(x => x.CreatedBy).IsRequired(true).HasMaxLength(100);
             builder.Property(x => x.TotalDiscountPercent).HasMaxLength(50);
             builder.Property(x => x.TotalDiscountAmount).HasMaxLength(100);

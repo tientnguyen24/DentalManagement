@@ -1,15 +1,12 @@
 ﻿using DentalManagement.Data.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DentalManagement.Data.Entities
 {
     public class Customer
     {
-        [Required]
-        [ScaffoldColumn(false)]
         public int Id { get; set; }
         public string FullName { get; set; }
         public Gender Gender { get; set; }

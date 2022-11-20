@@ -14,10 +14,9 @@ namespace DentalManagement.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
+        public Status Status { get; set; }
         public int ProductCategoryId { get; set; }
         public ProductCategory ProductCategory { get; set; }
         public List<InvoiceDetail> InvoiceDetails { get; set; }
-        public Status Status { get; set; }
-
     }
 }
