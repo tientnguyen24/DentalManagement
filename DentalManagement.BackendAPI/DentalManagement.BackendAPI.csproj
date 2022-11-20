@@ -5,13 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DentalManagement.Application\DentalManagement.Application.csproj" />
-    <ProjectReference Include="..\DentalManagement.Data\DentalManagement.Data.csproj" />
-    <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

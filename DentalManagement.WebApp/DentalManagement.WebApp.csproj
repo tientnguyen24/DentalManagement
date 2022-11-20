@@ -9,9 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DentalManagement.Application\DentalManagement.Application.csproj" />
-    <ProjectReference Include="..\DentalManagement.Data\DentalManagement.Data.csproj" />
-    <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utilities.csproj" />
+    <ProjectReference Include="..\DentalManagement.BackendAPI\DentalManagement.BackendAPI.csproj" />
   </ItemGroup>
 
 </Project>
