@@ -1,12 +1,12 @@
 ﻿using DentalManagement.ViewModels.Catalog.Users;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace DentalManagement.Application.Catalog.Users
+namespace DentalManagement.Admin.ApiIntegrations
 {
-    public interface IUserService
+    public interface IUserApiClient
     {
         Task<string> Authenticate(LoginRequest request);
         Task<bool> Register(RegisterRequest request);

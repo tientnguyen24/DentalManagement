@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Customers;
-using DentalManagement.Application.Catalog.Customers.ViewModels;
+using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.Data.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

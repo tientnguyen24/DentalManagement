@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Customers.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Common;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -23,8 +23,8 @@ namespace DentalManagement.Admin.ApiIntegrations
         }
         public async Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request)
         {
-            //var json = JsonConvert.SerializeObject(request);
-            //var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            /*var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");*/
 
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);

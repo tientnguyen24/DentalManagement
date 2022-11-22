@@ -1,4 +1,4 @@
-﻿using DentalManagement.Application.Catalog.Users.ViewModels;
+﻿using DentalManagement.ViewModels.Catalog.Users;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;
@@ -42,7 +42,7 @@ namespace DentalManagement.Application.Catalog.Users
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email,user.Email),
-                //new Claim(ClaimTypes.GivenName,user.CreatedBy),
+                new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.Role, string.Join(";",roles)),
 
             };

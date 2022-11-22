@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Customers.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

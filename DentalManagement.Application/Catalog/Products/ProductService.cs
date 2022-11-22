@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Products.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Products;
+using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;
