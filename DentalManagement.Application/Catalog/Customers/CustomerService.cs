@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Customers.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;
@@ -31,6 +31,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 EmailAddress = request.EmailAddress,
+                CreatedDate = DateTime.Now,
                 IdentifyCard = request.IdentifyCard,
                 Description = request.Description,
             };

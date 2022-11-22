@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Invoices;
-using DentalManagement.Application.Catalog.Invoices.ViewModels;
+using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.Data.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

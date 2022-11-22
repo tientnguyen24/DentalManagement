@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Users;
-using DentalManagement.Application.Catalog.Users.ViewModels;
+using DentalManagement.ViewModels.Catalog.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ namespace DentalManagement.BackendAPI.Controllers
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromForm]LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var resultToken = await _userService.Authenticate(request);
@@ -30,12 +30,12 @@ namespace DentalManagement.BackendAPI.Controllers
             {
                 return BadRequest();
             }
-            return Ok(new { token = resultToken });
+            return Ok(resultToken);
         }
         
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromForm] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _userService.Register(request);

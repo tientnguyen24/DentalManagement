@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Invoices.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.Enums;
 using System;
 using System.Collections.Generic;
