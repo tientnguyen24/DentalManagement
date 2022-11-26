@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using DentalManagement.Data.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FluentValidation;
+using DentalManagement.ViewModels.Catalog.Users;
 
 namespace DentalManagement.BackendAPI
 {
@@ -53,6 +55,8 @@ namespace DentalManagement.BackendAPI
 
 
             services.AddControllers();
+
+            services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
             services.AddSwaggerGen(c =>
             {
