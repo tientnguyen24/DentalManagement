@@ -1,4 +1,6 @@
 using DentalManagement.Admin.ApiIntegrations;
+using DentalManagement.ViewModels.Catalog.Users;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,12 +30,19 @@ namespace DentalManagement.Admin
             services.AddHttpClient();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.LoginPath = "/Users/Login/";
+                options.LoginPath = "/Login/Index/";
                 options.AccessDeniedPath = "/Users/Forbidden/";
             });
             services.AddControllersWithViews();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
             services.AddTransient<IUserApiClient, UserApiClient>();
+            services.AddTransient<ICustomerApiClient, CustomerApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
+
+            services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 #if DEBUG
             if (environment == Environments.Development)
@@ -64,7 +73,7 @@ namespace DentalManagement.Admin
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

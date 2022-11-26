@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -20,7 +22,7 @@ namespace DentalManagement.BackendAPI.Controllers
             _customerService = customerService;
         }
 
-        //http://localhost:port/customer
+        //http://localhost:port/api/customer
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -28,7 +30,7 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok(customers);
         }
 
-        //http://localhost:port/customer/search
+        //http://localhost:port/api/customer/search
         [HttpGet("search")]
         public async Task<IActionResult> Get([FromQuery]GetCustomerPagingRequest request)
         {
@@ -36,7 +38,7 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok(customers);
         }
 
-        //http://localhost:port/customer/{id}
+        //http://localhost:port/api/customer/{id}
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetById(int customerId)
         {
@@ -71,7 +73,7 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok();
         }
 
-        //http://localhost:port/customer/{id}/{status}
+        //http://localhost:port/api/customer/{id}/{status}
         [HttpPatch("{customerId}/{updatedStatus}")]
         public async Task<IActionResult> UpdateStatus(int customerId, Status updatedStatus)
         {

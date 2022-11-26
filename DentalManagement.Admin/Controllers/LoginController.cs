@@ -1,7 +1,9 @@
 ﻿using DentalManagement.Admin.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
+using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
@@ -16,29 +18,26 @@ using System.Threading.Tasks;
 
 namespace DentalManagement.Admin.Controllers
 {
-    public class UsersController : Controller
+    public class LoginController : Controller
     {
+
         private readonly IUserApiClient _userApiClient;
         private readonly IConfiguration _config;
-        public UsersController(IUserApiClient userApiClient, IConfiguration config)
+        public LoginController(IUserApiClient userApiClient, IConfiguration config)
         {
             _userApiClient = userApiClient;
             _config = config;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Index()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Index(LoginRequest request)
         {
             if (!ModelState.IsValid) return View(ModelState);
             var token = await _userApiClient.Authenticate(request);
@@ -48,7 +47,8 @@ namespace DentalManagement.Admin.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true
             };
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,userPrincipal,authProperties);
+            HttpContext.Session.SetString("Token", token);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
             return RedirectToAction("Index", "Home");
         }
 
@@ -56,6 +56,7 @@ namespace DentalManagement.Admin.Controllers
         private ClaimsPrincipal ValidateToken(string jwtToken)
         {
             IdentityModelEventSource.ShowPII = true;
+            SecurityToken validatedToken;
             TokenValidationParameters validationParameters = new TokenValidationParameters
             {
                 ValidateLifetime = true,
@@ -63,7 +64,7 @@ namespace DentalManagement.Admin.Controllers
                 ValidIssuer = _config["Tokens:Issuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
             };
-            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, validatedToken: out _);
+            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
             return principal;
         }
     }
