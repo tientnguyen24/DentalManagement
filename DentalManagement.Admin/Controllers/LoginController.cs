@@ -1,6 +1,9 @@
 ﻿using DentalManagement.Admin.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
 using DentalManagement.ViewModels.Common;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +23,14 @@ namespace DentalManagement.Admin.Controllers
 {
     public class LoginController : Controller
     {
-
         private readonly IUserApiClient _userApiClient;
         private readonly IConfiguration _config;
-        public LoginController(IUserApiClient userApiClient, IConfiguration config)
+        private readonly IValidator<LoginRequest> _validator;
+        public LoginController(IUserApiClient userApiClient, IConfiguration config, IValidator<LoginRequest> validator)
         {
             _userApiClient = userApiClient;
             _config = config;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -39,7 +43,12 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(LoginRequest request)
         {
-            if (!ModelState.IsValid) return View(ModelState);
+            ValidationResult result = await _validator.ValidateAsync(request);
+            if (!result.IsValid)
+            {
+                result.AddToModelState(this.ModelState);
+                return View("Index", request);
+            }
             var token = await _userApiClient.Authenticate(request);
             var userPrincipal = this.ValidateToken(token);
             var authProperties = new AuthenticationProperties

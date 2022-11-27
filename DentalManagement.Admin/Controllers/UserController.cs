@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace DentalManagement.Admin.Controllers
 {
     [Authorize]
-    public class UserController : Controller
+    public class UserController : BaseController
     {
 
         private readonly IUserApiClient _userApiClient;

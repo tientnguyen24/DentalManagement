@@ -59,7 +59,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]InvoiceCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] InvoiceCreateRequest request)
         {
             var invoiceId = await _invoiceService.Create(request);
             if (invoiceId == 0)
@@ -71,7 +71,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm]InvoiceUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] InvoiceUpdateRequest request)
         {
             var affectedResult = await _invoiceService.Update(request);
             if (affectedResult == 0)
@@ -94,7 +94,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromForm]InvoiceDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] InvoiceDeleteRequest request)
         {
             var affectedResult = await _invoiceService.Delete(request);
             if (affectedResult == 0)

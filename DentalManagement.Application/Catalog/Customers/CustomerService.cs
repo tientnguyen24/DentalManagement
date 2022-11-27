@@ -62,7 +62,7 @@ namespace DentalManagement.Application.Catalog.Customers
             }
             return await _context.SaveChangesAsync();
         }
-        public async Task<bool> UpdateStatus (int customerId, Status updatedStatus)
+        public async Task<bool> UpdateStatus(int customerId, Status updatedStatus)
         {
             var customer = await _context.Customers.FindAsync(customerId);
             if (customer == null)

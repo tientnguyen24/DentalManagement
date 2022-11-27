@@ -7,6 +7,26 @@
 
 <div class="container-fluid">
     <h1 class="h3 mb-2 text-gray-800">Danh sách khách hàng</h1>
+    <div>
+        <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
+            <i class="fa fa-user-plus"></i>
+            Tạo mới
+        </a>
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" class="form-control border-1 small" placeholder="Nhập từ khoá ..."
+                       aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr />
+
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
@@ -28,7 +48,7 @@
                                 Số điện thoại
                             </th>
                             <th>
-                                Tổng hoá đơn
+                                Tổng thành tiền
                             </th>
                             <th>
                                 Tổng chiết khấu
@@ -39,35 +59,35 @@
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
-                        <tr>
-                            <td>
-                                <a type="button" href="#"><i class="fa fa-plus-circle"></i></a>
-                            </td>
-                            <td>
-                                <a type="button" asp-controller="Customer" asp-action="Index">
-                                    @Html.DisplayFor(modelItem => item.FullName)
-                                </a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Gender)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BirthDay)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PhoneNumber)
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                @Html.ActionLink("Sửa", "Edit", new { /* id=item.PrimaryKey */ }) |
-                                @Html.ActionLink("Chi tiết", "Details", new { /* id=item.PrimaryKey */ }) |
-                                @Html.ActionLink("Xoá", "Delete", new { /*id=item.PrimaryKey */ })
-                            </td>
-                        </tr>
-                          }
+                            <tr>
+                                <td>
+                                    <a type="button" href="#"><i class="fa fa-plus-circle"></i></a>
+                                </td>
+                                <td>
+                                    <a type="button" asp-controller="Customer" asp-action="Index">
+                                        @Html.DisplayFor(modelItem => item.FullName)
+                                    </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Gender)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BirthDay)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Sửa", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Chi tiết", "Details", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Xoá", "Delete", new { /*id=item.PrimaryKey */ })
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
