@@ -1,6 +1,8 @@
 using DentalManagement.Admin.ApiIntegrations;
+using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Users;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,7 +43,15 @@ namespace DentalManagement.Admin
             services.AddTransient<ICustomerApiClient, CustomerApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
 
+            /*            services.AddControllersWithViews()
+                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+                        services.AddControllersWithViews()
+                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>());*/
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>();
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 #if DEBUG

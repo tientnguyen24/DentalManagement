@@ -58,7 +58,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]ProductCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] ProductCreateRequest request)
         {
             var productId = await _productService.Create(request);
             if (productId == 0)
@@ -70,7 +70,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateRequest request)
         {
             var affectedResult = await _productService.Update(request);
             if (affectedResult == 0)
@@ -92,7 +92,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromForm]ProductDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] ProductDeleteRequest request)
         {
             var affectedResult = await _productService.Delete(request);
             if (affectedResult == 0)

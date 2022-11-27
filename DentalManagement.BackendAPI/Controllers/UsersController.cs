@@ -35,8 +35,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
         
         [HttpPost("register")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _userService.Register(request);

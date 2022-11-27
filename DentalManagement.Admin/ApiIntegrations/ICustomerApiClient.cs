@@ -10,5 +10,6 @@ namespace DentalManagement.Admin.ApiIntegrations
     public interface ICustomerApiClient
     {
         Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request);
+        Task<bool> Create(CustomerCreateRequest request);
     }
 }

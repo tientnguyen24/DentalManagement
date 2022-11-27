@@ -51,7 +51,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]CustomerCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] CustomerCreateRequest request)
         {
             var customerId = await _customerService.Create(request);
             if (customerId == 0)
@@ -63,7 +63,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm]CustomerUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody]CustomerUpdateRequest request)
         {
             var affectedResult = await _customerService.Update(request);
             if (affectedResult == 0)
