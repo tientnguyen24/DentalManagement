@@ -16,25 +16,25 @@ namespace DentalManagement.Data.EF
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             //congifure using Fluent API
-            modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
-            modelBuilder.ApplyConfiguration(new AppUserConfiguration());
-            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-            modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductConfiguration());
-            modelBuilder.ApplyConfiguration(new InvoiceDetailConfiguration());
+            builder.ApplyConfiguration(new AppRoleConfiguration());
+            builder.ApplyConfiguration(new AppUserConfiguration());
+            builder.ApplyConfiguration(new CustomerConfiguration());
+            builder.ApplyConfiguration(new InvoiceConfiguration());
+            builder.ApplyConfiguration(new ProductCategoryConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new InvoiceDetailConfiguration());
 
-            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
-            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
-            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
+            builder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
+            builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
+            builder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
 
-            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
-            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
+            builder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
+            builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
 
-            modelBuilder.Seed();
+            //builder.Seed();
         }
 
         public DbSet<Customer> Customers { get; set; }

@@ -1,4 +1,6 @@
 ﻿using DentalManagement.ViewModels.Catalog.Users;
+using DentalManagement.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -14,20 +16,25 @@ namespace DentalManagement.Admin.ApiIntegrations
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
-        public UserApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<string> Authenticate(LoginRequest request)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             var response = await client.PostAsync("/api/users/authenticate", httpContent);
-            var token = await response.Content.ReadAsStringAsync();
-            return token;
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<ApiSuccessResult<string>>(await response.Content.ReadAsStringAsync());
+            }
+            return JsonConvert.DeserializeObject<ApiErrorResult<string>>(await response.Content.ReadAsStringAsync());
         }
 
         public Task<bool> Register(RegisterRequest request)

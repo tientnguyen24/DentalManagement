@@ -25,25 +25,42 @@ namespace DentalManagement.BackendAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var resultToken = await _userService.Authenticate(request);
-            if (string.IsNullOrEmpty(resultToken))
+            var result = await _userService.Authenticate(request);
+            if (string.IsNullOrEmpty(result.ResultObject))
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok(resultToken);
+            return Ok( new { result.Message, result.ResultObject });
         }
         
-        [HttpPost("register")]
+        [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _userService.Register(request);
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok();
+            return Ok(new { result.Message, result.ResultObject});
+        }
+
+        //http://localhost:port/api/users/search?keyword=?pageIndex=1?pageSize=10
+        [HttpGet("search")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
+        {
+            var users = await _userService.GetAllPaging(request);
+            return Ok(users);
+        }
+
+        //http://localhost:port/api/users/{userName}
+        [HttpGet("{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByUserName(string userName)
+        {
+            var user = await _userService.GetByUserName(userName);
+            if (!user.IsSuccessed) return BadRequest(user.Message);
+            return Ok(user.ResultObject);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace DentalManagement.Admin.Controllers
         }
 
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
-        {     
+        {
             var request = new GetCustomerPagingRequest()
             {
                 Keyword = keyword,
@@ -37,6 +37,13 @@ namespace DentalManagement.Admin.Controllers
             };
             var data = await _customerApiClient.GetAllPaging(request);
             //ViewBag.Keyword = keyword;
+            return View(data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int customerId)
+        {
+            var data = await _customerApiClient.GetById(customerId);
             return View(data);
         }
 
@@ -56,11 +63,35 @@ namespace DentalManagement.Admin.Controllers
                 return View("Create", request);
             }
             var data = await _customerApiClient.Create(request);
-            if (data)
+            if (!data)
             {
-                return RedirectToAction("Index");
+                return View(request);
             }
-            return View(request);
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpGet]
+        public IActionResult Update()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(CustomerUpdateRequest request)
+        {
+/*            ValidationResult result = await _validator.ValidateAsync(request);
+            if (!result.IsValid)
+            {
+                result.AddToModelState(this.ModelState);
+                return View("Update", request);
+            }*/
+            var data = await _customerApiClient.Update(request);
+            if (data == null)
+            {
+                return View(request);
+            }
+            return RedirectToAction("Index");
         }
     }
 }

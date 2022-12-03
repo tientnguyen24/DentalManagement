@@ -24,6 +24,7 @@ using FluentValidation;
 using DentalManagement.ViewModels.Catalog.Users;
 using FluentValidation.AspNetCore;
 using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.Application.Catalog.ProductCategories;
 
 namespace DentalManagement.BackendAPI
 {
@@ -47,6 +48,7 @@ namespace DentalManagement.BackendAPI
             services.AddMvcCore().AddApiExplorer();
             services.AddAuthorization();
             //declare DI
+            services.AddTransient<IProductCategoryService, ProductCategoryService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IInvoiceService, InvoiceService>();
