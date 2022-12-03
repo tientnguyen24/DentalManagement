@@ -6,6 +6,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,7 @@ namespace DentalManagement.Admin
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserApiClient, UserApiClient>();
             services.AddTransient<ICustomerApiClient, CustomerApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
@@ -52,6 +54,7 @@ namespace DentalManagement.Admin
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
             services.AddValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>();
+            //services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 #if DEBUG

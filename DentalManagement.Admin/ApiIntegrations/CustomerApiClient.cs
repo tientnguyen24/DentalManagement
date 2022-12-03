@@ -44,10 +44,40 @@ namespace DentalManagement.Admin.ApiIntegrations
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/customers/search?keyword={request.Keyword}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
-            var body = await response.Content.ReadAsStringAsync();
-            var customers = JsonConvert.DeserializeObject<PagedResult<CustomerViewModel>>(body);
+            var result = await response.Content.ReadAsStringAsync();
+            var customers = JsonConvert.DeserializeObject<PagedResult<CustomerViewModel>>(result);
             return customers;
         }
 
+        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.GetAsync($"/api/customers/{customerId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(await response.Content.ReadAsStringAsync());
+            }
+            return JsonConvert.DeserializeObject<ApiErrorResult<CustomerViewModel>>("fail");
+        }
+
+        public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"/api/customers/", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
+            }
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
+        }
     }
 }
