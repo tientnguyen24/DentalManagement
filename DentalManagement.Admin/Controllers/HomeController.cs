@@ -1,4 +1,6 @@
 ﻿using DentalManagement.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace DentalManagement.Admin.Controllers
 {
-    public class HomeController : Controller
+    [Authorize]
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 

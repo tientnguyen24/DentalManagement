@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Users;
-using DentalManagement.Application.Catalog.Users.ViewModels;
+using DentalManagement.ViewModels.Catalog.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +12,7 @@ namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,28 +23,44 @@ namespace DentalManagement.BackendAPI.Controllers
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromForm]LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var resultToken = await _userService.Authenticate(request);
-            if (string.IsNullOrEmpty(resultToken))
+            var result = await _userService.Authenticate(request);
+            if (string.IsNullOrEmpty(result.ResultObject))
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok(new { token = resultToken });
+            return Ok( new { result.Message, result.ResultObject });
         }
         
-        [HttpPost("register")]
+        [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromForm] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _userService.Register(request);
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok();
+            return Ok(new { result.Message, result.ResultObject});
+        }
+
+        //http://localhost:port/api/users/search?keyword=?pageIndex=1?pageSize=10
+        [HttpGet("search")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
+        {
+            var users = await _userService.GetAllPaging(request);
+            return Ok(users);
+        }
+
+        //http://localhost:port/api/users/{userName}
+        [HttpGet("{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByUserName(string userName)
+        {
+            var user = await _userService.GetByUserName(userName);
+            if (!user.IsSuccessed) return BadRequest(user.Message);
+            return Ok(user.ResultObject);
         }
     }
 }

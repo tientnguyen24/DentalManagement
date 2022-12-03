@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Customers.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;
@@ -23,6 +23,10 @@ namespace DentalManagement.Application.Catalog.Customers
         }
         public async Task<int> Create(CustomerCreateRequest request)
         {
+/*            if (await _context.Customers.AnyAsync(x => x.PhoneNumber == request.PhoneNumber))
+            {
+                return new ApiErrorResult<bool>("Số điện thoại đã bị tồn tại");
+            }*/
             var customer = new Customer()
             {
                 FullName = request.FullName,
@@ -31,6 +35,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 EmailAddress = request.EmailAddress,
+                CreatedDate = DateTime.Now,
                 IdentifyCard = request.IdentifyCard,
                 Description = request.Description,
             };
@@ -39,12 +44,12 @@ namespace DentalManagement.Application.Catalog.Customers
             return customer.Id;
         }
 
-        public async Task<int> Update(CustomerUpdateRequest request)
+        public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)
         {
             var customer = await _context.Customers.FindAsync(request.Id);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {request.Id}");
+                return new ApiErrorResult<bool>("Không thành công");
             }
             else
             {
@@ -59,9 +64,10 @@ namespace DentalManagement.Application.Catalog.Customers
                 customer.ModifiedDate = DateTime.Now;
                 customer.ModifiedBy = request.ModifiedBy;
             }
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return new ApiSuccessResult<bool>();
         }
-        public async Task<bool> UpdateStatus (int customerId, Status updatedStatus)
+        public async Task<bool> UpdateStatus(int customerId, Status updatedStatus)
         {
             var customer = await _context.Customers.FindAsync(customerId);
             if (customer == null)
@@ -156,12 +162,12 @@ namespace DentalManagement.Application.Catalog.Customers
             return pagedResult;
         }
 
-        public async Task<CustomerViewModel> GetById(int customerId)
+        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
         {
             var customer = await _context.Customers.FindAsync(customerId);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng có id: {customerId}");
+                return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
             }
             else
             {
@@ -183,7 +189,7 @@ namespace DentalManagement.Application.Catalog.Customers
                     ModifiedBy = customer.ModifiedBy
 
                 };
-                return customerViewModel;
+                return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
             }
         }
     }

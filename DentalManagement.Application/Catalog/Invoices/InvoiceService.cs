@@ -1,5 +1,5 @@
-﻿using DentalManagement.Application.Catalog.Invoices.ViewModels;
-using DentalManagement.Application.Common;
+﻿using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;

@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Application.Catalog.Products;
-using DentalManagement.Application.Catalog.Products.ViewModels;
+using DentalManagement.ViewModels.Catalog.Products;
 using DentalManagement.Data.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -56,7 +58,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]ProductCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] ProductCreateRequest request)
         {
             var productId = await _productService.Create(request);
             if (productId == 0)
@@ -68,7 +70,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateRequest request)
         {
             var affectedResult = await _productService.Update(request);
             if (affectedResult == 0)
@@ -90,7 +92,7 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromForm]ProductDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] ProductDeleteRequest request)
         {
             var affectedResult = await _productService.Delete(request);
             if (affectedResult == 0)

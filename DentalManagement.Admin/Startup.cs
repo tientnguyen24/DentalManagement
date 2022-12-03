@@ -1,5 +1,12 @@
+using DentalManagement.Admin.ApiIntegrations;
+using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Catalog.Users;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +30,39 @@ namespace DentalManagement.Admin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Login/Index/";
+                options.AccessDeniedPath = "/Users/Forbidden/";
+            });
             services.AddControllersWithViews();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IUserApiClient, UserApiClient>();
+            services.AddTransient<ICustomerApiClient, CustomerApiClient>();
+            IMvcBuilder builder = services.AddRazorPages();
+
+            /*            services.AddControllersWithViews()
+                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+                        services.AddControllersWithViews()
+                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>());*/
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>();
+            //services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+#if DEBUG
+            if (environment == Environments.Development)
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,10 +81,12 @@ namespace DentalManagement.Admin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
