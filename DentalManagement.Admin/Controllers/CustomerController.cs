@@ -1,4 +1,4 @@
-﻿using DentalManagement.Admin.ApiIntegrations;
+﻿using DentalManagement.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Customers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -18,12 +18,12 @@ namespace DentalManagement.Admin.Controllers
     public class CustomerController : BaseController
     {
         private readonly ICustomerApiClient _customerApiClient;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
         private readonly IValidator<CustomerCreateRequest> _validator;
-        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration config, IValidator<CustomerCreateRequest> validator)
+        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> validator)
         {
             _customerApiClient = customerApiClient;
-            _config = config;
+            _configuration = configuration;
             _validator = validator;
         }
 
@@ -36,15 +36,15 @@ namespace DentalManagement.Admin.Controllers
                 PageSize = pageSize
             };
             var data = await _customerApiClient.GetAllPaging(request);
-            //ViewBag.Keyword = keyword;
+            ViewBag.Keyword = keyword;
             return View(data);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detail(int customerId)
+        public async Task<IActionResult> Details(int id)
         {
-            var data = await _customerApiClient.GetById(customerId);
-            return View(data);
+            var data = await _customerApiClient.GetById(id);
+            return View(data.ResultObject);
         }
 
         [HttpGet]
@@ -72,13 +72,13 @@ namespace DentalManagement.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Edit()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(CustomerUpdateRequest request)
+        public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
 /*            ValidationResult result = await _validator.ValidateAsync(request);
             if (!result.IsValid)

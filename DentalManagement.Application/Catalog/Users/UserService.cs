@@ -76,7 +76,9 @@ namespace DentalManagement.Application.Catalog.Users
             }).ToListAsync();
             var pagedResult = new PagedResult<UserViewModel>()
             {
-                TotalRecord = totalRow,
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 Items = data
             };
             return pagedResult;
