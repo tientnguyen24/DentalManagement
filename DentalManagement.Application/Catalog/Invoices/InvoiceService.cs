@@ -200,7 +200,7 @@ namespace DentalManagement.Application.Catalog.Invoices
             }
         }
 
-        public async Task<PagedResult<InvoiceViewModel>> GetAllPaging(GetInvoicePagingRequest request)
+        public async Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request)
         {
             //select invoice record
             var query = from i in _context.Invoices
@@ -230,10 +230,12 @@ namespace DentalManagement.Application.Catalog.Invoices
             //select and projection
             var pagedResult = new PagedResult<InvoiceViewModel>()
             {
-                TotalRecord = totalRow,
-                Items = data,
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
             };
-            return pagedResult;
+            return new ApiSuccessResult<PagedResult<InvoiceViewModel>>(pagedResult);
         }
 
         public async Task<InvoiceViewModel> GetById(int invoiceId)

@@ -11,18 +11,18 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalManagement.Admin.ApiIntegrations
+namespace DentalManagement.ApiIntegrations
 {
-    public class CustomerApiClient : ICustomerApiClient
+    public class CustomerApiClient : BaseApiClient, ICustomerApiClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CustomerApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public CustomerApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) : base(httpClientFactory, httpContextAccessor, configuration)
         {
-            _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<bool> Create(CustomerCreateRequest request)
@@ -49,18 +49,14 @@ namespace DentalManagement.Admin.ApiIntegrations
             return customers;
         }
 
-        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
+        public async Task<ApiResult<CustomerViewModel>> GetById(int id)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/customers/{customerId}");
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(await response.Content.ReadAsStringAsync());
-            }
-            return JsonConvert.DeserializeObject<ApiErrorResult<CustomerViewModel>>("fail");
+            var response = await client.GetAsync($"/api/customers/{id}");
+            return JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)

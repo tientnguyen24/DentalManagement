@@ -10,19 +10,20 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalManagement.Admin.ApiIntegrations
+namespace DentalManagement.ApiIntegrations
 {
-    public class UserApiClient : IUserApiClient
+    public class UserApiClient : BaseApiClient, IUserApiClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public UserApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor) : base(httpClientFactory, httpContextAccessor, configuration) 
         {
-            _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
+
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var json = JsonConvert.SerializeObject(request);

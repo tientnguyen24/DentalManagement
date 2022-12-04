@@ -1,4 +1,4 @@
-﻿using DentalManagement.Admin.ApiIntegrations;
+﻿using DentalManagement.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
 using DentalManagement.ViewModels.Common;
 using FluentValidation;
@@ -24,12 +24,12 @@ namespace DentalManagement.Admin.Controllers
     public class LoginController : Controller
     {
         private readonly IUserApiClient _userApiClient;
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
         private readonly IValidator<LoginRequest> _validator;
-        public LoginController(IUserApiClient userApiClient, IConfiguration config, IValidator<LoginRequest> validator)
+        public LoginController(IUserApiClient userApiClient, IConfiguration configuration, IValidator<LoginRequest> validator)
         {
             _userApiClient = userApiClient;
-            _config = config;
+            _configuration = configuration;
             _validator = validator;
         }
 
@@ -75,9 +75,9 @@ namespace DentalManagement.Admin.Controllers
             TokenValidationParameters validationParameters = new TokenValidationParameters
             {
                 ValidateLifetime = true,
-                ValidAudience = _config["Tokens:Issuer"],
-                ValidIssuer = _config["Tokens:Issuer"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
+                ValidAudience = _configuration["Tokens:Issuer"],
+                ValidIssuer = _configuration["Tokens:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]))
             };
             ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
             return principal;

@@ -1,4 +1,4 @@
-﻿using DentalManagement.Admin.ApiIntegrations;
+﻿using DentalManagement.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,11 +22,11 @@ namespace DentalManagement.Admin.Controllers
     {
 
         private readonly IUserApiClient _userApiClient;
-        private readonly IConfiguration _config;
-        public UserController(IUserApiClient userApiClient, IConfiguration config)
+        private readonly IConfiguration _configuration;
+        public UserController(IUserApiClient userApiClient, IConfiguration configuration)
         {
             _userApiClient = userApiClient;
-            _config = config;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {

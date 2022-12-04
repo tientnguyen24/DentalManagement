@@ -16,7 +16,7 @@ namespace DentalManagement.Application.Catalog.Invoices
         Task<bool> UpdateStatus(int invoiceId, Status updatedStatus);
         Task<List<InvoiceViewModel>> GetAll();
         Task<InvoiceViewModel> GetById(int invoiceId);
-        Task<PagedResult<InvoiceViewModel>> GetAllPaging(GetInvoicePagingRequest request);
+        Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
         Task<List<InvoiceViewModel>> GetAllByCustomerId(GetInvoiceByCustomerIdRequest request);
         Task<List<InvoiceDetailViewModel>> GetDetailByInvoiceId(int? invoiceId);
     }

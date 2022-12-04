@@ -39,15 +39,11 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         //http://localhost:port/api/customer/{id}
-        [HttpGet("{customerId}")]
-        public async Task<IActionResult> GetById(int customerId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = await _customerService.GetById(customerId);
-            if (result == null)
-            {
-                return BadRequest();
-            }
-            return Ok(result.ResultObject);
+            var result = await _customerService.GetById(id);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -68,9 +64,9 @@ namespace DentalManagement.BackendAPI.Controllers
             var result = await _customerService.Update(request);
             if (!result.IsSuccessed)
             {
-                return BadRequest(result.Message);
+                return BadRequest();
             }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         //http://localhost:port/api/customer/{id}/{status}
