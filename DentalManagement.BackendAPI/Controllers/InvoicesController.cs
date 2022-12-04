@@ -13,7 +13,7 @@ namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class InvoicesController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
@@ -40,7 +40,7 @@ namespace DentalManagement.BackendAPI.Controllers
 
         //http://localhost:port/invoice/search
         [HttpGet("search")]
-        public async Task<IActionResult> Get([FromQuery]GetInvoicePagingRequest request)
+        public async Task<IActionResult> Get([FromQuery] GetInvoicePagingRequest request)
         {
             var invoices = await _invoiceService.GetAllPaging(request);
             return Ok(invoices);

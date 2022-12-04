@@ -4,8 +4,13 @@ using System.Text;
 
 namespace DentalManagement.Utilities.Constants
 {
-    public class SystemConstants
+    public static class SystemConstants
     {
         public const string MainConnectionString = "DentalManagementDb";
+        public static class AppSettings
+        {
+            public const string Token = "Token";
+            public const string BaseAddress = "BaseAddress";
+        }
     }
 }

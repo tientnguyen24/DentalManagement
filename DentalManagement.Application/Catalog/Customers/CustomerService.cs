@@ -23,10 +23,10 @@ namespace DentalManagement.Application.Catalog.Customers
         }
         public async Task<int> Create(CustomerCreateRequest request)
         {
-/*            if (await _context.Customers.AnyAsync(x => x.PhoneNumber == request.PhoneNumber))
-            {
-                return new ApiErrorResult<bool>("Số điện thoại đã bị tồn tại");
-            }*/
+            /*            if (await _context.Customers.AnyAsync(x => x.PhoneNumber == request.PhoneNumber))
+                        {
+                            return new ApiErrorResult<bool>("Số điện thoại đã bị tồn tại");
+                        }*/
             var customer = new Customer()
             {
                 FullName = request.FullName,
@@ -156,41 +156,40 @@ namespace DentalManagement.Application.Catalog.Customers
             //select and projection
             var pagedResult = new PagedResult<CustomerViewModel>()
             {
-                TotalRecord = totalRow,
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 Items = data,
             };
             return pagedResult;
         }
 
-        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
+        public async Task<ApiResult<CustomerViewModel>> GetById(int id)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer == null)
             {
                 return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
             }
-            else
+            var customerViewModel = new CustomerViewModel()
             {
-                var customerViewModel = new CustomerViewModel()
-                {
-                    Id = customer.Id,
-                    FullName = customer.FullName,
-                    Gender = customer.Gender,
-                    BirthDay = customer.BirthDay,
-                    Address = customer.Address,
-                    PhoneNumber = customer.PhoneNumber,
-                    EmailAddress = customer.EmailAddress,
-                    IdentifyCard = customer.IdentifyCard,
-                    Status = customer.Status,
-                    Description = customer.Description,
-                    CreatedDate = customer.CreatedDate,
-                    CreatedBy = customer.CreatedBy,
-                    ModifiedDate = customer.ModifiedDate,
-                    ModifiedBy = customer.ModifiedBy
+                Id = customer.Id,
+                FullName = customer.FullName,
+                Gender = customer.Gender,
+                BirthDay = customer.BirthDay,
+                Address = customer.Address,
+                PhoneNumber = customer.PhoneNumber,
+                EmailAddress = customer.EmailAddress,
+                IdentifyCard = customer.IdentifyCard,
+                Status = customer.Status,
+                Description = customer.Description,
+                CreatedDate = customer.CreatedDate,
+                CreatedBy = customer.CreatedBy,
+                ModifiedDate = customer.ModifiedDate,
+                ModifiedBy = customer.ModifiedBy
 
-                };
-                return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
-            }
+            };
+            return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
         }
     }
 }

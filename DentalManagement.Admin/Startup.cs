@@ -1,4 +1,4 @@
-using DentalManagement.Admin.ApiIntegrations;
+using DentalManagement.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Users;
 using FluentValidation;
@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace DentalManagement.Admin
 {
@@ -43,6 +44,7 @@ namespace DentalManagement.Admin
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IUserApiClient, UserApiClient>();
             services.AddTransient<ICustomerApiClient, CustomerApiClient>();
+            services.AddTransient<IInvoiceApiClient, InvoiceApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
 
             /*            services.AddControllersWithViews()

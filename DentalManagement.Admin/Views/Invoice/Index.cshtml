@@ -1,24 +1,24 @@
 ﻿@using DentalManagement.ViewModels.Common
-@model PagedResult<DentalManagement.ViewModels.Catalog.Customers.CustomerViewModel>
+@model PagedResult<DentalManagement.ViewModels.Catalog.Invoices.InvoiceViewModel>
 
 @{
-    ViewData["Title"] = "Danh sách khách hàng";
+    ViewData["Title"] = "Danh sách hoá đơn";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid">
-    <h1 class="h3 mb-2 text-gray-800">Danh sách khách hàng</h1>
+    <h1 class="h3 mb-2 text-gray-800">Danh sách hoá đơn</h1>
     <div>
-        <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
+        <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Invoice">
             <i class="fa fa-user-plus"></i>
             Tạo mới
         </a>
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" asp-action="Index" asp-controller="Invoice" method="get">
             <div class="input-group">
-                <input type="text" class="form-control border-1 small" placeholder="Nhập từ khoá ..."
+                <input type="date" class="form-control border-1 small" value="@ViewBag.InvoiceDate" name="keyword"
                        aria-label="Search" aria-describedby="basic-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
+                    <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
                 </div>
@@ -35,24 +35,25 @@
                     <thead class="thead-dark">
                         <tr>
                             <th>
+                                Số hoá đơn
                             </th>
                             <th>
-                                Họ và tên
+                                Ngày tạo
                             </th>
                             <th>
-                                Giới tính
+                                % giảm giá
                             </th>
                             <th>
-                                Ngày sinh
+                                Số tiền giảm giá
                             </th>
                             <th>
-                                Số điện thoại
+                                Thành tiền
                             </th>
                             <th>
-                                Tổng thành tiền
+                                Khách hàng
                             </th>
                             <th>
-                                Tổng chiết khấu
+                                Ghi chú
                             </th>
                             <th></th>
                         </tr>
@@ -62,28 +63,30 @@
                         {
                             <tr>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Id)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.FullName)
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Gender)
+                                    @Html.DisplayFor(modelItem => item.TotalDiscountPercent)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.BirthDay)
+                                    @Html.DisplayFor(modelItem => item.TotalDiscountAmount)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    @Html.DisplayFor(modelItem => item.TotalInvoiceAmount)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.CustomerId)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Xem", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }) |
-                                    @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.Id })
+                                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
                                 </td>
                             </tr>
                         }

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DentalManagement.ApiIntegration\DentalManagement.ApiIntegration.csproj" />
     <ProjectReference Include="..\DentalManagement.Utillities\DentalManagement.Utilities.csproj" />
     <ProjectReference Include="..\DentalManagement.ViewModels\DentalManagement.ViewModels.csproj" />
   </ItemGroup>
