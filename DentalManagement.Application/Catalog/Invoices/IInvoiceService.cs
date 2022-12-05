@@ -10,7 +10,7 @@ namespace DentalManagement.Application.Catalog.Invoices
 {
     public interface IInvoiceService
     {
-        Task<int> Create(InvoiceCreateRequest request);
+        Task<ApiResult<int>> Create(InvoiceCreateRequest request);
         Task<int> Update(InvoiceUpdateRequest request);
         Task<int> Delete(InvoiceDeleteRequest request);
         Task<bool> UpdateStatus(int invoiceId, Status updatedStatus);

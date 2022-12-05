@@ -30,5 +30,21 @@ namespace DentalManagement.Admin.Controllers
             ViewBag.InvoiceDate = invoiceDate;
             return View(data.ResultObject);
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(InvoiceCreateRequest request)
+        {
+            var data = await _invoiceApiClient.Create(request);
+            if (!data.IsSuccessed)
+            {
+                return View(request);
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
