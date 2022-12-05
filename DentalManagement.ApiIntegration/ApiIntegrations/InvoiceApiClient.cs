@@ -1,4 +1,5 @@
-﻿using DentalManagement.ViewModels.Catalog.Invoices;
+﻿using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DentalManagement.ApiIntegrations
@@ -23,16 +25,27 @@ namespace DentalManagement.ApiIntegrations
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }
-        public Task<ApiResult<bool>> Create(InvoiceCreateRequest request)
+        public async Task<ApiResult<bool>> Create(InvoiceCreateRequest request)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.PostAsync($"/api/invoices/", httpContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiErrorResult<bool>("Tạo mới không thành công");
+            }
+            return new ApiSuccessResult<bool>();
         }
 
         public async Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/invoices/search?keyword={request.InvoiceDate}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
             if (response.IsSuccessStatusCode)

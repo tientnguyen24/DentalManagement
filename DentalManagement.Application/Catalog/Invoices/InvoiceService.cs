@@ -21,7 +21,7 @@ namespace DentalManagement.Application.Catalog.Invoices
         {
             _context = context;
         }
-        public async Task<int> Create(InvoiceCreateRequest request)
+        public async Task<ApiResult<int>> Create(InvoiceCreateRequest request)
         {
             var products = _context.Products;
             var invoiceDetails = new List<InvoiceDetail>();
@@ -41,7 +41,7 @@ namespace DentalManagement.Application.Catalog.Invoices
             }
             var invoice = new Invoice()
             {
-                CreatedDate = DateTime.Now,
+                CreatedDate = request.CreatedDate,
                 CreatedBy = request.CreatedBy,
                 TotalDiscountPercent = request.TotalDiscountPercent,
                 TotalDiscountAmount = request.TotalDiscountAmount,
@@ -52,7 +52,7 @@ namespace DentalManagement.Application.Catalog.Invoices
             };
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
-            return invoice.Id;
+            return new ApiSuccessResult<int>(invoice.Id);
         }
 
         public async Task<int> Delete(InvoiceDeleteRequest request)

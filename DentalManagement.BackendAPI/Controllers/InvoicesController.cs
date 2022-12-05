@@ -61,13 +61,13 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] InvoiceCreateRequest request)
         {
-            var invoiceId = await _invoiceService.Create(request);
-            if (invoiceId == 0)
+            var data = await _invoiceService.Create(request);
+            if (!data.IsSuccessed)
             {
                 return BadRequest();
             }
-            var invoice = await _invoiceService.GetById(invoiceId);
-            return CreatedAtAction(nameof(GetById), new { id = invoiceId }, invoice);
+            var invoice = await _invoiceService.GetById(data.ResultObject);
+            return CreatedAtAction(nameof(GetById), new { id = data.ResultObject }, invoice);
         }
 
         [HttpPut]

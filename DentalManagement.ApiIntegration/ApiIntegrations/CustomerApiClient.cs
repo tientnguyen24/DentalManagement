@@ -1,4 +1,5 @@
-﻿using DentalManagement.ViewModels.Catalog.Customers;
+﻿using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +30,9 @@ namespace DentalManagement.ApiIntegrations
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync($"/api/customers/", httpContent);
             return response.IsSuccessStatusCode;
@@ -39,9 +40,9 @@ namespace DentalManagement.ApiIntegrations
 
         public async Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/customers/search?keyword={request.Keyword}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
             var result = await response.Content.ReadAsStringAsync();
@@ -51,9 +52,9 @@ namespace DentalManagement.ApiIntegrations
 
         public async Task<ApiResult<CustomerViewModel>> GetById(int id)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/customers/{id}");
             return JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(await response.Content.ReadAsStringAsync());
@@ -61,9 +62,9 @@ namespace DentalManagement.ApiIntegrations
 
         public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)
         {
-            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
