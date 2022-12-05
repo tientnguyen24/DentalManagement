@@ -58,9 +58,9 @@ namespace DentalManagement.BackendAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetByUserName(string userName)
         {
-            var user = await _userService.GetByUserName(userName);
-            if (!user.IsSuccessed) return BadRequest(user.Message);
-            return Ok(user.ResultObject);
+            var data = await _userService.GetByUserName(userName);
+            if (!data.IsSuccessed) return BadRequest(data.Message);
+            return Ok(data.ResultObject);
         }
     }
 }

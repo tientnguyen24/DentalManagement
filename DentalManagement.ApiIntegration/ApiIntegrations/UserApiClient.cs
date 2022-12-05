@@ -1,4 +1,5 @@
-﻿using DentalManagement.ViewModels.Catalog.Users;
+﻿using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Users;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,7 @@ namespace DentalManagement.ApiIntegrations
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             var response = await client.PostAsync("/api/users/authenticate", httpContent);
             if (response.IsSuccessStatusCode)
             {
