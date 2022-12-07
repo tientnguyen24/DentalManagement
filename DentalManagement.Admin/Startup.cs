@@ -47,16 +47,16 @@ namespace DentalManagement.Admin
             services.AddTransient<IInvoiceApiClient, InvoiceApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
 
-            /*            services.AddControllersWithViews()
-                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-
-                        services.AddControllersWithViews()
-                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>());*/
+            //fluent validation registration
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
+
+            //user validation
             services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+
+            //customer validation
             services.AddValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>();
-            //services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 #if DEBUG
