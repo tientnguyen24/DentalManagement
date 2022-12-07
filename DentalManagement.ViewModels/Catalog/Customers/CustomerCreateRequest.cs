@@ -26,9 +26,11 @@ namespace DentalManagement.ViewModels.Catalog.Customers
 
         [DisplayName("Địa chỉ Email")]
         public string EmailAddress { get; set; }
+
         [DisplayName("Số CMND/CCCD")]
         public string IdentifyCard { get; set; }
-        [DisplayName("Tiền sử bệnh")]
+
+        [DisplayName("Ghi chú")]
         public string Description { get; set; }
     }
 }

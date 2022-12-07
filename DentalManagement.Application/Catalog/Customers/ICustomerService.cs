@@ -13,7 +13,7 @@ namespace DentalManagement.Application.Catalog.Customers
         Task<int> Create(CustomerCreateRequest request);
         Task<ApiResult<bool>> Update(CustomerUpdateRequest request);
         Task<int> Delete(CustomerDeleteRequest request);
-        Task<bool> UpdateStatus(int customerId, Status updatedStatus);
+        Task<bool> UpdateStatus(int id, Status updatedStatus);
         Task<List<CustomerViewModel>> GetAll();
         Task<ApiResult<CustomerViewModel>> GetById(int id);
         Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request);

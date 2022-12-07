@@ -60,15 +60,11 @@ namespace DentalManagement.BackendAPI
 
             services.AddControllers();
 
-            /*            services.AddControllersWithViews()
-                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-
-                        services.AddControllersWithViews()
-                            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>());*/
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
             services.AddValidatorsFromAssemblyContaining<CustomerCreateRequestValidator>();
+            services.AddValidatorsFromAssemblyContaining<CustomerUpdateRequestValidator>();
 
             services.AddSwaggerGen(c =>
             {

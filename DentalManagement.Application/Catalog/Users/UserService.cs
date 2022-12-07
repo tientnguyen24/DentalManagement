@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using DentalManagement.ViewModels.Common;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using DentalManagement.Utilities.Constants;
 
 namespace DentalManagement.Application.Catalog.Users
 {
@@ -37,12 +38,12 @@ namespace DentalManagement.Application.Catalog.Users
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không chính xác");
+            if (user == null) return new ApiErrorResult<string>(SystemConstants.AppErrorMessage.Authenticate);
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<string>("Tên đăng nhập hoặc mật khẩu không chính xác");
+                return new ApiErrorResult<string>(SystemConstants.AppErrorMessage.Authenticate);
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
@@ -56,7 +57,7 @@ namespace DentalManagement.Application.Catalog.Users
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(_config["Tokens:Issuer"],_config["Tokens:Issuer"],claims,expires: DateTime.Now.AddHours(48),signingCredentials: creds);
-            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+            return new ApiSuccessResult<string>(SystemConstants.AppSuccessMessage.Authenticate, new JwtSecurityTokenHandler().WriteToken(token));
         }
 
         public async Task<PagedResult<UserViewModel>> GetAllPaging(GetUserPagingRequest request)
