@@ -15,5 +15,16 @@ namespace DentalManagement.ViewModels.Common
         {
             IsSuccessed = true;
         }
+        public ApiSuccessResult(string message)
+        {
+            IsSuccessed = true;
+            Message = message;
+        }
+        public ApiSuccessResult(string message, T resultObject)
+        {
+            IsSuccessed = true;
+            Message = message;
+            ResultObject = resultObject;
+        }
     }
 }

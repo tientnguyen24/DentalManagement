@@ -11,6 +11,7 @@ using System.Collections;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DentalManagement.Data.Enums;
+using DentalManagement.Utilities.Constants;
 
 namespace DentalManagement.Application.Catalog.Customers
 {
@@ -23,10 +24,6 @@ namespace DentalManagement.Application.Catalog.Customers
         }
         public async Task<int> Create(CustomerCreateRequest request)
         {
-            /*            if (await _context.Customers.AnyAsync(x => x.PhoneNumber == request.PhoneNumber))
-                        {
-                            return new ApiErrorResult<bool>("Số điện thoại đã bị tồn tại");
-                        }*/
             var customer = new Customer()
             {
                 FullName = request.FullName,
@@ -49,7 +46,7 @@ namespace DentalManagement.Application.Catalog.Customers
             var customer = await _context.Customers.FindAsync(request.Id);
             if (customer == null)
             {
-                return new ApiErrorResult<bool>("Không thành công");
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             else
             {
@@ -65,14 +62,14 @@ namespace DentalManagement.Application.Catalog.Customers
                 customer.ModifiedBy = request.ModifiedBy;
             }
             await _context.SaveChangesAsync();
-            return new ApiSuccessResult<bool>();
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-        public async Task<bool> UpdateStatus(int customerId, Status updatedStatus)
+        public async Task<bool> UpdateStatus(int id, Status updatedStatus)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {id}");
             }
             else if (customer.Status == updatedStatus)
             {

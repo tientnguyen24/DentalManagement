@@ -32,7 +32,7 @@ namespace DentalManagement.BackendAPI.Controllers
 
         //http://localhost:port/api/customer/search
         [HttpGet("search")]
-        public async Task<IActionResult> Get([FromQuery]GetCustomerPagingRequest request)
+        public async Task<IActionResult> Get([FromQuery] GetCustomerPagingRequest request)
         {
             var customers = await _customerService.GetAllPaging(request);
             return Ok(customers);
@@ -64,16 +64,16 @@ namespace DentalManagement.BackendAPI.Controllers
             var result = await _customerService.Update(request);
             if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result);
             }
             return Ok(result);
         }
 
         //http://localhost:port/api/customer/{id}/{status}
-        [HttpPatch("{customerId}/{updatedStatus}")]
-        public async Task<IActionResult> UpdateStatus(int customerId, Status updatedStatus)
+        [HttpPatch("{id}/{updatedStatus}")]
+        public async Task<IActionResult> UpdateStatus(int id, Status updatedStatus)
         {
-            var result = await _customerService.UpdateStatus(customerId, updatedStatus);
+            var result = await _customerService.UpdateStatus(id, updatedStatus);
             if (!result)
             {
                 return BadRequest();

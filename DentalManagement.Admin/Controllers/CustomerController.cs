@@ -19,12 +19,15 @@ namespace DentalManagement.Admin.Controllers
     {
         private readonly ICustomerApiClient _customerApiClient;
         private readonly IConfiguration _configuration;
-        private readonly IValidator<CustomerCreateRequest> _validator;
-        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> validator)
+        private readonly IValidator<CustomerCreateRequest> _createValidator;
+        private readonly IValidator<CustomerUpdateRequest> _updateValidator;
+
+        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> createValidator, IValidator<CustomerUpdateRequest> updateValidator)
         {
             _customerApiClient = customerApiClient;
             _configuration = configuration;
-            _validator = validator;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
@@ -56,7 +59,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CustomerCreateRequest request)
         {
-            ValidationResult result = await _validator.ValidateAsync(request);
+            ValidationResult result = await _createValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);
@@ -72,20 +75,38 @@ namespace DentalManagement.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var result = await _customerApiClient.GetById(id);
+            if (result.IsSuccessed)
+            {
+                var customer = result.ResultObject;
+                var updateRequest = new CustomerUpdateRequest()
+                {
+                    FullName = customer.FullName,
+                    Gender = customer.Gender,
+                    BirthDay = customer.BirthDay,
+                    Address = customer.Address,
+                    PhoneNumber = customer.PhoneNumber,
+                    EmailAddress = customer.EmailAddress,
+                    IdentifyCard = customer.IdentifyCard,
+                    Description = customer.Description,
+
+                };
+                return View(updateRequest);
+            }
+            return RedirectToAction("Error", "Home");
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
-/*            ValidationResult result = await _validator.ValidateAsync(request);
+            ValidationResult result = await _updateValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);
-                return View("Update", request);
-            }*/
+                return View("Edit", request);
+            }
             var data = await _customerApiClient.Update(request);
             if (data == null)
             {

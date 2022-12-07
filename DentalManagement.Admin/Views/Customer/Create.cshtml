@@ -62,7 +62,7 @@
         <span asp-validation-for="Description" class="text-danger d-block"></span>
         <div class="form-group row">
             <div class="col-sm-3">
-                <button type="submit" class="btn btn-outline-dark" asp-action="Index" asp-controller="Customer">Quay về</button>
+                @Html.ActionLink("Quay về", "Index", "Customer", "", new { @class = "btn btn-outline-dark" })
                 <button type="submit" class="btn btn-primary">Hoàn tất</button>
             </div>
         </div>

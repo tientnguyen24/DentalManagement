@@ -7,6 +7,10 @@
 }
 
 <div class="container-fluid">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Khách hàng</li>
+    </ol>
     <h1 class="h3 mb-2 text-gray-800">Danh sách khách hàng</h1>
     <div>
         <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
@@ -80,10 +84,9 @@
                                 <td>
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink(" Sửa", "Edit", new { id = item.Id }) |
                                     @Html.ActionLink("Xem", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }) |
-                                    @Html.ActionLink("Gán quyền", "RoleAssign", new { id = item.Id })
+                                    @Html.ActionLink(" Xóa", "Delete", new { id = item.Id })
                                 </td>
                             </tr>
                         }
