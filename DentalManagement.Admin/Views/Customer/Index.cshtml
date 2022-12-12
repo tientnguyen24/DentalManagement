@@ -12,26 +12,47 @@
         <li class="breadcrumb-item active">Khách hàng</li>
     </ol>
     <h1 class="h3 mb-2 text-gray-800">Danh sách khách hàng</h1>
-    <div>
-        <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
-            <i class="fa fa-user-plus"></i>
-            Tạo mới
-        </a>
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-                <input type="text" class="form-control border-1 small" placeholder="Nhập từ khoá ..."
-                       aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
+                <i class="fa fa-user-plus"></i>
+                Tạo mới
+            </a>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <form asp-action="Index" asp-controller="Customer" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control border-1 small" placeholder="Nhập từ khoá ..."
+                           aria-label="Search" aria-describedby="basic-addon2" value="@ViewBag.Keyword" name="keyword">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="button" onclick="window.location.href='/Customer/Index'">
+                            X
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr />
+    <!--number of record-->
+    <div class="row">
+        <form asp-action="Index" asp-controller="Customer" method="get" name="pageSize">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <select class="form-control" onchange="numberOfRecords()">
+                        <option value="10" selected>Số lượng hiển thị</option>
+                        <option value="20">20 khách hàng</option>
+                        <option value="50">50 khách hàng</option>
+                        <option value="100">100 khách hàng</option>
+                    </select>
                 </div>
             </div>
         </form>
     </div>
-
-    <hr />
-
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
@@ -62,33 +83,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Items)
+                        @if (Model.Items.Count == 0)
                         {
                             <tr>
-                                <td>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Gender)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.BirthDay)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                    @Html.ActionLink(" Sửa", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Xem", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink(" Xóa", "Delete", new { id = item.Id })
-                                </td>
+                                <td colspan="8">Không có kết quả cho '@ViewBag.Keyword'</td>
                             </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Gender)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BirthDay)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(" Sửa", "Edit", new { id = item.Id }) |
+                                        @Html.ActionLink("Xem", "Details", new { id = item.Id }) |
+                                        @Html.ActionLink(" Xóa", "Delete", new { id = item.Id })
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
