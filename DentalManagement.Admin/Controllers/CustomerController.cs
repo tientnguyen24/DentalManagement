@@ -4,12 +4,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DentalManagement.Admin.Controllers
@@ -32,6 +28,8 @@ namespace DentalManagement.Admin.Controllers
 
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
+            ViewBag.Keyword = keyword;
+            ViewBag.PageSize = pageSize;
             var request = new GetCustomerPagingRequest()
             {
                 Keyword = keyword,
@@ -39,7 +37,6 @@ namespace DentalManagement.Admin.Controllers
                 PageSize = pageSize
             };
             var data = await _customerApiClient.GetAllPaging(request);
-            ViewBag.Keyword = keyword;
             return View(data);
         }
 
@@ -71,7 +68,6 @@ namespace DentalManagement.Admin.Controllers
                 return View(request);
             }
             return RedirectToAction("Index");
-
         }
 
         [HttpGet]
@@ -91,7 +87,6 @@ namespace DentalManagement.Admin.Controllers
                     EmailAddress = customer.EmailAddress,
                     IdentifyCard = customer.IdentifyCard,
                     Description = customer.Description,
-
                 };
                 return View(updateRequest);
             }

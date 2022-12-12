@@ -50,10 +50,10 @@ namespace DentalManagement.Admin.Controllers
                 return View("Index", request);
             }
             var token = await _userApiClient.Authenticate(request);
-            if (!token.IsSuccessed)
+            if (token.ResultObject == null)
             {
                 result.AddToModelState(this.ModelState);
-                this.ModelState.AddModelError("Tên đăng nhập hoặc mật khẩu không chính xác", token.Message);
+                this.ModelState.AddModelError("", token.Message);
                 return View("Index", request);
             }
             var userPrincipal = this.ValidateToken(token.ResultObject);

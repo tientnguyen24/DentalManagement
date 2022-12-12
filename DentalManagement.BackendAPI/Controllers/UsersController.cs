@@ -28,9 +28,9 @@ namespace DentalManagement.BackendAPI.Controllers
             var result = await _userService.Authenticate(request);
             if (string.IsNullOrEmpty(result.ResultObject))
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
-            return Ok( new { result.Message, result.ResultObject });
+            return Ok(result);
         }
         
         [HttpPost]
