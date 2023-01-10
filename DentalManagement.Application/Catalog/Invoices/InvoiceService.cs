@@ -1,4 +1,5 @@
 ﻿using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
 using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
@@ -23,22 +24,24 @@ namespace DentalManagement.Application.Catalog.Invoices
         }
         public async Task<ApiResult<int>> Create(InvoiceCreateRequest request)
         {
-            var products = _context.Products;
+            //var products = _context.Products;
             var invoiceDetails = new List<InvoiceDetail>();
-            foreach (var product in products)
+
+            foreach (var item in request.InvoiceLines)
             {
-                if (product.Id == request.ProductId)
-                {
+                //if (product.Id == request.ProductId)
+                //{
                     invoiceDetails.Add(new InvoiceDetail()
                     {
-                        ProductId = request.ProductId,
-                        ItemDiscountPercent = request.ItemDiscountPercent,
-                        ItemDiscountAmount = request.ItemDiscountAmount,
-                        ItemAmount = request.ItemAmount,
-                        Quantity = request.Quantity
+                        ProductId = item.ProductId,
+                        ItemDiscountPercent = item.ItemDiscountPercent,
+                        ItemDiscountAmount = item.ItemDiscountAmount,
+                        ItemAmount = item.ItemAmount,
+                        Quantity = item.Quantity
                     });
-                }
+                //}
             }
+
             var invoice = new Invoice()
             {
                 CreatedDate = request.CreatedDate,
@@ -83,7 +86,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                             where id.InvoiceId == invoice.Id
                             select id;
 
-                foreach(var item in query)
+                foreach (var item in query)
                 {
                     item.ItemAmount = request.TotalInvoiceAmount;
                 }
@@ -94,7 +97,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 invoice.ModifiedDate = DateTime.Now;
                 invoice.ModifiedBy = request.ModifiedBy;
                 invoice.Description = request.Description;
-                              
+
             }
             return await _context.SaveChangesAsync();
         }
@@ -176,16 +179,17 @@ namespace DentalManagement.Application.Catalog.Invoices
             }
         }
 
-        public async Task<List<InvoiceDetailViewModel>> GetDetailByInvoiceId(int? invoiceId)
+        public async Task<List<InvoiceLineViewModel>> GetDetailByInvoiceId(int? invoiceId)
         {
-            var query = from id in _context.InvoiceDetails
+            var query = from i in _context.Invoices
+                        join id in _context.InvoiceDetails on i.Id equals id.InvoiceId
                         select id;
             if (invoiceId.HasValue && invoiceId.Value > 0)
             {
                 query = query.Where(x => x.InvoiceId == invoiceId);
-                var data = await query.Select(x => new InvoiceDetailViewModel()
+                var data = await query.Select(x => new InvoiceLineViewModel()
                 {
-                    InvoiceId = x.InvoiceId,
+                    //InvoiceId = x.InvoiceId,
                     ProductId = x.ProductId,
                     ItemDiscountPercent = x.ItemDiscountPercent,
                     ItemDiscountAmount = x.ItemDiscountAmount,
@@ -206,9 +210,10 @@ namespace DentalManagement.Application.Catalog.Invoices
             var query = from i in _context.Invoices
                         select new { i };
             //filter invoice
-            if (request.InvoiceDate != null)
+            if (request.Keyword != null)
             {
-                query = query.Where(x => x.i.CreatedDate.Value.Date == request.InvoiceDate);
+                DateTime invoiceDate = DateTime.Parse(request.Keyword);
+                query = query.Where(x => x.i.CreatedDate.Value.Date == invoiceDate);
             }
 
             //paging

@@ -1,5 +1,6 @@
 ﻿using DentalManagement.Data.Entities;
 using DentalManagement.Data.Enums;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,6 +21,6 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
         public int CustomerId { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
-        public Task<List<InvoiceDetailViewModel>> InvoiceDetails { get; set; }
+        public Task<List<InvoiceLineViewModel>> InvoiceDetails { get; set; }
     }
 }
