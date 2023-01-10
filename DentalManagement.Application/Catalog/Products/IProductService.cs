@@ -15,7 +15,7 @@ namespace DentalManagement.Application.Catalog.Products
         Task<int> Delete(ProductDeleteRequest request);
         Task<bool> UpdateStatus(int productId, Status updatedStatus);
         Task<List<ProductViewModel>> GetAll();
-        Task<ProductViewModel> GetById(int productId);
+        Task<ApiResult<ProductViewModel>> GetById(int productId);
         Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
         Task<List<ProductViewModel>> GetAllByProductCategoryId(GetProductByCategoryIdRequest request);
     }

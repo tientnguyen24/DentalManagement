@@ -1,3 +1,4 @@
+using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Users;
@@ -45,6 +46,7 @@ namespace DentalManagement.Admin
             services.AddTransient<IUserApiClient, UserApiClient>();
             services.AddTransient<ICustomerApiClient, CustomerApiClient>();
             services.AddTransient<IInvoiceApiClient, InvoiceApiClient>();
+            services.AddTransient<IProductApiClient, ProductApiClient>();
             IMvcBuilder builder = services.AddRazorPages();
 
             //fluent validation registration

@@ -38,6 +38,18 @@ namespace DentalManagement.ApiIntegrations
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<List<CustomerViewModel>> GetAll()
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.GetAsync($"/api/customers/");
+            var result = await response.Content.ReadAsStringAsync();
+            var customers = JsonConvert.DeserializeObject<List<CustomerViewModel>>(result);
+            return customers;
+        }
+
         public async Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
@@ -57,7 +69,9 @@ namespace DentalManagement.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync($"/api/customers/{id}");
-            return JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(await response.Content.ReadAsStringAsync());
+            var result = await response.Content.ReadAsStringAsync();
+            var customer = JsonConvert.DeserializeObject<ApiSuccessResult<CustomerViewModel>>(result);
+            return customer;
         }
 
         public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)
