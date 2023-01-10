@@ -47,7 +47,7 @@ namespace DentalManagement.ApiIntegrations
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/invoices/search?keyword={request.InvoiceDate}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
+            var response = await client.GetAsync($"/api/invoices/search?keyword={request.Keyword}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();

@@ -180,12 +180,12 @@ namespace DentalManagement.Application.Catalog.Products
             }
         }
 
-        public async Task<ProductViewModel> GetById(int productId)
+        public async Task<ApiResult<ProductViewModel>> GetById(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
             if(product == null)
             {
-                throw new DentalManagementException($"Không tìm thấy sản phẩm có id: {productId}");
+                return new ApiErrorResult<ProductViewModel>("Không tìm thấy dịch vụ");
             }
             else
             {
@@ -200,7 +200,7 @@ namespace DentalManagement.Application.Catalog.Products
                     ModifiedBy = product.ModifiedBy,
                     ProductCategoryId = product.ProductCategoryId
                 };
-                return productViewModel;
+                return new ApiSuccessResult<ProductViewModel>(productViewModel);
             }
         }
     }

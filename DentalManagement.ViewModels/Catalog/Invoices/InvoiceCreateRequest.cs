@@ -1,8 +1,10 @@
 ﻿using DentalManagement.Data.Entities;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DentalManagement.ViewModels.Catalog.Invoices
 {
@@ -29,19 +31,6 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
         [DisplayName("Ghi chú")]
         public string Description { get; set; }
 
-        [DisplayName("Mã sản phẩm")]
-        public int ProductId { get; set; }
-
-        [DisplayName("% giảm giá")]
-        public decimal ItemDiscountPercent { get; set; }
-
-        [DisplayName("Số tiền giảm")]
-        public decimal ItemDiscountAmount { get; set; }
-
-        [DisplayName("Thành tiền")]
-        public decimal ItemAmount { get; set; }
-
-        [DisplayName("Số lượng")]
-        public decimal Quantity { get; set; }
+        public List<InvoiceLineCreateRequest> InvoiceLines { get; set; }
     }
 }

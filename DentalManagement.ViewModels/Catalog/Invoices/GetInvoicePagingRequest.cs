@@ -7,6 +7,6 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 {
     public class GetInvoicePagingRequest : PagingRequestBase
     {
-        public DateTime? InvoiceDate { get; set; }
+        public string Keyword { get; set; }
     }
 }

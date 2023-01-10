@@ -12,7 +12,7 @@
     <hr class="sidebar-divider my-0">
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="#">
+        <a class="nav-link" asp-action="Index" asp-controller="Home">
             <i class="fas fa-fw fa-home"></i>
             <span>Trang chủ</span>
         </a>
@@ -28,12 +28,12 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
            aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-calendar"></i>
-            <span>Lịch khám bệnh</span>
+            <span>Dịch vụ</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="#">Lịch hẹn</a>
-                <a class="collapse-item" href="#">Tạo mới lịch hẹn</a>
+                <a class="collapse-item" asp-action="Index" asp-controller="Product">Danh sách dịch vụ</a>
+                <a class="collapse-item" asp-action="Create" asp-controller="Product">Tạo mới dịch vụ</a>
             </div>
         </div>
     </li>
@@ -60,7 +60,7 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" asp-action="Index" asp-controller="Invoice">Danh sách hoá đơn</a>
-                <a class="collapse-item" asp-action="Create" asp-controller="Invoice">Tạo mới hoá đơn</a>
+                <a class="collapse-item" href="/Bill">Tạo mới hoá đơn <span class="badge badge-danger badge-counter" id="lbl_no_of_items_sidebar"></span></a>
             </div>
         </div>
     </li>
@@ -78,4 +78,8 @@
             <span>Danh sách vật tư</span>
         </a>
     </li>
+    <hr class="sidebar-divider d-none d-md-block">
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
 </ul>
