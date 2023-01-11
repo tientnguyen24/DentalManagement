@@ -58,5 +58,26 @@ namespace DentalManagement.Admin.Controllers
             HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
             return Ok(currentBill);
         }
+
+        public IActionResult UpdateBill(int id, int quantity)
+        {
+            var session = HttpContext.Session.GetString(SystemConstants.BillSession);
+            List<BillViewModel> currentBill = new List<BillViewModel>();
+            if (session != null)
+                currentBill = JsonConvert.DeserializeObject<List<BillViewModel>>(session);
+            foreach(var item in currentBill)
+            {
+                if(item.ProductId == id) {
+                    if (quantity == 0)
+                    {
+                        currentBill.Remove(item);
+                        break;
+                    }
+                    item.Quantity = quantity;
+                }
+            }
+            HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
+            return Ok(currentBill);
+        }
     }
 }
