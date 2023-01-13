@@ -16,9 +16,11 @@ namespace DentalManagement.Admin.Controllers
     public class BillController : BaseController
     {
         private readonly IProductApiClient _productApiClient;
-        public BillController(IProductApiClient productApiClient)
+        private readonly ICustomerApiClient _customerApiClient;
+        public BillController(IProductApiClient productApiClient, ICustomerApiClient customerApiClient)
         {
             _productApiClient = productApiClient;
+            _customerApiClient = customerApiClient;
         }
         public IActionResult Index()
         {
@@ -35,6 +37,42 @@ namespace DentalManagement.Admin.Controllers
             return Ok(currentBill);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetListProducts()
+        {
+            var products = await _productApiClient.GetAll();
+            List<ProductViewModel> currentProduct = new List<ProductViewModel>();
+            foreach (var item in products)
+            {
+                var productItem = new ProductViewModel()
+                {
+                    ProductId = item.Id,
+                    ProductCategoryName = item.ProductCategoryName,
+                    ProductName = item.Name,
+                    UnitPrice = item.UnitPrice
+                };
+                currentProduct.Add(productItem);
+                HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentProduct));
+            }
+            return Ok(currentProduct);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListCustomers()
+        {
+            var customers = await _customerApiClient.GetAll();
+            List<CustomerViewModel> currentCustomer = new List<CustomerViewModel>();
+            foreach (var item in customers)
+            {
+                var customerItem = new CustomerViewModel()
+                {
+                    CustomerId = item.Id
+                };
+                currentCustomer.Add(customerItem);
+                HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentCustomer));
+            }
+            return Ok(currentCustomer);
+        }
         public async Task<IActionResult> AddToBill(int id)
         {
             var product = await _productApiClient.GetById(id);
@@ -58,6 +96,8 @@ namespace DentalManagement.Admin.Controllers
             HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
             return Ok(currentBill);
         }
+
+
 
         public IActionResult UpdateBill(int id, int quantity)
         {

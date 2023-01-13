@@ -1,4 +1,4 @@
-﻿using DentalManagement.ApiIntegrations;
+﻿using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

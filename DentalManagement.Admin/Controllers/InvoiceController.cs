@@ -1,5 +1,4 @@
 ﻿using DentalManagement.ApiIntegration.ApiIntegrations;
-using DentalManagement.ApiIntegrations;
 using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Invoices;

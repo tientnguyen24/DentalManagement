@@ -12,7 +12,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalManagement.ApiIntegrations
+namespace DentalManagement.ApiIntegration.ApiIntegrations
 {
     public class InvoiceApiClient : BaseApiClient, IInvoiceApiClient
     {
