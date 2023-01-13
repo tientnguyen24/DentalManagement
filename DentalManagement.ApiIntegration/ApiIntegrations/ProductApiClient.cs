@@ -1,4 +1,4 @@
-﻿using DentalManagement.ApiIntegrations;
+﻿using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Products;
 using DentalManagement.ViewModels.Common;
