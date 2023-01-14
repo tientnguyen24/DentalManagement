@@ -66,7 +66,13 @@ namespace DentalManagement.Admin.Controllers
             {
                 var customerItem = new CustomerViewModel()
                 {
-                    CustomerId = item.Id
+                    CustomerId = item.Id,
+                    FullName = item.FullName,
+                    Gender = (int)item.Gender,
+                    BirthDay = item.BirthDay,
+                    Address = item.Address,
+                    PhoneNumber = item.PhoneNumber,
+                    IdentifyCard = item.IdentifyCard
                 };
                 currentCustomer.Add(customerItem);
                 HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentCustomer));
@@ -96,8 +102,6 @@ namespace DentalManagement.Admin.Controllers
             HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
             return Ok(currentBill);
         }
-
-
 
         public IActionResult UpdateBill(int id, int quantity)
         {

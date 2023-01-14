@@ -61,16 +61,24 @@
                 }
                 var customer_table_body_html = '';
                 $.each(res, function (i, item) {
+                    if (item.gender === 0) {
+                        item.gender = 'Nam';
+                    }
+                    if (item.gender === 1) {
+                        item.gender = 'Nữ';
+                    }
                     customer_table_body_html += "<tr>"
                         + " <td>"
                         + " <button type=\"button\" class=\"btn btn-add-to-bill\" data-id=\"" + item.customerId + "\">"
                         + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
                         + " </button>"
                         + " <td>" + (i + 1) + "</td>"
-                        + " </td >"
-                        + " <td>" + item.customerId + "</td>"
-                        + " <td>" + item.customerId + "</td>"
-                        + " <td>" + item.customerId + "</td>"
+                        + " <td>" + item.fullName + "</td>"
+                        + " <td>" + item.gender + "</td>"
+                        + " <td>" + (item.birthDay).substring(0, 10) + "</td>"
+                        + " <td>" + item.address + "</td>"
+                        + " <td>" + item.identifyCard + "</td>"
+                        + " <td>" + item.phoneNumber + "</td>"
                         + " </tr>";
                 });
                 $('#customer_bill_body').html(customer_table_body_html);
