@@ -7,9 +7,8 @@ namespace DentalManagement.Admin.Models
 {
     public class BillViewModel
     {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal UnitPrice { get; set; }
-        public int Quantity { get; set; }
+        public List<BillItemViewModel> BillItemViewModels { get; set; }
+        public ProductViewModel ProductViewModel { get; set; }
+        public CustomerViewModel CustomerViewModel { get; set; }
     }
 }
