@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalManagement.ApiIntegrations
+namespace DentalManagement.ApiIntegration.ApiIntegrations
 {
     public class UserApiClient : BaseApiClient, IUserApiClient
     {

@@ -1,4 +1,4 @@
-﻿using DentalManagement.ApiIntegrations;
+﻿using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Users;
 using DentalManagement.ViewModels.Common;
 using FluentValidation;

@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace DentalManagement.ApiIntegrations
+namespace DentalManagement.ApiIntegration.ApiIntegrations
 {
     public class BaseApiClient
     {

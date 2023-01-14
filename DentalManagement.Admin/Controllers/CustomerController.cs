@@ -1,4 +1,4 @@
-﻿using DentalManagement.ApiIntegrations;
+﻿using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.ViewModels.Catalog.Customers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
