@@ -1,7 +1,7 @@
 ﻿var BillController = function () {
     this.initialize = function () {
         loadProduct();
-        addToBill();
+        addProductToBill();
         loadCustomer();
         loadData();
         registerEvents();
@@ -18,12 +18,12 @@
                 $.each(res, function (i, item) {
                     product_table_body_html += "<tr>"
                         + " <td>"
-                        + " <button type=\"button\" class=\"btn btn-add-to-bill\" data-id=\"" + item.customerId + "\">"
+                        + " <button type=\"button\" class=\"btn btn-add-product-to-bill\" data-id=\"" + item.productId + "\">"
                         + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
                         + " </button>"
                         + " <td>" + (i + 1) + "</td>"
                         + " </td >"
-                        + " <td>" + item.productName + "</td>"
+                        + " <td>" + item.productCategoryName + "</td>"
                         + " <td>" + item.productName + "</td>"
                         + " <td>" + item.unitPrice + "</td>"
                         + " </tr>";
@@ -33,16 +33,17 @@
         });
     }
 
-    function addToBill() {
-        $('body').on('click', '.btn-add-to-bill', function (e) {
+    function addProductToBill() {
+        $('body').on('click', '.btn-add-product-to-bill', function (e) {
             e.preventDefault();
             const id = $(this).data('id');
             $.ajax({
                 type: "POST",
-                url: '/Bill/AddToBill',
+                url: '/Bill/AddProductToBill',
                 data: { id: id },
                 success: function (res) {
-                    console.log(res)
+                    console.log(res);
+                    window.location.reload();
                 },
                 error: function (err) {
                     console.log(err)

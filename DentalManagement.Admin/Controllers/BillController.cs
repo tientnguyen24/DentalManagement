@@ -31,9 +31,9 @@ namespace DentalManagement.Admin.Controllers
         public IActionResult GetListItems()
         {
             var session = HttpContext.Session.GetString(SystemConstants.BillSession);
-            List<BillViewModel> currentBill = new List<BillViewModel>();
+            List<BillItemViewModel> currentBill = new List<BillItemViewModel>();
             if (session != null)
-                currentBill = JsonConvert.DeserializeObject<List<BillViewModel>>(session);
+                currentBill = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
             return Ok(currentBill);
         }
 
@@ -52,8 +52,8 @@ namespace DentalManagement.Admin.Controllers
                     UnitPrice = item.UnitPrice
                 };
                 currentProduct.Add(productItem);
-                HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentProduct));
             }
+            HttpContext.Session.SetString(SystemConstants.ProductSession, JsonConvert.SerializeObject(currentProduct));
             return Ok(currentProduct);
         }
 
@@ -75,23 +75,23 @@ namespace DentalManagement.Admin.Controllers
                     IdentifyCard = item.IdentifyCard
                 };
                 currentCustomer.Add(customerItem);
-                HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentCustomer));
             }
+            HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(currentCustomer);
         }
-        public async Task<IActionResult> AddToBill(int id)
+        public async Task<IActionResult> AddProductToBill(int id)
         {
             var product = await _productApiClient.GetById(id);
             var session = HttpContext.Session.GetString(SystemConstants.BillSession);
-            List<BillViewModel> currentBill = new List<BillViewModel>();
+            List<BillItemViewModel> currentBill = new List<BillItemViewModel>();
             if (session != null)
-                currentBill = JsonConvert.DeserializeObject<List<BillViewModel>>(session);
+                currentBill = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
             int quantity = 1;
             if (currentBill.Any(x => x.ProductId == id))
             {
                 quantity = currentBill.First(x => x.ProductId == id).Quantity + 1;
             }
-            var billItem = new BillViewModel()
+            var billItem = new BillItemViewModel()
             {
                 ProductId = id,
                 ProductName = product.ResultObject.Name,
@@ -106,9 +106,9 @@ namespace DentalManagement.Admin.Controllers
         public IActionResult UpdateBill(int id, int quantity)
         {
             var session = HttpContext.Session.GetString(SystemConstants.BillSession);
-            List<BillViewModel> currentBill = new List<BillViewModel>();
+            List<BillItemViewModel> currentBill = new List<BillItemViewModel>();
             if (session != null)
-                currentBill = JsonConvert.DeserializeObject<List<BillViewModel>>(session);
+                currentBill = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
             foreach(var item in currentBill)
             {
                 if(item.ProductId == id) {
