@@ -3,6 +3,7 @@
         loadProduct();
         addProductToBill();
         loadCustomer();
+        customerOnChange();
         loadData();
         registerEvents();
     }
@@ -20,7 +21,7 @@
                         + " <td>"
                         + " <button type=\"button\" class=\"btn btn-add-product-to-bill\" data-id=\"" + item.productId + "\">"
                         + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
-                        + " </button>"
+                        + " </button></td>"
                         + " <td>" + (i + 1) + "</td>"
                         + " </td >"
                         + " <td>" + item.productCategoryName + "</td>"
@@ -57,33 +58,49 @@
             type: "GET",
             url: '/Bill/GetListCustomers',
             success: function (res) {
-                if (res.length === 0) {
-                    $('#tbl_customer_bill').hide();
-                }
-                var customer_table_body_html = '';
+                var dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
                 $.each(res, function (i, item) {
-                    if (item.gender === 0) {
-                        item.gender = 'Nam';
-                    }
-                    if (item.gender === 1) {
-                        item.gender = 'Nữ';
-                    }
-                    customer_table_body_html += "<tr>"
-                        + " <td>"
-                        + " <button type=\"button\" class=\"btn btn-add-to-bill\" data-id=\"" + item.customerId + "\">"
-                        + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
-                        + " </button>"
-                        + " <td>" + (i + 1) + "</td>"
-                        + " <td>" + item.fullName + "</td>"
-                        + " <td>" + item.gender + "</td>"
-                        + " <td>" + (item.birthDay).substring(0, 10) + "</td>"
-                        + " <td>" + item.address + "</td>"
-                        + " <td>" + item.identifyCard + "</td>"
-                        + " <td>" + item.phoneNumber + "</td>"
-                        + " </tr>";
+                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName+"</option>"
                 });
-                $('#customer_bill_body').html(customer_table_body_html);
+                $('#dropListCustomer').html(dropListCustomer_html);
             }
+        });
+    }
+
+    function customerOnChange() {
+        $('body').on('change', '#dropListCustomer', function (e) {
+            e.preventDefault();
+            const id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: '/Bill/AddCustomerToBill',
+                data: { id: id },
+                success: function (res) {
+                    console.log(res);
+                    if (res.length === 0) {
+                        $('#tbl_customer_bill').hide();
+                    }
+                    var customer_table_body_html = '';
+                    $.each(res, function (i, item) {
+                        if (item.gender === 0) {
+                            item.gender = 'Nam';
+                        }
+                        if (item.gender === 1) {
+                            item.gender = 'Nữ';
+                        }
+                        customer_table_body_html += " <tr><td>" + item.fullName + "</td></tr>"
+                            + " <tr><td>" + item.gender + "</td></tr>"
+                            + " <tr><td>" + (item.birthDay).substring(0, 10) + "</td></tr>"
+                            + " <tr><td>" + item.address + "</td></tr>"
+                            + " <tr><td>" + item.identifyCard + "</td></tr>"
+                            + " <tr><td>" + item.phoneNumber + "</td></tr>"
+                    });
+                    $('#customer_bill_body').html(customer_table_body_html);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
         });
     }
 
