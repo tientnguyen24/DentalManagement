@@ -1,13 +1,14 @@
 ﻿var BillController = function () {
     this.initialize = function () {
-        loadProduct();
+        loadProductList();
         addProductToBill();
-        loadCustomer();
-        customerOnChange();
+        loadCustomerDropdownList();
+        customerDropdownListOnChange();
         loadData();
+        loadCustomer();
         registerEvents();
     }
-    function loadProduct() {
+    function loadProductList() {
         $.ajax({
             type: "GET",
             url: '/Bill/GetListProducts',
@@ -53,7 +54,7 @@
         })
     }
 
-    function loadCustomer() {
+    function loadCustomerDropdownList() {
         $.ajax({
             type: "GET",
             url: '/Bill/GetListCustomers',
@@ -67,7 +68,39 @@
         });
     }
 
-    function customerOnChange() {
+    function loadCustomer() {
+        $.ajax({
+            type: "GET",
+            url: '/Bill/GetCustomer',
+            success: function (res) {
+                console.log(res);
+                var item = $.parseJSON(res);
+                if (res.length === 0) {
+                    $('#tbl_customer_bill').hide();
+                }
+                var customer_table_body_html = '';
+                if (item['Gender'] === 0) {
+                    item['Gender'] = 'Nam';
+                }
+                if (item['Gender'] === 1) {
+                    item['Gender'] = 'Nữ';
+                }
+                customer_table_body_html += " <tr><td><input type=\"hidden\" id=\"" + item['CustomerId'] + "\" value=\"" + item['CustomerId'] + "\" /></td></tr>"
+                    + " <tr><td>" + item['FullName'] + "</td></tr>"
+                    + " <tr><td>" + item['Gender'] + "</td></tr>"
+                    + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                    + " <tr><td>" + item['Address'] + "</td></tr>"
+                    + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
+                    + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
+                $('#customer_bill_body').html(customer_table_body_html);
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        });
+    }
+
+    function customerDropdownListOnChange() {
         $('body').on('change', '#dropListCustomer', function (e) {
             e.preventDefault();
             const id = $(this).val();
@@ -77,24 +110,23 @@
                 data: { id: id },
                 success: function (res) {
                     console.log(res);
+                    var item = $.parseJSON(res);
                     if (res.length === 0) {
                         $('#tbl_customer_bill').hide();
                     }
                     var customer_table_body_html = '';
-                    $.each(res, function (i, item) {
-                        if (item.gender === 0) {
-                            item.gender = 'Nam';
-                        }
-                        if (item.gender === 1) {
-                            item.gender = 'Nữ';
-                        }
-                        customer_table_body_html += " <tr><td>" + item.fullName + "</td></tr>"
-                            + " <tr><td>" + item.gender + "</td></tr>"
-                            + " <tr><td>" + (item.birthDay).substring(0, 10) + "</td></tr>"
-                            + " <tr><td>" + item.address + "</td></tr>"
-                            + " <tr><td>" + item.identifyCard + "</td></tr>"
-                            + " <tr><td>" + item.phoneNumber + "</td></tr>"
-                    });
+                    if (item['Gender'] === 0) {
+                        item['Gender'] = 'Nam';
+                    }
+                    if (item['Gender'] === 1) {
+                        item['Gender'] = 'Nữ';
+                    }
+                    customer_table_body_html += " <tr><td>" + item['FullName'] + "</td></tr>"
+                        + " <tr><td>" + item['Gender'] + "</td></tr>"
+                        + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                        + " <tr><td>" + item['Address'] + "</td></tr>"
+                        + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
+                        + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
                     $('#customer_bill_body').html(customer_table_body_html);
                 },
                 error: function (err) {
@@ -233,14 +265,4 @@ $(document).ready(function () {
             duration: 600
         });
     });
-
-    $('.radio-group .radio').click(function () {
-        $(this).parent().find('.radio').removeClass('selected');
-        $(this).addClass('selected');
-    });
-
-    $(".submit").click(function () {
-        return false;
-    })
-
 });
