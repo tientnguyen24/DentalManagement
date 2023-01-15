@@ -53,7 +53,7 @@ namespace DentalManagement.Admin.Controllers
                 };
                 currentProduct.Add(productItem);
             }
-            HttpContext.Session.SetString(SystemConstants.ProductSession, JsonConvert.SerializeObject(currentProduct));
+            //HttpContext.Session.SetString(SystemConstants.ProductSession, JsonConvert.SerializeObject(currentProduct));
             return Ok(currentProduct);
         }
 
@@ -76,6 +76,28 @@ namespace DentalManagement.Admin.Controllers
                 };
                 currentCustomer.Add(customerItem);
             }
+            //HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
+            return Ok(currentCustomer);
+        }
+
+        public async Task<IActionResult> AddCustomerToBill(int id)
+        {
+            var customer = await _customerApiClient.GetById(id);
+            var session = HttpContext.Session.GetString(SystemConstants.CustomerSession);
+            List<CustomerViewModel> currentCustomer = new List<CustomerViewModel>();
+            if (session != null)
+                currentCustomer.Clear();
+            var data = new CustomerViewModel()
+            {
+                CustomerId = customer.ResultObject.Id,
+                FullName = customer.ResultObject.FullName,
+                Gender = (int)customer.ResultObject.Gender,
+                BirthDay = customer.ResultObject.BirthDay,
+                Address = customer.ResultObject.Address,
+                PhoneNumber = customer.ResultObject.PhoneNumber,
+                IdentifyCard = customer.ResultObject.IdentifyCard
+            };
+            currentCustomer.Add(data);
             HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(currentCustomer);
         }
