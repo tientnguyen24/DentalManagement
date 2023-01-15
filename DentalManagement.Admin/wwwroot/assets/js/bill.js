@@ -1,12 +1,14 @@
 ﻿var BillController = function () {
     this.initialize = function () {
-        loadProduct();
+        loadProductList();
         addProductToBill();
-        loadCustomer();
+        loadCustomerDropdownList();
+        customerDropdownListOnChange();
         loadData();
+        loadCustomer();
         registerEvents();
     }
-    function loadProduct() {
+    function loadProductList() {
         $.ajax({
             type: "GET",
             url: '/Bill/GetListProducts',
@@ -20,7 +22,7 @@
                         + " <td>"
                         + " <button type=\"button\" class=\"btn btn-add-product-to-bill\" data-id=\"" + item.productId + "\">"
                         + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
-                        + " </button>"
+                        + " </button></td>"
                         + " <td>" + (i + 1) + "</td>"
                         + " </td >"
                         + " <td>" + item.productCategoryName + "</td>"
@@ -52,38 +54,85 @@
         })
     }
 
-    function loadCustomer() {
+    function loadCustomerDropdownList() {
         $.ajax({
             type: "GET",
             url: '/Bill/GetListCustomers',
             success: function (res) {
+                var dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
+                $.each(res, function (i, item) {
+                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName+"</option>"
+                });
+                $('#dropListCustomer').html(dropListCustomer_html);
+            }
+        });
+    }
+
+    function loadCustomer() {
+        $.ajax({
+            type: "GET",
+            url: '/Bill/GetCustomer',
+            success: function (res) {
+                console.log(res);
+                var item = $.parseJSON(res);
                 if (res.length === 0) {
                     $('#tbl_customer_bill').hide();
                 }
                 var customer_table_body_html = '';
-                $.each(res, function (i, item) {
-                    if (item.gender === 0) {
-                        item.gender = 'Nam';
-                    }
-                    if (item.gender === 1) {
-                        item.gender = 'Nữ';
-                    }
-                    customer_table_body_html += "<tr>"
-                        + " <td>"
-                        + " <button type=\"button\" class=\"btn btn-add-to-bill\" data-id=\"" + item.customerId + "\">"
-                        + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
-                        + " </button>"
-                        + " <td>" + (i + 1) + "</td>"
-                        + " <td>" + item.fullName + "</td>"
-                        + " <td>" + item.gender + "</td>"
-                        + " <td>" + (item.birthDay).substring(0, 10) + "</td>"
-                        + " <td>" + item.address + "</td>"
-                        + " <td>" + item.identifyCard + "</td>"
-                        + " <td>" + item.phoneNumber + "</td>"
-                        + " </tr>";
-                });
+                if (item['Gender'] === 0) {
+                    item['Gender'] = 'Nam';
+                }
+                if (item['Gender'] === 1) {
+                    item['Gender'] = 'Nữ';
+                }
+                customer_table_body_html += " <tr><td><input type=\"hidden\" id=\"" + item['CustomerId'] + "\" value=\"" + item['CustomerId'] + "\" /></td></tr>"
+                    + " <tr><td>" + item['FullName'] + "</td></tr>"
+                    + " <tr><td>" + item['Gender'] + "</td></tr>"
+                    + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                    + " <tr><td>" + item['Address'] + "</td></tr>"
+                    + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
+                    + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
                 $('#customer_bill_body').html(customer_table_body_html);
+            },
+            error: function (err) {
+                console.log(err)
             }
+        });
+    }
+
+    function customerDropdownListOnChange() {
+        $('body').on('change', '#dropListCustomer', function (e) {
+            e.preventDefault();
+            const id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: '/Bill/AddCustomerToBill',
+                data: { id: id },
+                success: function (res) {
+                    console.log(res);
+                    var item = $.parseJSON(res);
+                    if (res.length === 0) {
+                        $('#tbl_customer_bill').hide();
+                    }
+                    var customer_table_body_html = '';
+                    if (item['Gender'] === 0) {
+                        item['Gender'] = 'Nam';
+                    }
+                    if (item['Gender'] === 1) {
+                        item['Gender'] = 'Nữ';
+                    }
+                    customer_table_body_html += " <tr><td>" + item['FullName'] + "</td></tr>"
+                        + " <tr><td>" + item['Gender'] + "</td></tr>"
+                        + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                        + " <tr><td>" + item['Address'] + "</td></tr>"
+                        + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
+                        + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
+                    $('#customer_bill_body').html(customer_table_body_html);
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
         });
     }
 
@@ -216,14 +265,4 @@ $(document).ready(function () {
             duration: 600
         });
     });
-
-    $('.radio-group .radio').click(function () {
-        $(this).parent().find('.radio').removeClass('selected');
-        $(this).addClass('selected');
-    });
-
-    $(".submit").click(function () {
-        return false;
-    })
-
 });

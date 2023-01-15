@@ -8,7 +8,6 @@ namespace DentalManagement.Admin.Models
     public class BillViewModel
     {
         public List<BillItemViewModel> BillItemViewModels { get; set; }
-        public ProductViewModel ProductViewModel { get; set; }
         public CustomerViewModel CustomerViewModel { get; set; }
     }
 }

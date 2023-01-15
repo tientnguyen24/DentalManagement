@@ -1,6 +1,8 @@
 ﻿using DentalManagement.Admin.Models;
 using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,7 +55,6 @@ namespace DentalManagement.Admin.Controllers
                 };
                 currentProduct.Add(productItem);
             }
-            HttpContext.Session.SetString(SystemConstants.ProductSession, JsonConvert.SerializeObject(currentProduct));
             return Ok(currentProduct);
         }
 
@@ -76,8 +77,33 @@ namespace DentalManagement.Admin.Controllers
                 };
                 currentCustomer.Add(customerItem);
             }
-            HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(currentCustomer);
+        }
+
+        [HttpGet]
+        public IActionResult GetCustomer()
+        {
+            var session = HttpContext.Session.GetString(SystemConstants.CustomerSession);
+            CustomerViewModel currentCustomer = new CustomerViewModel();
+            if (session != null)
+                currentCustomer = JsonConvert.DeserializeObject<CustomerViewModel>(session);
+            return Ok(JsonConvert.SerializeObject(currentCustomer));
+        }
+        public async Task<IActionResult> AddCustomerToBill(int id)
+        {
+            var customer = await _customerApiClient.GetById(id);
+            var currentCustomer = new CustomerViewModel()
+            {
+                CustomerId = customer.ResultObject.Id,
+                FullName = customer.ResultObject.FullName,
+                Gender = (int)customer.ResultObject.Gender,
+                BirthDay = customer.ResultObject.BirthDay,
+                Address = customer.ResultObject.Address,
+                PhoneNumber = customer.ResultObject.PhoneNumber,
+                IdentifyCard = customer.ResultObject.IdentifyCard
+            };
+            HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
+            return Ok(JsonConvert.SerializeObject(currentCustomer));
         }
         public async Task<IActionResult> AddProductToBill(int id)
         {
@@ -109,9 +135,10 @@ namespace DentalManagement.Admin.Controllers
             List<BillItemViewModel> currentBill = new List<BillItemViewModel>();
             if (session != null)
                 currentBill = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
-            foreach(var item in currentBill)
+            foreach (var item in currentBill)
             {
-                if(item.ProductId == id) {
+                if (item.ProductId == id)
+                {
                     if (quantity == 0)
                     {
                         currentBill.Remove(item);
@@ -122,6 +149,53 @@ namespace DentalManagement.Admin.Controllers
             }
             HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
             return Ok(currentBill);
+        }
+
+        public IActionResult Payment()
+        {
+            return View("Payment", GetBillViewModel());
+        }
+
+        /*        [HttpPost]
+                public IActionResult Payment(BillViewModel request)
+                {
+                    var model = GetBillViewModel();
+                    var invoiceLines = new List<InvoiceLineCreateRequest>();
+                    foreach (var item in model.BillItemViewModels)
+                    {
+                        invoiceLines.Add(new InvoiceLineCreateRequest()
+                        {
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            ItemAmount = item.UnitPrice*item.Quantity
+                        });
+                    }
+                    var invoiceCreateRequest = new InvoiceCreateRequest()
+                    {
+
+                        InvoiceLines = invoiceLines
+                    };
+                    return View(model);
+                }*/
+
+        private BillViewModel GetBillViewModel()
+        {
+            var billSession = HttpContext.Session.GetString(SystemConstants.BillSession);
+            List<BillItemViewModel> currentBill = new List<BillItemViewModel>();
+            var customerSession = HttpContext.Session.GetString(SystemConstants.CustomerSession);
+            CustomerViewModel currentCustomer = new CustomerViewModel();
+            if (billSession != null && customerSession != null)
+            {
+                currentBill = JsonConvert.DeserializeObject<List<BillItemViewModel>>(billSession);
+                currentCustomer = JsonConvert.DeserializeObject<CustomerViewModel>(customerSession);
+            }
+
+            var billViewModel = new BillViewModel()
+            {
+                BillItemViewModels = currentBill,
+                CustomerViewModel = currentCustomer,
+            };
+            return billViewModel;
         }
     }
 }
