@@ -28,13 +28,13 @@
                                         <div class="table-responsive">
                                             <table class="table-sm text-left" width="100%" cellspacing="0">
                                                 <tbody>
-                                                    <tr><td>Mã khách hàng: </td><td>@Model.CustomerViewModel.CustomerId</td></tr>
-                                                    <tr><td>Họ và tên: </td><td>@Model.CustomerViewModel.FullName</td></tr>
-                                                    <tr><td>Giới tính: </td><td>@Model.CustomerViewModel.Gender</td></tr>
-                                                    <tr><td>Ngày sinh: </td><td>@Model.CustomerViewModel.BirthDay</td></tr>
-                                                    <tr><td>Địa chỉ: </td><td>@Model.CustomerViewModel.Address</td></tr>
-                                                    <tr><td>Số CMND/CCCD: </td><td>@Model.CustomerViewModel.IdentifyCard</td></tr>
-                                                    <tr><td>Số điện thoại: </td><td>@Model.CustomerViewModel.PhoneNumber</td></tr>
+                                                    <tr><td class="text-right">Mã khách hàng: </td><td class="text-left">@Model.CustomerViewModel.CustomerId</td></tr>
+                                                    <tr><td class="text-right">Họ và tên: </td><td class="text-left">@Model.CustomerViewModel.FullName</td></tr>
+                                                    <tr><td class="text-right">Giới tính: </td><td class="text-left">@Model.CustomerViewModel.Gender</td></tr>
+                                                    <tr><td class="text-right">Ngày sinh: </td><td class="text-left">@Model.CustomerViewModel.BirthDay</td></tr>
+                                                    <tr><td class="text-right">Địa chỉ: </td><td class="text-left">@Model.CustomerViewModel.Address</td></tr>
+                                                    <tr><td class="text-right">Số CMND/CCCD: </td><td class="text-left">@Model.CustomerViewModel.IdentifyCard</td></tr>
+                                                    <tr><td class="text-right">Số điện thoại: </td><td class="text-left">@Model.CustomerViewModel.PhoneNumber</td></tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -65,11 +65,12 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @{ int index = 1;}
                                                     @foreach (var item in Model.BillItemViewModels)
                                                     {
                                                         decimal itemAmount = item.Quantity * item.UnitPrice;
                                                         <tr>
-                                                            <td>1</td>
+                                                            <td>@(index++)</td>
                                                             <td>@item.ProductName</td>
                                                             <td>@item.UnitPrice</td>
                                                             <td>@item.Quantity</td>
@@ -87,7 +88,7 @@
                                                         <td>--:--</td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="4" class="text-right text-danger">Thành tiền (<span id="lbl_no_of_items"></span>): </td>
+                                                        <td colspan="4" class="text-right text-danger">Thành tiền (@Model.BillItemViewModels.Count()): </td>
                                                         <td>@Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice).ToString("N0")</td>
                                                     </tr>
                                                 </tfoot>
@@ -97,6 +98,9 @@
                                 </div>
                             </div>
                         </div>
+                        <a asp-controller="Bill" asp-action="Index">
+                            <input type="button" name="previous" class="previous action-button-previous" value="Quay lại" />
+                        </a>
                         <button type="submit" class="next action-button">Hoàn tất</button>
                     </form>
                 </fieldset>
