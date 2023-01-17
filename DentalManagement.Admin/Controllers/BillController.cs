@@ -19,10 +19,12 @@ namespace DentalManagement.Admin.Controllers
     {
         private readonly IProductApiClient _productApiClient;
         private readonly ICustomerApiClient _customerApiClient;
-        public BillController(IProductApiClient productApiClient, ICustomerApiClient customerApiClient)
+        private readonly IInvoiceApiClient _invoiceApiClient;
+        public BillController(IProductApiClient productApiClient, ICustomerApiClient customerApiClient, IInvoiceApiClient invoiceApiClient)
         {
             _productApiClient = productApiClient;
             _customerApiClient = customerApiClient;
+            _invoiceApiClient = invoiceApiClient;
         }
         public IActionResult Index()
         {
@@ -153,30 +155,43 @@ namespace DentalManagement.Admin.Controllers
 
         public IActionResult Payment()
         {
-            return View("Payment", GetBillViewModel());
+            return View(GetBillViewModel());
         }
 
-        /*        [HttpPost]
-                public IActionResult Payment(BillViewModel request)
+        [HttpPost]
+        public async Task<IActionResult> Payment(BillViewModel request)
+        {
+            var model = GetBillViewModel();
+            var invoiceLines = new List<InvoiceLineCreateRequest>();
+            decimal totalInvoiceAmount = 0;
+            foreach (var item in model.BillItemViewModels)
+            {
+                totalInvoiceAmount = totalInvoiceAmount + (item.UnitPrice * item.Quantity);
+                invoiceLines.Add(new InvoiceLineCreateRequest()
                 {
-                    var model = GetBillViewModel();
-                    var invoiceLines = new List<InvoiceLineCreateRequest>();
-                    foreach (var item in model.BillItemViewModels)
-                    {
-                        invoiceLines.Add(new InvoiceLineCreateRequest()
-                        {
-                            ProductId = item.ProductId,
-                            Quantity = item.Quantity,
-                            ItemAmount = item.UnitPrice*item.Quantity
-                        });
-                    }
-                    var invoiceCreateRequest = new InvoiceCreateRequest()
-                    {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    ItemAmount = item.UnitPrice * item.Quantity
+                });
+            }
+            var invoiceCreateRequest = new InvoiceCreateRequest()
+            {
+                CustomerId = model.CustomerViewModel.CustomerId,
+                CreatedDate = DateTime.Now,
+                CreatedBy = User.Identity.Name,
+                TotalInvoiceAmount = totalInvoiceAmount,
+                InvoiceLines = invoiceLines
+            };
 
-                        InvoiceLines = invoiceLines
-                    };
-                    return View(model);
-                }*/
+            var data = await _invoiceApiClient.Create(invoiceCreateRequest);
+            if (!data.IsSuccessed)
+            {
+                return View(invoiceCreateRequest);
+            }
+            HttpContext.Session.Remove(SystemConstants.BillSession);
+            HttpContext.Session.Remove(SystemConstants.CustomerSession);
+            return RedirectToAction("Index");
+        }
 
         private BillViewModel GetBillViewModel()
         {

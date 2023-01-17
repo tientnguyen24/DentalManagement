@@ -102,7 +102,7 @@ namespace DentalManagement.Application.Catalog.Users
         public async Task<ApiResult<bool>> Register(RegisterRequest request)
         {
             var result = await _userManager.FindByNameAsync(request.UserName);
-            if (result == null) return new ApiErrorResult<bool>("Tên đăng nhập đã tồn tại");
+            if (result != null) return new ApiErrorResult<bool>("Tên đăng nhập đã tồn tại");
 
             var user = new AppUser()
             {
