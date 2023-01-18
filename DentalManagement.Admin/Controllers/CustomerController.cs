@@ -15,15 +15,15 @@ namespace DentalManagement.Admin.Controllers
     {
         private readonly ICustomerApiClient _customerApiClient;
         private readonly IConfiguration _configuration;
-        private readonly IValidator<CustomerCreateRequest> _createValidator;
-        private readonly IValidator<CustomerUpdateRequest> _updateValidator;
+        private readonly IValidator<CustomerCreateRequest> _customerCreateRequestValidator;
+        private readonly IValidator<CustomerUpdateRequest> _customerUpdateRequestValidator;
 
-        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> createValidator, IValidator<CustomerUpdateRequest> updateValidator)
+        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> customerCreateRequestValidator, IValidator<CustomerUpdateRequest> customerUpdateRequestValidator)
         {
             _customerApiClient = customerApiClient;
             _configuration = configuration;
-            _createValidator = createValidator;
-            _updateValidator = updateValidator;
+            _customerCreateRequestValidator = customerCreateRequestValidator;
+            _customerUpdateRequestValidator = customerUpdateRequestValidator;
         }
 
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
@@ -56,14 +56,14 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CustomerCreateRequest request)
         {
-            ValidationResult result = await _createValidator.ValidateAsync(request);
+            ValidationResult result = await _customerCreateRequestValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);
                 return View("Create", request);
             }
             var data = await _customerApiClient.Create(request);
-            if (!data)
+            if (!data.IsSuccessed)
             {
                 return View(request);
             }
@@ -96,7 +96,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CustomerUpdateRequest request)
         {
-            ValidationResult result = await _updateValidator.ValidateAsync(request);
+            ValidationResult result = await _customerUpdateRequestValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);

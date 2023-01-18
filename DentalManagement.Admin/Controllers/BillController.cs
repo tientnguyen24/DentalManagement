@@ -153,6 +153,17 @@ namespace DentalManagement.Admin.Controllers
             return Ok(currentBill);
         }
 
+        public IActionResult IsSession()
+        {
+            var model = GetBillViewModel();
+            if (model.BillItemViewModels.Count == 0 && model.CustomerViewModel.CustomerId == 0)
+            {
+                TempData["errorMsg"] = "Thiếu thông tin";
+                return View("Index");
+            }
+            return RedirectToAction("Payment");
+        }
+
         public IActionResult Payment()
         {
             return View(GetBillViewModel());
@@ -186,10 +197,12 @@ namespace DentalManagement.Admin.Controllers
             var data = await _invoiceApiClient.Create(invoiceCreateRequest);
             if (!data.IsSuccessed)
             {
-                return View(invoiceCreateRequest);
+                TempData["errorMsg"] = "Thiếu thông tin";
+                return View(GetBillViewModel());
             }
             HttpContext.Session.Remove(SystemConstants.BillSession);
             HttpContext.Session.Remove(SystemConstants.CustomerSession);
+            TempData["successMsg"] = "Thành công";
             return RedirectToAction("Index");
         }
 
