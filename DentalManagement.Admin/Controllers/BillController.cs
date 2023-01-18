@@ -19,10 +19,12 @@ namespace DentalManagement.Admin.Controllers
     {
         private readonly IProductApiClient _productApiClient;
         private readonly ICustomerApiClient _customerApiClient;
-        public BillController(IProductApiClient productApiClient, ICustomerApiClient customerApiClient)
+        private readonly IInvoiceApiClient _invoiceApiClient;
+        public BillController(IProductApiClient productApiClient, ICustomerApiClient customerApiClient, IInvoiceApiClient invoiceApiClient)
         {
             _productApiClient = productApiClient;
             _customerApiClient = customerApiClient;
+            _invoiceApiClient = invoiceApiClient;
         }
         public IActionResult Index()
         {
@@ -151,32 +153,58 @@ namespace DentalManagement.Admin.Controllers
             return Ok(currentBill);
         }
 
-        public IActionResult Payment()
+        public IActionResult IsSession()
         {
-            return View("Payment", GetBillViewModel());
+            var model = GetBillViewModel();
+            if (model.BillItemViewModels.Count == 0 && model.CustomerViewModel.CustomerId == 0)
+            {
+                TempData["errorMsg"] = "Thiếu thông tin";
+                return View("Index");
+            }
+            return RedirectToAction("Payment");
         }
 
-        /*        [HttpPost]
-                public IActionResult Payment(BillViewModel request)
-                {
-                    var model = GetBillViewModel();
-                    var invoiceLines = new List<InvoiceLineCreateRequest>();
-                    foreach (var item in model.BillItemViewModels)
-                    {
-                        invoiceLines.Add(new InvoiceLineCreateRequest()
-                        {
-                            ProductId = item.ProductId,
-                            Quantity = item.Quantity,
-                            ItemAmount = item.UnitPrice*item.Quantity
-                        });
-                    }
-                    var invoiceCreateRequest = new InvoiceCreateRequest()
-                    {
+        public IActionResult Payment()
+        {
+            return View(GetBillViewModel());
+        }
 
-                        InvoiceLines = invoiceLines
-                    };
-                    return View(model);
-                }*/
+        [HttpPost]
+        public async Task<IActionResult> Payment(BillViewModel request)
+        {
+            var model = GetBillViewModel();
+            var invoiceLines = new List<InvoiceLineCreateRequest>();
+            decimal totalInvoiceAmount = 0;
+            foreach (var item in model.BillItemViewModels)
+            {
+                totalInvoiceAmount = totalInvoiceAmount + (item.UnitPrice * item.Quantity);
+                invoiceLines.Add(new InvoiceLineCreateRequest()
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    ItemAmount = item.UnitPrice * item.Quantity
+                });
+            }
+            var invoiceCreateRequest = new InvoiceCreateRequest()
+            {
+                CustomerId = model.CustomerViewModel.CustomerId,
+                CreatedDate = DateTime.Now,
+                CreatedBy = User.Identity.Name,
+                TotalInvoiceAmount = totalInvoiceAmount,
+                InvoiceLines = invoiceLines
+            };
+
+            var data = await _invoiceApiClient.Create(invoiceCreateRequest);
+            if (!data.IsSuccessed)
+            {
+                TempData["errorMsg"] = "Thiếu thông tin";
+                return View(GetBillViewModel());
+            }
+            HttpContext.Session.Remove(SystemConstants.BillSession);
+            HttpContext.Session.Remove(SystemConstants.CustomerSession);
+            TempData["successMsg"] = "Thành công";
+            return RedirectToAction("Index");
+        }
 
         private BillViewModel GetBillViewModel()
         {

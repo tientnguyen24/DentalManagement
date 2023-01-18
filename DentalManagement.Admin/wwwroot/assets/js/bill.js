@@ -25,9 +25,9 @@
                         + " </button></td>"
                         + " <td>" + (i + 1) + "</td>"
                         + " </td >"
-                        + " <td>" + item.productCategoryName + "</td>"
-                        + " <td>" + item.productName + "</td>"
-                        + " <td>" + item.unitPrice + "</td>"
+                        + " <td class=\"text-left\">" + item.productCategoryName + "</td>"
+                        + " <td class=\"text-left\">" + item.productName + "</td>"
+                        + " <td>" + numberWithCommas(item.unitPrice) + "</td>"
                         + " </tr>";
                 });
                 $('#product_bill_body').html(product_table_body_html);
@@ -149,20 +149,24 @@
                 var tempTotal = 0;
                 $.each(res, function (i, item) {
                     html += "<tr>"
-                        + " <td><button type=\"button\" class=\"btn btn-remove-item\" data-id=\"" + item.productId + "\"><i class=\"fas fa-trash fa-sm text-danger\"></i></button></td>"
-                        + " <td>" + (i + 1) + "</td>"
-                        + " <td>" + item.productName + "</td>"
-                        + " <td>" + item.unitPrice + "</td>"
-                        + " <td><button type=\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button><input type=\"text\" placeholder=\"1\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/><button type=\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button></td>"
-                        + " <td>" + item.unitPrice * item.quantity + "</td>"
-                        + " </tr>";
+                        + "<td><button type=\"button\" class=\"btn btn-remove-item\" data-id=\"" + item.productId + "\"><i class=\"fas fa-trash fa-sm text-danger\"></i></button></td>"
+                        + "<td>" + (i + 1) + "</td>"
+                        + "<td class=\"text-left\">" + item.productName + "</td>"
+                        + "<td>" + numberWithCommas(item.unitPrice) + "</td>"
+                        + "<td>"
+                        + "<button type =\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button>"
+                        + "<input type =\"text\" placeholder=\"1\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
+                        + "<button type =\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button>"
+                        + "</td>"
+                        + "<td>" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
+                        + "</tr>";
                     total += item.unitPrice * item.quantity;
                     tempTotal += item.unitPrice * item.quantity;
                 });
                 $('#bill_body').html(html);
-                $('#lbl_total').text(total);
+                $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
-                $('#lbl_temp_total').text(tempTotal);
+                $('#lbl_temp_total').text(numberWithCommas(tempTotal));
             }
         });
     }
@@ -205,7 +209,6 @@
             }
         });
     }
-
 }
 
 $(document).ready(function () {

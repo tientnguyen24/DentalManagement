@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DentalManagement.Data.Enums
 {
     public enum Gender
     {
-        Male,
-        Female,
-        Other
+        [Display(Name = "Nam")] Male,
+        [Display(Name = "Nữ")] Female,
+        [Display(Name = "Khác")] Other
     }
 
     public enum Status
     {
-        Active,
-        Inactive
+        [Display(Name = "Hoạt động")] Active,
+        [Display(Name = "Tạm khóa")] Inactive
     }
 }

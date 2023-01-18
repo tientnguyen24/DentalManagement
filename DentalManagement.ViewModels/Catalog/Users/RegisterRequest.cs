@@ -11,7 +11,7 @@ namespace DentalManagement.ViewModels.Catalog.Users
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string FullName { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public DateTime? BirthDay { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }

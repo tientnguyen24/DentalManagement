@@ -13,7 +13,7 @@ namespace DentalManagement.ViewModels.Catalog.Customers
         [DisplayName("Họ và tên")]
         public string FullName { get; set; }
         [DisplayName("Giới tính")]
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         [DisplayName("Ngày sinh")]
         public DateTime? BirthDay { get; set; }
         [DisplayName("Địa chỉ thường trú")]

@@ -26,7 +26,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<bool> Create(CustomerCreateRequest request)
+        public async Task<ApiResult<bool>> Create(CustomerCreateRequest request)
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -35,7 +35,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync($"/api/customers/", httpContent);
-            return response.IsSuccessStatusCode;
+            return new ApiSuccessResult<bool>(response.IsSuccessStatusCode);
         }
 
         public async Task<List<CustomerViewModel>> GetAll()

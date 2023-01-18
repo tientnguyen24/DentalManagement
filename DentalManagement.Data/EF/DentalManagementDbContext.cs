@@ -34,7 +34,7 @@ namespace DentalManagement.Data.EF
             builder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
 
-            //builder.Seed();
+            builder.Seed();
         }
 
         public DbSet<Customer> Customers { get; set; }
