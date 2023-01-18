@@ -13,7 +13,7 @@ namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -49,13 +49,13 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CustomerCreateRequest request)
         {
-            var customerId = await _customerService.Create(request);
-            if (customerId == 0)
+            var result = await _customerService.Create(request);
+            if (result.ResultObject == 0)
             {
-                return BadRequest();
+                return BadRequest(result);
             }
-            var customer = await _customerService.GetById(customerId);
-            return CreatedAtAction(nameof(GetById), new { id = customerId }, customer);
+            var customer = await _customerService.GetById(result.ResultObject);
+            return CreatedAtAction(nameof(GetById), new { id = result.ResultObject }, customer);
         }
 
         [HttpPut]

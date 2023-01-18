@@ -10,7 +10,7 @@ namespace DentalManagement.Application.Catalog.Customers
 {
     public interface ICustomerService
     {
-        Task<int> Create(CustomerCreateRequest request);
+        Task<ApiResult<int>> Create(CustomerCreateRequest request);
         Task<ApiResult<bool>> Update(CustomerUpdateRequest request);
         Task<int> Delete(CustomerDeleteRequest request);
         Task<bool> UpdateStatus(int id, Status updatedStatus);

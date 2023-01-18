@@ -25,12 +25,12 @@ namespace DentalManagement.Admin.Controllers
     {
         private readonly IUserApiClient _userApiClient;
         private readonly IConfiguration _configuration;
-        private readonly IValidator<LoginRequest> _validator;
-        public LoginController(IUserApiClient userApiClient, IConfiguration configuration, IValidator<LoginRequest> validator)
+        private readonly IValidator<LoginRequest> _loginRequestValidator;
+        public LoginController(IUserApiClient userApiClient, IConfiguration configuration, IValidator<LoginRequest> loginRequestValidator)
         {
             _userApiClient = userApiClient;
             _configuration = configuration;
-            _validator = validator;
+            _loginRequestValidator = loginRequestValidator;
         }
 
         [HttpGet]
@@ -43,7 +43,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(LoginRequest request)
         {
-            ValidationResult result = await _validator.ValidateAsync(request);
+            ValidationResult result = await _loginRequestValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(this.ModelState);

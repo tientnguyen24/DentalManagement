@@ -18,9 +18,10 @@
         <li class="breadcrumb-item active">Tạo hoá đơn thanh toán</li>
     </ol>
     <h1 class="h3 mb-2 text-gray-800">Hoá đơn thanh toán</h1>
-
     <hr />
     <div class="col-md-12 mx-0">
+        <span class="text-danger">@TempData["errorMsg"]</span>
+        <span class="text-success">@TempData["successMsg"]</span>
         <div class="user" id="msform">
             <!-- progressbar -->
             <ul id="progressbar">
@@ -49,7 +50,7 @@
                                                     Tên dịch vụ
                                                 </th>
                                                 <th>
-                                                    Đơn giá
+                                                    Đơn giá (VNĐ)
                                                 </th>
                                             </tr>
                                         </thead>
@@ -61,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="button" name="next" class="next action-button" value="Tiếp tục" />
+                <input type="button" name="next" class="next btn btn-primary" value="Tiếp tục" />
             </fieldset>
             <fieldset>
                 <div class="row">
@@ -80,13 +81,13 @@
                                                     Tên dịch vụ
                                                 </th>
                                                 <th>
-                                                    Đơn giá
+                                                    Đơn giá (VNĐ)
                                                 </th>
                                                 <th>
                                                     Số lượng
                                                 </th>
                                                 <th>
-                                                    Thành tiền
+                                                    Thành tiền (VNĐ)
                                                 </th>
                                             </tr>
                                         </thead>
@@ -128,9 +129,9 @@
                         </div>
                     </div>
                 </div>
-                <input type="button" name="previous" class="previous action-button-previous" value="Quay lại" />
-                <a asp-controller="Bill" asp-action="Payment">
-                    <input type="button" name="make_payment" class="next action-button" value="Tiếp tục" />
+                <input type="button" name="previous" class="previous btn btn-outline-dark" value="Quay lại" />
+                <a asp-controller="Bill" asp-action="IsSession">
+                    <input type="button" name="make_payment" class="next btn btn-primary" value="Tiếp tục" />
                 </a>
             </fieldset>
         </div>

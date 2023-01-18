@@ -11,7 +11,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
     {
         Task<PagedResult<CustomerViewModel>> GetAllPaging(GetCustomerPagingRequest request);
         Task<List<CustomerViewModel>> GetAll();
-        Task<bool> Create(CustomerCreateRequest request);
+        Task<ApiResult<bool>> Create(CustomerCreateRequest request);
         Task<ApiResult<bool>> Update(CustomerUpdateRequest request);
         Task<ApiResult<CustomerViewModel>> GetById(int id);
     }

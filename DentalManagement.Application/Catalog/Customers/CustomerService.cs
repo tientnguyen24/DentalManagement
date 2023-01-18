@@ -22,7 +22,7 @@ namespace DentalManagement.Application.Catalog.Customers
         {
             _context = context;
         }
-        public async Task<int> Create(CustomerCreateRequest request)
+        public async Task<ApiResult<int>> Create(CustomerCreateRequest request)
         {
             var customer = new Customer()
             {
@@ -38,7 +38,7 @@ namespace DentalManagement.Application.Catalog.Customers
             };
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
-            return customer.Id;
+            return new ApiSuccessResult<int>(customer.Id);
         }
 
         public async Task<ApiResult<bool>> Update(CustomerUpdateRequest request)
