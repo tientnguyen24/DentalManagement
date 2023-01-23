@@ -153,7 +153,18 @@ namespace DentalManagement.Admin.Controllers
             return Ok(currentBill);
         }
 
-        public IActionResult IsSession()
+        public IActionResult UpdateBill(decimal totalDiscountAmount)
+        {
+            var session = HttpContext.Session.GetString(SystemConstants.BillSession);
+            BillViewModel currentBill = new BillViewModel();
+            if (session != null)
+                currentBill = JsonConvert.DeserializeObject<BillViewModel>(session);
+            
+            HttpContext.Session.SetString(SystemConstants.BillSession, JsonConvert.SerializeObject(currentBill));
+            return Ok(currentBill);
+        }
+
+        public IActionResult Payment()
         {
             var model = GetBillViewModel();
             if (model.BillItemViewModels.Count == 0 && model.CustomerViewModel.CustomerId == 0)
@@ -161,12 +172,7 @@ namespace DentalManagement.Admin.Controllers
                 TempData["errorMsg"] = "Thiếu thông tin";
                 return View("Index");
             }
-            return RedirectToAction("Payment");
-        }
-
-        public IActionResult Payment()
-        {
-            return View(GetBillViewModel());
+            return View(model);
         }
 
         [HttpPost]
