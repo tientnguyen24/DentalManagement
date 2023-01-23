@@ -86,12 +86,12 @@
                     item['Gender'] = 'Nữ';
                 }
                 customer_table_body_html += " <tr><td><input type=\"hidden\" id=\"" + item['CustomerId'] + "\" value=\"" + item['CustomerId'] + "\" /></td></tr>"
-                    + " <tr><td>" + item['FullName'] + "</td></tr>"
-                    + " <tr><td>" + item['Gender'] + "</td></tr>"
-                    + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
-                    + " <tr><td>" + item['Address'] + "</td></tr>"
-                    + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
-                    + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
+                    + " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                    + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
+                    + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                    + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
+                    + " <tr><td>Số CMND/CCCD: " + item['IdentifyCard'] + "</td></tr>"
+                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>";
                 $('#customer_bill_body').html(customer_table_body_html);
             },
             error: function (err) {
@@ -155,7 +155,7 @@
                         + "<td>" + numberWithCommas(item.unitPrice) + "</td>"
                         + "<td>"
                         + "<button type =\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button>"
-                        + "<input type =\"text\" placeholder=\"1\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
+                        + "<input type =\"text\" class=\"col-md-3 inp_quantity\" placeholder=\"0\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
                         + "<button type =\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button>"
                         + "</td>"
                         + "<td>" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
@@ -167,6 +167,15 @@
                 $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
                 $('#lbl_temp_total').text(numberWithCommas(tempTotal));
+                $('body').on('keypress', '.inp_total_discount_amount', function (e) {
+                    //press enter will do action
+                    if (e.which === 13) {
+                        e.preventDefault();
+                        const totalDiscountAmount = $(this).val();
+                        total = tempTotal - totalDiscountAmount;
+                        $('#lbl_total').text(numberWithCommas(total));
+                    }
+                });
             }
         });
     }
@@ -188,9 +197,28 @@
 
         $('body').on('click', '.btn-remove-item', function (e) {
             e.preventDefault();
-            const id = $(this).data('id');
+            const id = $(this).val();
             updateBill(id, 0);
         });
+
+        $('body').on('keypress', '.inp_quantity', function (e) {
+            //press enter will do action
+            if (e.which === 13) {
+                e.preventDefault();
+                const id = $(this).data('id');
+                const quantity = $('#txt_quantity_' + id).val();
+                updateBill(id, quantity);
+            }
+        });
+
+        $('body').on('input', '.inp_quantity', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
+        });
+
+        $('body').on('input', '.inp_total_discount_amount', function (e) {
+            this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
+        });
+
     }
 
     function updateBill(id, quantity) {
