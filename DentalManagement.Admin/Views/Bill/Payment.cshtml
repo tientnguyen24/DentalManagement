@@ -67,7 +67,7 @@
                                                 @{ int index = 1;}
                                                 @foreach (var item in Model.BillItemViewModels)
                                                 {
-                                                    decimal itemAmount = item.Quantity * item.UnitPrice;
+                                                    var itemAmount = item.Quantity * item.UnitPrice;
                                                     <tr>
                                                         <td>@(index++)</td>
                                                         <td class="text-left">@item.ProductName</td>
@@ -78,17 +78,22 @@
                                                 }
                                             </tbody>
                                             <tfoot>
+                                                @{ 
+                                                    var tempTotal = Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice);
+                                                    var discount = Model.BillSummaryViewModel.TotalDiscountAmount;
+                                                    var total = tempTotal - discount;
+                                                }
                                                 <tr>
                                                     <td colspan="4" class="text-right">Tạm tính: </td>
-                                                    <td>@Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice).ToString("N0")</td>
+                                                    <td>@tempTotal.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-right">Giảm giá: </td>
-                                                    <td></td>
+                                                    <td>@discount.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-right text-danger">Thành tiền (@Model.BillItemViewModels.Count()): </td>
-                                                    <td>@Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice).ToString("N0")</td>
+                                                    <td>@total.ToString("N0")</td>
                                                 </tr>
                                             </tfoot>
                                         </table>

@@ -5,6 +5,7 @@
         loadCustomerDropdownList();
         customerDropdownListOnChange();
         loadData();
+        loadSummary();
         loadCustomer();
         registerEvents();
     }
@@ -73,7 +74,6 @@
             type: "GET",
             url: '/Bill/GetCustomer',
             success: function (res) {
-                console.log(res);
                 var item = $.parseJSON(res);
                 if (res.length === 0) {
                     $('#tbl_customer_bill').hide();
@@ -167,15 +167,19 @@
                 $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
                 $('#lbl_temp_total').text(numberWithCommas(tempTotal));
-                $('body').on('keypress', '.inp_total_discount_amount', function (e) {
-                    //press enter will do action
-                    if (e.which === 13) {
-                        e.preventDefault();
-                        const totalDiscountAmount = $(this).val();
-                        total = tempTotal - totalDiscountAmount;
-                        $('#lbl_total').text(numberWithCommas(total));
-                    }
-                });
+            }
+        });
+    }
+
+    function loadSummary() {
+        $.ajax({
+            type: "GET",
+            url: '/Bill/GetListSummary',
+            success: function (res) {
+                console.log(res)
+            },
+            error: function (err) {
+                console.log(err)
             }
         });
     }
@@ -185,20 +189,20 @@
             e.preventDefault();
             const id = $(this).data('id');
             const quantity = parseInt($('#txt_quantity_' + id).val()) + 1;
-            updateBill(id, quantity);
+            updateQuantity(id, quantity);
         });
 
         $('body').on('click', '.btn-minus-quantity', function (e) {
             e.preventDefault();
             const id = $(this).data('id');
             const quantity = parseInt($('#txt_quantity_' + id).val()) - 1;
-            updateBill(id, quantity);
+            updateQuantity(id, quantity);
         });
 
         $('body').on('click', '.btn-remove-item', function (e) {
             e.preventDefault();
-            const id = $(this).val();
-            updateBill(id, 0);
+            const id = $(this).data('id');
+            updateQuantity(id, 0);
         });
 
         $('body').on('keypress', '.inp_quantity', function (e) {
@@ -207,7 +211,21 @@
                 e.preventDefault();
                 const id = $(this).data('id');
                 const quantity = $('#txt_quantity_' + id).val();
-                updateBill(id, quantity);
+                updateQuantity(id, quantity);
+            }
+
+        });
+
+        $('body').on('keypress', '.inp_total_discount_amount', function (e) {
+            //press enter will do action
+            if (e.which === 13) {
+                e.preventDefault();
+                const totalDiscountAmount = $('#inp_total_discount_amount').val();
+                const tempTotal = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+                const total = tempTotal - totalDiscountAmount;
+                $('#lbl_total').text(numberWithCommas(total));
+                //continue here
+                updateDiscount(totalDiscountAmount);
             }
         });
 
@@ -221,16 +239,32 @@
 
     }
 
-    function updateBill(id, quantity) {
+    function updateQuantity(id, quantity) {
         $.ajax({
             type: "POST",
-            url: '/Bill/UpdateBill',
+            url: '/Bill/UpdateQuantity',
             data: {
                 id: id,
                 quantity: quantity
             },
             success: function (res) {
                 loadData();
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        });
+    }
+
+    function updateDiscount(totalInvoiceAmount) {
+        $.ajax({
+            type: "POST",
+            url: '/Bill/UpdateDiscount',
+            data: {
+                totalInvoiceAmount: totalInvoiceAmount
+            },
+            success: function (res) {
+                console.log(res)
             },
             error: function (err) {
                 console.log(err)
