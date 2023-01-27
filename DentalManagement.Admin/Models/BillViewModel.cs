@@ -9,5 +9,6 @@ namespace DentalManagement.Admin.Models
     {
         public List<BillItemViewModel> BillItemViewModels { get; set; }
         public CustomerViewModel CustomerViewModel { get; set; }
+        public BillSummaryViewModel BillSummaryViewModel { get; set; }
     }
 }

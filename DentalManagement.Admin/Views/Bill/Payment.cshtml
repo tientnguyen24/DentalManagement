@@ -26,15 +26,14 @@
                                 <h1 class="h4 text-gray-900 mb-4">Thông tin khách hàng</h1>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table-sm text-left" width="100%" cellspacing="0">
+                                        <table class="table table-striped table-bordered table-sm" width="100%" cellspacing="0">
                                             <tbody>
-                                                <tr><td class="text-right">Mã khách hàng: </td><td class="text-left">@Model.CustomerViewModel.CustomerId</td></tr>
-                                                <tr><td class="text-right">Họ và tên: </td><td class="text-left">@Model.CustomerViewModel.FullName</td></tr>
-                                                <tr><td class="text-right">Giới tính: </td><td class="text-left">@Model.CustomerViewModel.Gender</td></tr>
-                                                <tr><td class="text-right">Ngày sinh: </td><td class="text-left">@Model.CustomerViewModel.BirthDay</td></tr>
-                                                <tr><td class="text-right">Địa chỉ: </td><td class="text-left">@Model.CustomerViewModel.Address</td></tr>
-                                                <tr><td class="text-right">Số CMND/CCCD: </td><td class="text-left">@Model.CustomerViewModel.IdentifyCard</td></tr>
-                                                <tr><td class="text-right">Số điện thoại: </td><td class="text-left">@Model.CustomerViewModel.PhoneNumber</td></tr>
+                                                <tr><td>Họ và tên: @Model.CustomerViewModel.FullName</td></tr>
+                                                <tr><td>Giới tính: @Model.CustomerViewModel.Gender</td></tr>
+                                                <tr><td>Ngày sinh: @Model.CustomerViewModel.BirthDay</td></tr>
+                                                <tr><td>Địa chỉ: @Model.CustomerViewModel.Address</td></tr>
+                                                <tr><td>Số CMND/CCCD: @Model.CustomerViewModel.IdentifyCard</td></tr>
+                                                <tr><td>Số điện thoại: @Model.CustomerViewModel.PhoneNumber</td></tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -54,13 +53,13 @@
                                                         Tên dịch vụ
                                                     </th>
                                                     <th>
-                                                        Đơn giá (VNĐ)
+                                                        Đơn giá
                                                     </th>
                                                     <th>
                                                         Số lượng
                                                     </th>
                                                     <th>
-                                                        Thành tiền (VNĐ)
+                                                        Thành tiền
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -68,7 +67,7 @@
                                                 @{ int index = 1;}
                                                 @foreach (var item in Model.BillItemViewModels)
                                                 {
-                                                    decimal itemAmount = item.Quantity * item.UnitPrice;
+                                                    var itemAmount = item.Quantity * item.UnitPrice;
                                                     <tr>
                                                         <td>@(index++)</td>
                                                         <td class="text-left">@item.ProductName</td>
@@ -79,17 +78,22 @@
                                                 }
                                             </tbody>
                                             <tfoot>
+                                                @{ 
+                                                    var tempTotal = Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice);
+                                                    var discount = Model.BillSummaryViewModel.TotalDiscountAmount;
+                                                    var total = tempTotal - discount;
+                                                }
                                                 <tr>
                                                     <td colspan="4" class="text-right">Tạm tính: </td>
-                                                    <td>@Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice).ToString("N0")</td>
+                                                    <td>@tempTotal.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-right">Giảm giá: </td>
-                                                    <td>--:--</td>
+                                                    <td>@discount.ToString("N0")</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-right text-danger">Thành tiền (@Model.BillItemViewModels.Count()): </td>
-                                                    <td>@Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice).ToString("N0")</td>
+                                                    <td>@total.ToString("N0")</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
