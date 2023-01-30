@@ -97,7 +97,7 @@ namespace DentalManagement.Admin.Controllers
                     BirthDay = item.BirthDay,
                     Address = item.Address,
                     PhoneNumber = item.PhoneNumber,
-                    IdentifyCard = item.IdentifyCard
+                    Description = item.Description
                 };
                 currentCustomer.Add(customerItem);
             }
@@ -124,7 +124,7 @@ namespace DentalManagement.Admin.Controllers
                 BirthDay = customer.ResultObject.BirthDay,
                 Address = customer.ResultObject.Address,
                 PhoneNumber = customer.ResultObject.PhoneNumber,
-                IdentifyCard = customer.ResultObject.IdentifyCard
+                Description = customer.ResultObject.Description
             };
             HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(JsonConvert.SerializeObject(currentCustomer));
@@ -183,9 +183,7 @@ namespace DentalManagement.Admin.Controllers
                 currentBillSummary = JsonConvert.DeserializeObject<BillSummaryViewModel>(session);
             currentBillSummary = new BillSummaryViewModel()
             {
-                CreatedDate = DateTime.Now,
                 TotalDiscountAmount = totalInvoiceAmount,
-                Description = ""
             };
             HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
             return Ok(currentBillSummary);

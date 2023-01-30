@@ -85,13 +85,12 @@
                 if (item['Gender'] === 1) {
                     item['Gender'] = 'Nữ';
                 }
-                customer_table_body_html += " <tr><td><input type=\"hidden\" id=\"" + item['CustomerId'] + "\" value=\"" + item['CustomerId'] + "\" /></td></tr>"
-                    + " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
                     + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
                     + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
                     + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
-                    + " <tr><td>Số CMND/CCCD: " + item['IdentifyCard'] + "</td></tr>"
-                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>";
+                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
+                    + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>";
                 $('#customer_bill_body').html(customer_table_body_html);
             },
             error: function (err) {
@@ -109,7 +108,6 @@
                 url: '/Bill/AddCustomerToBill',
                 data: { id: id },
                 success: function (res) {
-                    console.log(res);
                     var item = $.parseJSON(res);
                     if (res.length === 0) {
                         $('#tbl_customer_bill').hide();
@@ -121,12 +119,12 @@
                     if (item['Gender'] === 1) {
                         item['Gender'] = 'Nữ';
                     }
-                    customer_table_body_html += " <tr><td>" + item['FullName'] + "</td></tr>"
-                        + " <tr><td>" + item['Gender'] + "</td></tr>"
-                        + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
-                        + " <tr><td>" + item['Address'] + "</td></tr>"
-                        + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
-                        + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
+                    customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                        + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
+                        + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                        + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
+                        + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
+                        + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>";
                     $('#customer_bill_body').html(customer_table_body_html);
                 },
                 error: function (err) {
