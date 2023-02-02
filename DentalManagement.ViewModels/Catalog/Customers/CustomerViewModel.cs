@@ -36,5 +36,7 @@ namespace DentalManagement.ViewModels.Catalog.Customers
         public DateTime? ModifiedDate { get; set; }
         [DisplayName("Được chỉnh sửa bởi")]
         public string ModifiedBy { get; set; }
+        [DisplayName("Dư nợ hiện tại")]
+        public decimal CurrentBalance { get; set; }
     }
 }

@@ -20,5 +20,6 @@ namespace DentalManagement.Data.Entities
         public Customer Customer { get; set; }
         public List<InvoiceDetail> InvoiceDetails { get; set; }
         public Status Status { get; set; }
+        public decimal PrepaymentAmount { get; set; }
     }
 }

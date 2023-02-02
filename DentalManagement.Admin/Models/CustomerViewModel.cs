@@ -15,5 +15,6 @@ namespace DentalManagement.Admin.Models
         public string PhoneNumber { get; set; }
         public string IdentifyCard { get; set; }
         public string Description { get; set; }
+        public decimal CurrentBalance { get; set; }
     }
 }

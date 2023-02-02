@@ -115,7 +115,8 @@ namespace DentalManagement.Application.Catalog.Customers
                 CreatedDate = x.CreatedDate,
                 CreatedBy = x.CreatedBy,
                 ModifiedDate = x.ModifiedDate,
-                ModifiedBy = x.ModifiedBy
+                ModifiedBy = x.ModifiedBy,
+                CurrentBalance = x.CurrentBalance
             }).ToListAsync();
             return data;
         }
