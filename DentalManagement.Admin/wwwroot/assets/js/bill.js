@@ -62,7 +62,7 @@
             success: function (res) {
                 var dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
                 $.each(res, function (i, item) {
-                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName+"</option>"
+                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName + "</option>"
                 });
                 $('#dropListCustomer').html(dropListCustomer_html);
             }
@@ -167,6 +167,7 @@
                 $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
                 $('#lbl_temp_total').text(numberWithCommas(tempTotal));
+                $('#lbl_remaining_amount').text(numberWithCommas(total));
             }
         });
     }
@@ -176,7 +177,9 @@
             type: "GET",
             url: '/Bill/GetListSummary',
             success: function (res) {
-                console.log(res)
+                $('#inp_total_discount_amount').attr("value", "" + res['totalDiscountAmount'] + "");
+                $('#inp_prepayment_amount').attr("value", "" + res['prepaymentAmount'] + "");
+                $('#inp_decription').attr("value", "" + res['description'] + "");
             },
             error: function (err) {
                 console.log(err)
@@ -205,46 +208,26 @@
             updateQuantity(id, 0);
         });
 
-        $('body').on('keypress', '.inp_quantity', function (e) {
-            //press enter will do action
-            if (e.which === 13) {
-                e.preventDefault();
-                const id = $(this).data('id');
-                const quantity = $('#txt_quantity_' + id).val();
-                updateQuantity(id, quantity);
-            }
-
-        });
-
-        $('body').on('click', '.add_discount_amount_to_bill', function (e) {
-                e.preventDefault();
-                const totalDiscountAmount = $('#inp_total_discount_amount').val();
-                const tempTotal = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
-                const totalAmount = tempTotal - totalDiscountAmount;
-                $('#lbl_total').text(numberWithCommas(totalAmount));
-                updateDiscount(totalDiscountAmount);
-        });
-
-        $('body').on('click', '.add_prepayment_to_bill', function (e) {
+        $('body').on('focusout', '.inp_quantity', function (e) {
             e.preventDefault();
+            const id = $(this).data('id');
+            const quantity = $('#txt_quantity_' + id).val();
+            updateQuantity(id, quantity);
+        });
+
+        $('body').on('focusout', '.inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
+            e.preventDefault();
+            const totalDiscountAmount = $('#inp_total_discount_amount').val();
             const prepaymentAmount = $('#inp_prepayment_amount').val();
+            const description = $('#inp_decription').val();
+            const tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+            $('#lbl_total').text(numberWithCommas(tempTotalAmount - totalDiscountAmount));
             const totalAmount = parseInt($('#lbl_total').text().replace(/,/g, ''), 10);
-            const remainingAmount = totalAmount - prepaymentAmount;
-            $('#lbl_remaining_amount').text(numberWithCommas(remainingAmount));
-            updatePrepayment(prepaymentAmount);
+            $('#lbl_remaining_amount').text(numberWithCommas(totalAmount - prepaymentAmount));
+            updateSummary(prepaymentAmount, totalDiscountAmount, description);
         });
 
-        $('body').on('click', '.add_description_to_bill', function (e) {
-                e.preventDefault();
-                const description = $('#inp_decription').val();
-                updateDescription(description);
-        });
-
-        $('body').on('input', '.inp_quantity', function (e) {
-            this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
-        });
-
-        $('body').on('input', '.inp_total_discount_amount', function (e) {
+        $('body').on('input', '.inp_quantity, .inp_total_discount_amount, .inp_prepayment_amount', function (e) {
             this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
         });
 
@@ -267,43 +250,13 @@
         });
     }
 
-    function updateDiscount(totalInvoiceAmount) {
+    function updateSummary(prepaymentAmount, totalDiscountAmount, description) {
         $.ajax({
             type: "POST",
-            url: '/Bill/UpdateDiscount',
+            url: '/Bill/UpdateListSummary',
             data: {
-                totalInvoiceAmount: totalInvoiceAmount
-            },
-            success: function (res) {
-                console.log(res)
-            },
-            error: function (err) {
-                console.log(err)
-            }
-        });
-    }
-
-    function updatePrepayment(prepaymentAmount) {
-        $.ajax({
-            type: "POST",
-            url: '/Bill/UpdatePrepayment',
-            data: {
-                prepaymentAmount: prepaymentAmount
-            },
-            success: function (res) {
-                console.log(res)
-            },
-            error: function (err) {
-                console.log(err)
-            }
-        });
-    }
-
-    function updateDescription(description) {
-        $.ajax({
-            type: "POST",
-            url: '/Bill/UpdateDescription',
-            data: {
+                prepaymentAmount: prepaymentAmount,
+                totalDiscountAmount: totalDiscountAmount,
                 description: description
             },
             success: function (res) {

@@ -106,7 +106,7 @@
                                                 @{
                                                     var tempTotalAmount = Model.BillItemViewModels.Sum(x => x.Quantity * x.UnitPrice);
                                                     var discountAmount = Model.BillSummaryViewModel.TotalDiscountAmount;
-                                                    var totalAmount = Model.BillSummaryViewModel.TotalInvoiceAmount;
+                                                    var totalAmount = tempTotalAmount - discountAmount;
                                                     var prepaymentAmount = Model.BillSummaryViewModel.PrepaymentAmount;
                                                     var remainingAmount = totalAmount - prepaymentAmount;
                                                 }
