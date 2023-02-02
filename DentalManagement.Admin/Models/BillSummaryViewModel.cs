@@ -15,5 +15,6 @@ namespace DentalManagement.Admin.Models
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
         public string Description { get; set; }
+        public decimal PrepaymentAmount { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.Description).HasMaxLength(300);
             builder.HasOne(x => x.Customer).WithMany(x => x.Invoices).HasForeignKey(x => x.CustomerId);
             builder.Property(x => x.Status).HasDefaultValue(Status.Active);
+            builder.Property(x => x.PrepaymentAmount).HasMaxLength(100);
         }
     }
 }

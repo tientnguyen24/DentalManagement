@@ -56,7 +56,8 @@ namespace DentalManagement.Admin.Controllers
                 {
                     CreatedDate = DateTime.Now,
                     TotalDiscountAmount = 0,
-                    Description = ""
+                    Description = "",
+                    PrepaymentAmount = 0
                 };
                 HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
             }
@@ -97,7 +98,8 @@ namespace DentalManagement.Admin.Controllers
                     BirthDay = item.BirthDay,
                     Address = item.Address,
                     PhoneNumber = item.PhoneNumber,
-                    Description = item.Description
+                    Description = item.Description,
+                    CurrentBalance = item.CurrentBalance
                 };
                 currentCustomer.Add(customerItem);
             }
@@ -140,6 +142,8 @@ namespace DentalManagement.Admin.Controllers
             if (currentBillItem.Any(x => x.ProductId == id))
             {
                 quantity = currentBillItem.First(x => x.ProductId == id).Quantity + 1;
+                var currentItem = currentBillItem.Single(x => x.ProductId == id);
+                currentBillItem.Remove(currentItem);
             }
             var billItem = new BillItemViewModel()
             {
@@ -189,6 +193,34 @@ namespace DentalManagement.Admin.Controllers
             return Ok(currentBillSummary);
         }
 
+        public IActionResult UpdatePrepayment(decimal prepaymentAmount)
+        {
+            var session = HttpContext.Session.GetString(SystemConstants.BillSummarySession);
+            BillSummaryViewModel currentBillSummary = new BillSummaryViewModel();
+            if (session != null)
+                currentBillSummary = JsonConvert.DeserializeObject<BillSummaryViewModel>(session);
+            currentBillSummary = new BillSummaryViewModel()
+            {
+                PrepaymentAmount = prepaymentAmount,
+            };
+            HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
+            return Ok(currentBillSummary);
+        }
+
+        public IActionResult UpdateDescription(string description)
+        {
+            var session = HttpContext.Session.GetString(SystemConstants.BillSummarySession);
+            BillSummaryViewModel currentBillSummary = new BillSummaryViewModel();
+            if (session != null)
+                currentBillSummary = JsonConvert.DeserializeObject<BillSummaryViewModel>(session);
+            currentBillSummary = new BillSummaryViewModel()
+            {
+                Description = description,
+            };
+            HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
+            return Ok(currentBillSummary);
+        }
+
         public IActionResult Payment()
         {
             var model = GetBillViewModel();
@@ -205,10 +237,8 @@ namespace DentalManagement.Admin.Controllers
         {
             var model = GetBillViewModel();
             var invoiceLines = new List<InvoiceLineCreateRequest>();
-            decimal totalInvoiceAmount = 0;
             foreach (var item in model.BillItemViewModels)
             {
-                totalInvoiceAmount = totalInvoiceAmount + (item.UnitPrice * item.Quantity);
                 invoiceLines.Add(new InvoiceLineCreateRequest()
                 {
                     ProductId = item.ProductId,
@@ -221,7 +251,8 @@ namespace DentalManagement.Admin.Controllers
                 CustomerId = model.CustomerViewModel.CustomerId,
                 CreatedDate = DateTime.Now,
                 CreatedBy = User.Identity.Name,
-                TotalInvoiceAmount = totalInvoiceAmount,
+                TotalInvoiceAmount = model.BillSummaryViewModel.TotalInvoiceAmount,
+                PrepaymentAmount = model.BillSummaryViewModel.PrepaymentAmount,
                 InvoiceLines = invoiceLines
             };
 
