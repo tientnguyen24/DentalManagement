@@ -51,6 +51,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 TotalInvoiceAmount = request.TotalInvoiceAmount,
                 CustomerId = request.CustomerId,
                 Description = request.Description,
+                PrepaymentAmount = request.PrepaymentAmount,
                 InvoiceDetails = invoiceDetails
             };
             _context.Invoices.Add(invoice);

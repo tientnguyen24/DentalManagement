@@ -15,9 +15,9 @@
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Invoice">Hoá đơn</a></li>
-        <li class="breadcrumb-item active">Tạo hoá đơn thanh toán</li>
+        <li class="breadcrumb-item active">Tạo hồ sơ</li>
     </ol>
-    <h1 class="h3 mb-2 text-gray-800">Hoá đơn thanh toán</h1>
+    <h1 class="h3 mb-2 text-gray-800">HỒ SƠ ĐIỀU TRỊ</h1>
     <hr />
     <div class="col-md-12 mx-0">
         <span class="text-danger">@TempData["errorMsg"]</span>
@@ -34,7 +34,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card shadow mb-4">
-                            <h1 class="h4 text-gray-900 mb-4">Chọn dịch vụ</h1>
+                            <div class="card-title">
+                                <h4 class="align-middle mb-4">Chọn dịch vụ</h4>
+                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-sm" width="100%" cellspacing="0" id="tbl_product_bill">
@@ -69,7 +71,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card shadow mb-4">
-                            <h1 class="h4 text-gray-900 mb-4">Thông tin khách hàng</h1>
+                            <div class="card-title">
+                                <h4 class="align-middle mb-4">Thông tin khách hàng</h4>
+                            </div>
                             <div class="card-body">
                                 <div class="form-group row">
                                     <select id="dropListCustomer" class="form-control">
@@ -88,26 +92,28 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card shadow mb-4">
-                            <h1 class="h4 text-gray-900 mb-4">Thông tin hoá đơn</h1>
+                            <div class="card-title">
+                                <h4 class="align-middle mb-4">Thông tin hoá đơn</h4>
+                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-sm" width="100%" cellspacing="0" id="tbl_bill">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th></th>
-                                                <th>
+                                                <th class="col-md-1"></th>
+                                                <th class="col-md-1">
                                                     STT
                                                 </th>
-                                                <th>
+                                                <th class="col-md-5">
                                                     Tên dịch vụ
                                                 </th>
-                                                <th>
+                                                <th class="col-md-1">
                                                     Đơn giá
                                                 </th>
-                                                <th>
+                                                <th class="col-md-2">
                                                     Số lượng
                                                 </th>
-                                                <th>
+                                                <th class="col-md-2">
                                                     Thành tiền
                                                 </th>
                                             </tr>
@@ -121,11 +127,34 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="5" class="text-right">Giảm giá: </td>
-                                                <td><input type="text" class="text-center inp_total_discount_amount" id="inp_total_discount_amount"/></td>
+                                                <td>
+                                                    <div class="input-group input-group-sm mb-3">
+                                                        <input type="text" class="form-control border-1 small text-center inp_total_discount_amount" id="inp_total_discount_amount" placeholder="Nhập số tiền" />
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="5" class="text-right text-danger">Thành tiền (<span id="lbl_no_of_items"></span>): </td>
                                                 <td><p id="lbl_total"></p></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right">Thanh toán: </td>
+                                                <td>
+                                                    <div class="input-group input-group-sm mb-3">
+                                                        <input type="text" class="form-control border-1 small text-center inp_prepayment_amount" id="inp_prepayment_amount" placeholder="Nhập số tiền" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right text-danger">Còn lại: </td>
+                                                <td><p id="lbl_remaining_amount"></p></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div class="input-group input-group-sm mb-3">
+                                                        <input type="text" class="form-control border-1 small text-left inp_decription" id="inp_decription" placeholder="Nhập ghi chú" />
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tfoot>
                                     </table>

@@ -22,5 +22,6 @@ namespace DentalManagement.Data.Entities
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
         public List<Invoice> Invoices { get; set; }
+        public decimal CurrentBalance { get; set; }
     }
 }

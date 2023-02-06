@@ -4,14 +4,16 @@ using DentalManagement.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentalManagement.Data.Migrations
 {
     [DbContext(typeof(DentalManagementDbContext))]
-    partial class DentalManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230202052927_AddPrepaymentAmountForInvoice")]
+    partial class AddPrepaymentAmountForInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

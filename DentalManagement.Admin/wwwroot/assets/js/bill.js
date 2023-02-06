@@ -5,7 +5,6 @@
         loadCustomerDropdownList();
         customerDropdownListOnChange();
         loadData();
-        loadSummary();
         loadCustomer();
         registerEvents();
     }
@@ -62,7 +61,7 @@
             success: function (res) {
                 var dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
                 $.each(res, function (i, item) {
-                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName+"</option>"
+                    dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName + "</option>"
                 });
                 $('#dropListCustomer').html(dropListCustomer_html);
             }
@@ -85,13 +84,13 @@
                 if (item['Gender'] === 1) {
                     item['Gender'] = 'Nữ';
                 }
-                customer_table_body_html += " <tr><td><input type=\"hidden\" id=\"" + item['CustomerId'] + "\" value=\"" + item['CustomerId'] + "\" /></td></tr>"
-                    + " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
                     + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
                     + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
                     + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
-                    + " <tr><td>Số CMND/CCCD: " + item['IdentifyCard'] + "</td></tr>"
-                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>";
+                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
+                    + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>"
+                    + " <tr><td>Dư nợ hiện tại: " + item['CurrentBalance'] + "</td></tr>";
                 $('#customer_bill_body').html(customer_table_body_html);
             },
             error: function (err) {
@@ -109,7 +108,6 @@
                 url: '/Bill/AddCustomerToBill',
                 data: { id: id },
                 success: function (res) {
-                    console.log(res);
                     var item = $.parseJSON(res);
                     if (res.length === 0) {
                         $('#tbl_customer_bill').hide();
@@ -121,12 +119,13 @@
                     if (item['Gender'] === 1) {
                         item['Gender'] = 'Nữ';
                     }
-                    customer_table_body_html += " <tr><td>" + item['FullName'] + "</td></tr>"
-                        + " <tr><td>" + item['Gender'] + "</td></tr>"
-                        + " <tr><td>" + (item['BirthDay']).substring(0, 10) + "</td></tr>"
-                        + " <tr><td>" + item['Address'] + "</td></tr>"
-                        + " <tr><td>" + item['IdentifyCard'] + "</td></tr>"
-                        + " <tr><td>" + item['PhoneNumber'] + "</td></tr>";
+                    customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                        + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
+                        + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                        + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
+                        + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
+                        + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>"
+                        + " <tr><td>Dư nợ hiện tại: " + item['CurrentBalance'] + "</td></tr>";
                     $('#customer_bill_body').html(customer_table_body_html);
                 },
                 error: function (err) {
@@ -149,24 +148,23 @@
                 var tempTotal = 0;
                 $.each(res, function (i, item) {
                     html += "<tr>"
-                        + "<td><button type=\"button\" class=\"btn btn-remove-item\" data-id=\"" + item.productId + "\"><i class=\"fas fa-trash fa-sm text-danger\"></i></button></td>"
-                        + "<td>" + (i + 1) + "</td>"
-                        + "<td class=\"text-left\">" + item.productName + "</td>"
-                        + "<td>" + numberWithCommas(item.unitPrice) + "</td>"
-                        + "<td>"
-                        + "<button type =\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button>"
-                        + "<input type =\"text\" class=\"col-md-3 inp_quantity\" placeholder=\"0\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
-                        + "<button type =\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button>"
-                        + "</td>"
-                        + "<td>" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
+                        + "<td class=\"col-md-1\"><button type=\"button\" class=\"btn btn-remove-item\" data-id=\"" + item.productId + "\"><i class=\"fas fa-trash fa-sm text-danger\"></i></button></td>"
+                        + "<td class=\"col-md-1\">" + (i + 1) + "</td>"
+                        + "<td class=\"text-left col-md-5\">" + item.productName + "</td>"
+                        + "<td class=\"col-md-1\">" + numberWithCommas(item.unitPrice) + "</td>"
+                        + "<td class=\"col-md-2\"><div class=\"input-group input-group-sm mb-3\">"
+                        + "<div class=\"input-group-prepend\"><button type =\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button></div>"
+                        + "<input type =\"text\" class=\"form-control border-1 small text-center inp_quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
+                        + "<div class=\"input-group-append\"><button type =\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button></div>"
+                        + "</div></td>"
+                        + "<td class=\"col-md-2\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                         + "</tr>";
-                    total += item.unitPrice * item.quantity;
                     tempTotal += item.unitPrice * item.quantity;
                 });
                 $('#bill_body').html(html);
-                $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
                 $('#lbl_temp_total').text(numberWithCommas(tempTotal));
+                loadSummary();
             }
         });
     }
@@ -176,7 +174,27 @@
             type: "GET",
             url: '/Bill/GetListSummary',
             success: function (res) {
-                console.log(res)
+                if (res['description'] != null) {
+                    $('#inp_decription').attr("value", "" + res['description'] + "");
+                }
+                var tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+                var total = tempTotalAmount - res['totalDiscountAmount'];
+                $('#lbl_total').text(numberWithCommas(total));
+                $('#inp_total_discount_amount').attr("value", "" + numberWithCommas(res['totalDiscountAmount']) + "");
+                if (res['prepaymentAmount'] == '' || res['totalDiscountAmount'] != '') {
+                    $('#inp_prepayment_amount').attr("value", "" + numberWithCommas(total) + "");
+                }
+                else {
+                    $('#inp_prepayment_amount').attr("value", "" + numberWithCommas(res['prepaymentAmount']) + "");
+                }
+
+                if ($('#inp_prepayment_amount').val() == '') {
+                    $('#lbl_remaining_amount').text(numberWithCommas(total));
+                }
+                else {
+                    var prepaymentAmount = parseInt($('#inp_prepayment_amount').val().replace(/,/g, ''), 10);
+                    $('#lbl_remaining_amount').text(numberWithCommas(total - prepaymentAmount));
+                }
             },
             error: function (err) {
                 console.log(err)
@@ -205,35 +223,35 @@
             updateQuantity(id, 0);
         });
 
-        $('body').on('keypress', '.inp_quantity', function (e) {
-            //press enter will do action
-            if (e.which === 13) {
-                e.preventDefault();
-                const id = $(this).data('id');
-                const quantity = $('#txt_quantity_' + id).val();
+        $('body').on('focusout', '.inp_quantity', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            const quantity = $('#txt_quantity_' + id).val();
+            if (quantity == '') {
+                updateQuantity(id, 1);
+            }
+            else {
                 updateQuantity(id, quantity);
             }
-
         });
 
-        $('body').on('keypress', '.inp_total_discount_amount', function (e) {
-            //press enter will do action
-            if (e.which === 13) {
-                e.preventDefault();
-                const totalDiscountAmount = $('#inp_total_discount_amount').val();
-                const tempTotal = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
-                const total = tempTotal - totalDiscountAmount;
-                $('#lbl_total').text(numberWithCommas(total));
-                //continue here
-                updateDiscount(totalDiscountAmount);
-            }
+        $('body').on('focusout', '.inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
+            e.preventDefault();
+            const totalDiscountAmount = $('#inp_total_discount_amount').val();
+            const prepaymentAmount = $('#inp_prepayment_amount').val();
+            const description = $('#inp_decription').val();
+            const tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+            $('#lbl_total').text(numberWithCommas(tempTotalAmount - totalDiscountAmount));
+            const totalAmount = parseInt($('#lbl_total').text().replace(/,/g, ''), 10);
+            $('#lbl_remaining_amount').text(numberWithCommas(totalAmount - prepaymentAmount));
+            updateSummary(prepaymentAmount, totalDiscountAmount, description);
         });
 
-        $('body').on('input', '.inp_quantity', function (e) {
-            this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
+        $('body').on('keyup', '.inp_quantity, .inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
+            updateTextView($(this));
         });
 
-        $('body').on('input', '.inp_total_discount_amount', function (e) {
+        $('body').on('input', '.inp_quantity, .inp_total_discount_amount, .inp_prepayment_amount', function (e) {
             this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');
         });
 
@@ -256,15 +274,17 @@
         });
     }
 
-    function updateDiscount(totalInvoiceAmount) {
+    function updateSummary(prepaymentAmount, totalDiscountAmount, description) {
         $.ajax({
             type: "POST",
-            url: '/Bill/UpdateDiscount',
+            url: '/Bill/UpdateListSummary',
             data: {
-                totalInvoiceAmount: totalInvoiceAmount
+                prepaymentAmount: prepaymentAmount,
+                totalDiscountAmount: totalDiscountAmount,
+                description: description
             },
             success: function (res) {
-                console.log(res)
+                loadData();
             },
             error: function (err) {
                 console.log(err)
