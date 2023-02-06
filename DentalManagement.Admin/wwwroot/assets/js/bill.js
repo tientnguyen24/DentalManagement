@@ -5,7 +5,6 @@
         loadCustomerDropdownList();
         customerDropdownListOnChange();
         loadData();
-        loadSummary();
         loadCustomer();
         registerEvents();
     }
@@ -155,19 +154,17 @@
                         + "<td class=\"col-md-1\">" + numberWithCommas(item.unitPrice) + "</td>"
                         + "<td class=\"col-md-2\"><div class=\"input-group input-group-sm mb-3\">"
                         + "<div class=\"input-group-prepend\"><button type =\"button\" class=\"btn btn-minus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-minus-circle fa-sm text-danger\"></i></button></div>"
-                        + "<input type =\"text\" class=\"form-control border-1 small text-center inp_quantity\" placeholder=\"0\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
+                        + "<input type =\"text\" class=\"form-control border-1 small text-center inp_quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
                         + "<div class=\"input-group-append\"><button type =\"button\" class=\"btn btn-plus-quantity\" data-id=\"" + item.productId + "\"><i class=\"fas fa-plus-circle fa-sm text-success\"></i></button></div>"
                         + "</div></td>"
                         + "<td class=\"col-md-2\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                         + "</tr>";
-                    total += item.unitPrice * item.quantity;
                     tempTotal += item.unitPrice * item.quantity;
                 });
                 $('#bill_body').html(html);
-                $('#lbl_total').text(numberWithCommas(total));
                 $('#lbl_no_of_items').text(res.length);
                 $('#lbl_temp_total').text(numberWithCommas(tempTotal));
-                $('#lbl_remaining_amount').text(numberWithCommas(total));
+                loadSummary();
             }
         });
     }
@@ -177,9 +174,15 @@
             type: "GET",
             url: '/Bill/GetListSummary',
             success: function (res) {
+                var tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+                var total = tempTotalAmount - res['totalDiscountAmount'];
                 $('#inp_total_discount_amount').attr("value", "" + res['totalDiscountAmount'] + "");
-                $('#inp_prepayment_amount').attr("value", "" + res['prepaymentAmount'] + "");
-                $('#inp_decription').attr("value", "" + res['description'] + "");
+                $('#inp_prepayment_amount').attr("value", "" + total + "");
+                if (res['description'] != null) {
+                    $('#inp_decription').attr("value", "" + res['description'] + "");
+                }
+                $('#lbl_total').text(numberWithCommas(total));
+                $('#lbl_remaining_amount').text(numberWithCommas(total - parseInt($('#inp_prepayment_amount').val())));
             },
             error: function (err) {
                 console.log(err)
@@ -212,7 +215,12 @@
             e.preventDefault();
             const id = $(this).data('id');
             const quantity = $('#txt_quantity_' + id).val();
-            updateQuantity(id, quantity);
+            if (quantity == '') {
+                updateQuantity(id, 1);
+            }
+            else {
+                updateQuantity(id, quantity);
+            }
         });
 
         $('body').on('focusout', '.inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
@@ -260,7 +268,7 @@
                 description: description
             },
             success: function (res) {
-                console.log(res)
+                loadData();
             },
             error: function (err) {
                 console.log(err)
