@@ -174,15 +174,27 @@
             type: "GET",
             url: '/Bill/GetListSummary',
             success: function (res) {
-                var tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
-                var total = tempTotalAmount - res['totalDiscountAmount'];
-                $('#inp_total_discount_amount').attr("value", "" + res['totalDiscountAmount'] + "");
-                $('#inp_prepayment_amount').attr("value", "" + total + "");
                 if (res['description'] != null) {
                     $('#inp_decription').attr("value", "" + res['description'] + "");
                 }
+                var tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+                var total = tempTotalAmount - res['totalDiscountAmount'];
                 $('#lbl_total').text(numberWithCommas(total));
-                $('#lbl_remaining_amount').text(numberWithCommas(total - parseInt($('#inp_prepayment_amount').val())));
+                $('#inp_total_discount_amount').attr("value", "" + numberWithCommas(res['totalDiscountAmount']) + "");
+                if (res['prepaymentAmount'] == '' || res['totalDiscountAmount'] != '') {
+                    $('#inp_prepayment_amount').attr("value", "" + numberWithCommas(total) + "");
+                }
+                else {
+                    $('#inp_prepayment_amount').attr("value", "" + numberWithCommas(res['prepaymentAmount']) + "");
+                }
+
+                if ($('#inp_prepayment_amount').val() == '') {
+                    $('#lbl_remaining_amount').text(numberWithCommas(total));
+                }
+                else {
+                    var prepaymentAmount = parseInt($('#inp_prepayment_amount').val().replace(/,/g, ''), 10);
+                    $('#lbl_remaining_amount').text(numberWithCommas(total - prepaymentAmount));
+                }
             },
             error: function (err) {
                 console.log(err)
@@ -233,6 +245,10 @@
             const totalAmount = parseInt($('#lbl_total').text().replace(/,/g, ''), 10);
             $('#lbl_remaining_amount').text(numberWithCommas(totalAmount - prepaymentAmount));
             updateSummary(prepaymentAmount, totalDiscountAmount, description);
+        });
+
+        $('body').on('keyup', '.inp_quantity, .inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
+            updateTextView($(this));
         });
 
         $('body').on('input', '.inp_quantity, .inp_total_discount_amount, .inp_prepayment_amount', function (e) {
