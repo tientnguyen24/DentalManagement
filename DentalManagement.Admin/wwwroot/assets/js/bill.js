@@ -77,21 +77,23 @@
                 if (res.length === 0) {
                     $('#tbl_customer_bill').hide();
                 }
-                var customer_table_body_html = '';
-                if (item['Gender'] === 0) {
-                    item['Gender'] = 'Nam';
+                if (item['CustomerId'] > 0) {
+                    var customer_table_body_html = '';
+                    if (item['Gender'] === 0) {
+                        item['Gender'] = 'Nam';
+                    }
+                    if (item['Gender'] === 1) {
+                        item['Gender'] = 'Nữ';
+                    }
+                    customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
+                        + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
+                        + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
+                        + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
+                        + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
+                        + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>"
+                        + " <tr><td>Dư nợ hiện tại: " + item['CurrentBalance'] + "</td></tr>";
+                    $('#customer_bill_body').html(customer_table_body_html);
                 }
-                if (item['Gender'] === 1) {
-                    item['Gender'] = 'Nữ';
-                }
-                customer_table_body_html += " <tr><td>Họ và tên: " + item['FullName'] + "</td></tr>"
-                    + " <tr><td>Giới tính: " + item['Gender'] + "</td></tr>"
-                    + " <tr><td>Ngày sinh: " + (item['BirthDay']).substring(0, 10) + "</td></tr>"
-                    + " <tr><td>Địa chỉ: " + item['Address'] + "</td></tr>"
-                    + " <tr><td>Số điện thoại: " + item['PhoneNumber'] + "</td></tr>"
-                    + " <tr><td>Tiền sử bệnh: " + item['Description'] + "</td></tr>"
-                    + " <tr><td>Dư nợ hiện tại: " + item['CurrentBalance'] + "</td></tr>";
-                $('#customer_bill_body').html(customer_table_body_html);
             },
             error: function (err) {
                 console.log(err)
@@ -235,7 +237,7 @@
             }
         });
 
-        $('body').on('focusout', '.inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
+        $('body').on('focusout', '.load-summary, .inp_total_discount_amount, .inp_prepayment_amount, .inp_decription', function (e) {
             e.preventDefault();
             const totalDiscountAmount = $('#inp_total_discount_amount').val();
             const prepaymentAmount = $('#inp_prepayment_amount').val();
