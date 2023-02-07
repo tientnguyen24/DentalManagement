@@ -201,8 +201,8 @@ namespace DentalManagement.Admin.Controllers
             var model = GetBillViewModel();
             if (model.BillItemViewModels.Count == 0 && model.CustomerViewModel.CustomerId == 0)
             {
-                TempData["errorMsg"] = "Thiếu thông tin";
-                return View("Index");
+                TempData["errorMsg"] = "Thiếu thông tin dịch vụ hoặc khách hàng";
+                return RedirectToAction("Index");
             }
             return View(model);
         }
