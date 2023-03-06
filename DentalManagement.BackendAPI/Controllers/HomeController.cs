@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DentalManagement.BackendAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

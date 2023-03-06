@@ -12,7 +12,7 @@ namespace DentalManagement.BackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductCategoriesController : ControllerBase
     {
         private readonly IProductCategoryService _productCategoryService;
