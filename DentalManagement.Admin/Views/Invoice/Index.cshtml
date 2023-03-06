@@ -14,7 +14,7 @@
     <h1 class="h3 mb-2 text-gray-800">Danh sách hoá đơn</h1>
     <div class="row">
         <div class="col-md-6 col-xs-12">
-            <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Invoice">
+            <a type="button" class="btn btn-outline-primary" asp-action="Index" asp-controller="Bill">
                 <i class="fa fa-user-plus"></i>
                 Tạo mới
             </a>
@@ -63,19 +63,19 @@
                                 Số hoá đơn
                             </th>
                             <th>
+                                Khách hàng
+                            </th>
+                            <th>
                                 Ngày tạo
                             </th>
                             <th>
-                                % giảm giá
-                            </th>
-                            <th>
-                                Số tiền giảm giá
+                                Giảm giá
                             </th>
                             <th>
                                 Thành tiền
                             </th>
                             <th>
-                                Khách hàng
+                                Thanh toán
                             </th>
                             <th>
                                 Ghi chú
@@ -99,10 +99,10 @@
                                         @Html.DisplayFor(modelItem => item.Id)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                                        @Html.DisplayFor(modelItem => item.CustomerName)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.TotalDiscountPercent)
+                                        @Html.DisplayFor(modelItem => item.CreatedDate)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.TotalDiscountAmount)
@@ -111,7 +111,7 @@
                                         @Html.DisplayFor(modelItem => item.TotalInvoiceAmount)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.CustomerId)
+                                        @Html.DisplayFor(modelItem => item.PrepaymentAmount)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)

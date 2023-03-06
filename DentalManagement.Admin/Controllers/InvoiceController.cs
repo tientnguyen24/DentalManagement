@@ -41,22 +41,5 @@ namespace DentalManagement.Admin.Controllers
             var data = await _invoiceApiClient.GetAllPaging(request);
             return View(data.ResultObject);
         }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(InvoiceCreateRequest request)
-        {
-
-            var data = await _invoiceApiClient.Create(request);
-            if (!data.IsSuccessed)
-            {
-                return View(request);
-            }
-            return RedirectToAction("Index");
-        }
     }
 }

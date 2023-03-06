@@ -209,7 +209,8 @@ namespace DentalManagement.Application.Catalog.Invoices
         {
             //select invoice record
             var query = from i in _context.Invoices
-                        select new { i };
+                        join c in _context.Customers on i.CustomerId equals c.Id
+                        select new { i, c };
             //filter invoice
             if (request.Keyword != null)
             {
@@ -222,6 +223,7 @@ namespace DentalManagement.Application.Catalog.Invoices
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new InvoiceViewModel()
             {
                 CustomerId = x.i.CustomerId,
+                CustomerName = x.c.FullName,
                 Id = x.i.Id,
                 CreatedDate = x.i.CreatedDate,
                 CreatedBy = x.i.CreatedBy,
@@ -232,6 +234,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 Status = x.i.Status,
                 ModifiedDate = x.i.ModifiedDate,
                 ModifiedBy = x.i.ModifiedBy,
+                PrepaymentAmount = x.i.PrepaymentAmount
             }).ToListAsync();
             //select and projection
             var pagedResult = new PagedResult<InvoiceViewModel>()
