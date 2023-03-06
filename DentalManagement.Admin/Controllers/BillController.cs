@@ -131,6 +131,7 @@ namespace DentalManagement.Admin.Controllers
             HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(JsonConvert.SerializeObject(currentCustomer));
         }
+        
         public async Task<IActionResult> AddProductToBill(int id)
         {
             var product = await _productApiClient.GetById(id);
