@@ -92,10 +92,10 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] ProductDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] int productId)
         {
-            var affectedResult = await _productService.Delete(request);
-            if (affectedResult == 0)
+            var result = await _productService.Delete(productId);
+            if (result == 0)
             {
                 return BadRequest();
             }

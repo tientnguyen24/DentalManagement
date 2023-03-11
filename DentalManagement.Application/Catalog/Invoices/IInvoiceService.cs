@@ -5,7 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
+using DentalManagement.ViewModels.Catalog.Customers;
 
 namespace DentalManagement.Application.Catalog.Invoices
 {
@@ -13,12 +14,12 @@ namespace DentalManagement.Application.Catalog.Invoices
     {
         Task<ApiResult<int>> Create(InvoiceCreateRequest request);
         Task<int> Update(InvoiceUpdateRequest request);
-        Task<int> Delete(InvoiceDeleteRequest request);
+        Task<int> Delete(int invoiceId);
         Task<bool> UpdateStatus(int invoiceId, Status updatedStatus);
         Task<List<InvoiceViewModel>> GetAll();
         Task<InvoiceViewModel> GetById(int invoiceId);
         Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
-        Task<List<InvoiceViewModel>> GetAllByCustomerId(GetInvoiceByCustomerIdRequest request);
-        Task<List<InvoiceLineViewModel>> GetDetailByInvoiceId(int? invoiceId);
+        Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId);
+        Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId);
     }
 }

@@ -1,17 +1,16 @@
 ﻿using DentalManagement.ViewModels.Catalog.Invoices;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
 using DentalManagement.Data.Entities;
 using DentalManagement.Utilities.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DentalManagement.Data.Enums;
+using DentalManagement.ViewModels.Catalog.Customers;
 
 namespace DentalManagement.Application.Catalog.Invoices
 {
@@ -27,18 +26,18 @@ namespace DentalManagement.Application.Catalog.Invoices
             //var products = _context.Products;
             var invoiceDetails = new List<InvoiceDetail>();
 
-            foreach (var item in request.InvoiceLines)
+            foreach (var item in request.InvoiceDetails)
             {
                 //if (product.Id == request.ProductId)
                 //{
-                    invoiceDetails.Add(new InvoiceDetail()
-                    {
-                        ProductId = item.ProductId,
-                        ItemDiscountPercent = item.ItemDiscountPercent,
-                        ItemDiscountAmount = item.ItemDiscountAmount,
-                        ItemAmount = item.ItemAmount,
-                        Quantity = item.Quantity
-                    });
+                invoiceDetails.Add(new InvoiceDetail()
+                {
+                    ProductId = item.ProductId,
+                    ItemDiscountPercent = item.ItemDiscountPercent,
+                    ItemDiscountAmount = item.ItemDiscountAmount,
+                    ItemAmount = item.ItemAmount,
+                    Quantity = item.Quantity
+                });
                 //}
             }
 
@@ -59,12 +58,12 @@ namespace DentalManagement.Application.Catalog.Invoices
             return new ApiSuccessResult<int>(invoice.Id);
         }
 
-        public async Task<int> Delete(InvoiceDeleteRequest request)
+        public async Task<int> Delete(int invoiceId)
         {
-            var invoice = await _context.Invoices.FindAsync(request.Id);
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn: {request.Id}");
+                throw new DentalManagementException($"Không tìm thấy hoá đơn: {invoiceId}");
             }
             else
             {
@@ -132,7 +131,6 @@ namespace DentalManagement.Application.Catalog.Invoices
                 TotalDiscountPercent = x.i.TotalDiscountPercent,
                 TotalDiscountAmount = x.i.TotalDiscountAmount,
                 TotalInvoiceAmount = x.i.TotalInvoiceAmount,
-                CustomerId = x.i.CustomerId,
                 Description = x.i.Description,
                 Status = x.i.Status,
                 ModifiedDate = x.i.ModifiedDate,
@@ -141,15 +139,15 @@ namespace DentalManagement.Application.Catalog.Invoices
             return data;
         }
 
-        public async Task<List<InvoiceViewModel>> GetAllByCustomerId(GetInvoiceByCustomerIdRequest request)
+        public async Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId)
         {
             var query = from c in _context.Customers
                         join i in _context.Invoices on c.Id equals i.CustomerId
                         select new { c, i };
-            if (request.CustomerId.HasValue && request.CustomerId.Value > 0)
+            if (customerId > 0)
             {
-                query = query.Where(x => x.c.Id == request.CustomerId);
-                if (query.Count() > 0)
+                query = query.Where(x => x.c.Id == customerId);
+                if (!query.Any())
                 {
                     var data = await query.Select(x => new InvoiceViewModel()
                     {
@@ -161,16 +159,18 @@ namespace DentalManagement.Application.Catalog.Invoices
                         TotalInvoiceAmount = x.i.TotalInvoiceAmount,
                         ModifiedDate = x.i.ModifiedDate,
                         ModifiedBy = x.i.ModifiedBy,
-                        CustomerId = x.i.CustomerId,
                         Description = x.i.Description,
                         Status = x.i.Status,
-                        //InvoiceDetails = GetDetailByInvoiceId(x.i.Id)
+                        CustomerViewModel = new ViewModels.Catalog.Customers.CustomerViewModel()
+                        {
+                            FullName = x.c.FullName
+                        }
                     }).ToListAsync();
                     return data;
                 }
                 else
                 {
-                    throw new DentalManagementException($"Không có hoá đơn cho khách hàng {request.CustomerId}");
+                    throw new DentalManagementException($"Không có hoá đơn cho khách hàng {customerId}");
                 }
 
             }
@@ -180,17 +180,16 @@ namespace DentalManagement.Application.Catalog.Invoices
             }
         }
 
-        public async Task<List<InvoiceLineViewModel>> GetDetailByInvoiceId(int? invoiceId)
+        public async Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId)
         {
             var query = from i in _context.Invoices
                         join id in _context.InvoiceDetails on i.Id equals id.InvoiceId
                         select id;
-            if (invoiceId.HasValue && invoiceId.Value > 0)
+            if (invoiceId > 0)
             {
                 query = query.Where(x => x.InvoiceId == invoiceId);
-                var data = await query.Select(x => new InvoiceLineViewModel()
+                var data = await query.Select(x => new InvoiceDetailViewModel()
                 {
-                    //InvoiceId = x.InvoiceId,
                     ProductId = x.ProductId,
                     ItemDiscountPercent = x.ItemDiscountPercent,
                     ItemDiscountAmount = x.ItemDiscountAmount,
@@ -222,8 +221,6 @@ namespace DentalManagement.Application.Catalog.Invoices
             int totalRow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new InvoiceViewModel()
             {
-                CustomerId = x.i.CustomerId,
-                CustomerName = x.c.FullName,
                 Id = x.i.Id,
                 CreatedDate = x.i.CreatedDate,
                 CreatedBy = x.i.CreatedBy,
@@ -234,7 +231,25 @@ namespace DentalManagement.Application.Catalog.Invoices
                 Status = x.i.Status,
                 ModifiedDate = x.i.ModifiedDate,
                 ModifiedBy = x.i.ModifiedBy,
-                PrepaymentAmount = x.i.PrepaymentAmount
+                PrepaymentAmount = x.i.PrepaymentAmount,
+                CustomerViewModel = new CustomerViewModel()
+                {
+                    Id = x.c.Id,
+                    FullName = x.c.FullName,
+                    Gender = x.c.Gender,
+                    BirthDay = x.c.BirthDay,
+                    Address = x.c.Address,
+                    PhoneNumber = x.c.PhoneNumber,
+                    EmailAddress = x.c.EmailAddress,
+                    IdentifyCard = x.c.IdentifyCard,
+                    Status = x.c.Status,
+                    Description = x.c.Description,
+                    CreatedDate = x.c.CreatedDate,
+                    CreatedBy = x.c.CreatedBy,
+                    ModifiedDate = x.c.ModifiedDate,
+                    ModifiedBy = x.c.ModifiedBy,
+                    CurrentBalance = x.c.CurrentBalance
+                }
             }).ToListAsync();
             //select and projection
             var pagedResult = new PagedResult<InvoiceViewModel>()
@@ -249,7 +264,12 @@ namespace DentalManagement.Application.Catalog.Invoices
 
         public async Task<InvoiceViewModel> GetById(int invoiceId)
         {
-            var invoice = await _context.Invoices.FindAsync(invoiceId);
+            var invoice = await _context.Invoices
+                .Include(i => i.Customer)
+                .Include(i => i.InvoiceDetails)
+                .ThenInclude(i=>i.Product)
+                .ThenInclude(i=>i.ProductCategory)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null)
             {
                 throw new DentalManagementException($"Không tìm thấy hoá đơn có id: {invoiceId}");
@@ -264,16 +284,45 @@ namespace DentalManagement.Application.Catalog.Invoices
                     TotalDiscountPercent = invoice.TotalDiscountPercent,
                     TotalDiscountAmount = invoice.TotalDiscountAmount,
                     TotalInvoiceAmount = invoice.TotalInvoiceAmount,
+                    PrepaymentAmount = invoice.PrepaymentAmount,
                     ModifiedDate = invoice.ModifiedDate,
                     ModifiedBy = invoice.ModifiedBy,
-                    CustomerId = invoice.CustomerId,
                     Description = invoice.Description,
                     Status = invoice.Status,
-                    InvoiceDetails = GetDetailByInvoiceId(invoice.Id)
+                    //check customer entity, if customer is null then do not create new instance CustomerViewModel
+                    CustomerViewModel = invoice.Customer == null ? null : new CustomerViewModel()
+                    {
+                        Id = invoice.Customer.Id,
+                        FullName = invoice.Customer.FullName,
+                        Gender = invoice.Customer.Gender,
+                        BirthDay = invoice.Customer.BirthDay,
+                        Address = invoice.Customer.Address,
+                        PhoneNumber = invoice.Customer.PhoneNumber,
+                        EmailAddress = invoice.Customer.EmailAddress,
+                        IdentifyCard = invoice.Customer.IdentifyCard,
+                        Status = invoice.Customer.Status,
+                        Description = invoice.Customer.Description,
+                        CreatedDate = invoice.Customer.CreatedDate,
+                        CreatedBy = invoice.Customer.CreatedBy,
+                        ModifiedDate = invoice.Customer.ModifiedDate,
+                        ModifiedBy = invoice.Customer.ModifiedBy,
+                        CurrentBalance = invoice.Customer.CurrentBalance,
+                    },
+                    //check invoice details entity, if invoice details is null then do not create new instance InvoiceDetailViewModel and fill to list
+                    InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(d => new InvoiceDetailViewModel()
+                    {
+                        InvoiceId = d.InvoiceId,
+                        ProductId = d.ProductId,
+                        ProductName = d.Product.Name,
+                        Quantity = d.Quantity,
+                        UnitPrice = d.Product.UnitPrice,
+                        ItemDiscountPercent = d.ItemDiscountPercent,
+                        ItemDiscountAmount = d.ItemDiscountAmount,
+                        ItemAmount = d.ItemAmount
+                    }).ToList()
                 };
                 return invoiceViewModel;
             }
         }
-
     }
 }
