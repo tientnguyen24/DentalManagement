@@ -1,6 +1,7 @@
 ﻿using DentalManagement.Data.Entities;
 using DentalManagement.Data.Enums;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,8 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
     public class InvoiceViewModel
     {
         public int Id { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
 
@@ -23,15 +26,16 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal TotalInvoiceAmount { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal PrepaymentAmount { get; set; }
-        public Task<List<InvoiceLineViewModel>> InvoiceDetails { get; set; }
+        public CustomerViewModel CustomerViewModel { get; set; }
+        public List<InvoiceDetailViewModel> InvoiceDetailViewModels { get; set; }
     }
 }

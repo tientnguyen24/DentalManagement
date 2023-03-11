@@ -131,12 +131,12 @@ namespace DentalManagement.Application.Catalog.Products
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<int> Delete(ProductDeleteRequest request)
+        public async Task<int> Delete(int productId)
         {
-            var product = await _context.Products.FindAsync(request.Id);
-            if(product == null)
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
             {
-                throw new DentalManagementException($"Không tìm thấy sản phẩm: {request.Id}");
+                throw new DentalManagementException($"Không tìm thấy sản phẩm: {productId}");
             }
             _context.Products.Remove(product);
             return await _context.SaveChangesAsync();
@@ -152,7 +152,7 @@ namespace DentalManagement.Application.Catalog.Products
             if (request.ProductCategoryId.HasValue && request.ProductCategoryId.Value > 0)
             {
                 query = query.Where(x=>x.pc.Id == request.ProductCategoryId);
-                if(query.Count() > 0)
+                if(!query.Any())
                 {
                     var data = await query.Select(x => new ProductViewModel()
                     {

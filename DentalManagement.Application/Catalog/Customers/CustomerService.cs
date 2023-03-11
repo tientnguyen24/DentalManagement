@@ -64,12 +64,12 @@ namespace DentalManagement.Application.Catalog.Customers
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-        public async Task<bool> UpdateStatus(int id, Status updatedStatus)
+        public async Task<bool> UpdateStatus(int customerId, Status updatedStatus)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers.FindAsync(customerId);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {id}");
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
             }
             else if (customer.Status == updatedStatus)
             {
@@ -81,12 +81,12 @@ namespace DentalManagement.Application.Catalog.Customers
             }
             return await _context.SaveChangesAsync() > 0;
         }
-        public async Task<int> Delete(CustomerDeleteRequest request)
+        public async Task<int> Delete(int customerId)
         {
-            var customer = await _context.Customers.FindAsync(request.Id);
+            var customer = await _context.Customers.FindAsync(customerId);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {request.Id}");
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
             }
             else
             {
@@ -116,7 +116,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 CreatedBy = x.CreatedBy,
                 ModifiedDate = x.ModifiedDate,
                 ModifiedBy = x.ModifiedBy,
-                CurrentBalance = x.CurrentBalance
+                CurrentBalance = x.CurrentBalance,
             }).ToListAsync();
             return data;
         }
@@ -162,9 +162,14 @@ namespace DentalManagement.Application.Catalog.Customers
             return pagedResult;
         }
 
-        public async Task<ApiResult<CustomerViewModel>> GetById(int id)
+        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers
+                .Include(c => c.Invoices)
+                .ThenInclude(c => c.InvoiceDetails)
+                .ThenInclude(c => c.Product)
+                .FirstOrDefaultAsync(c => c.Id == customerId);
+
             if (customer == null)
             {
                 return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
@@ -185,7 +190,6 @@ namespace DentalManagement.Application.Catalog.Customers
                 CreatedBy = customer.CreatedBy,
                 ModifiedDate = customer.ModifiedDate,
                 ModifiedBy = customer.ModifiedBy
-
             };
             return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
         }
