@@ -1,5 +1,5 @@
 ﻿using DentalManagement.Data.Entities;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,6 +26,6 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 
         public decimal PrepaymentAmount { get; set; }
 
-        public List<InvoiceLineCreateRequest> InvoiceLines { get; set; }
+        public List<InvoiceDetailCreateRequest> InvoiceDetails { get; set; }
     }
 }

@@ -6,55 +6,55 @@
 }
 
 <div class="container-fluid">
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Customer">Khách hàng</a></li>
-        <li class="breadcrumb-item active">Chi tiết</li>
-    </ol>
-    <div class="text-center">
-        <h1 class="h4 text-gray-900 mb-4">Chi tiết khách hàng</h1>
+    <div class="tab">
+        <button class="tablinks" onclick="openCustomerTab(event, 'customerInformation')" id="defaultOpen">Thông tin cá nhân</button>
+        <button class="tablinks" onclick="openCustomerTab(event, 'customerMedicalBill')">Khám & Điều trị</button>
+        <button class="tablinks" onclick="openCustomerTab(event, 'customerPaymentHistory')">Lịch sử giao dịch</button>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <label asp-for="FullName" class="control-label"></label>
-            <input asp-for="FullName" class="form-control" readonly />
+
+    <div id="customerInformation" class="tabcontent">
+        <div class="form-group row">
+            <div class="col-sm-3 mb-3 mb-sm-0">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" readonly />
 
 
-            <label asp-for="Gender" class="control-label"></label>
-            <input asp-for="Gender" class="form-control" readonly />
+                <label asp-for="Gender" class="control-label"></label>
+                <input asp-for="Gender" class="form-control" readonly />
 
 
-            <label asp-for="BirthDay" class="control-label"></label>
-            <input asp-for="BirthDay" class="form-control" readonly />
+                <label asp-for="BirthDay" class="control-label"></label>
+                <input asp-for="BirthDay" class="form-control" readonly />
 
+            </div>
+            <div class="col-sm-3 mb-3 mb-sm-0">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" readonly />
+
+
+                <label asp-for="EmailAddress" class="control-label"></label>
+                <input asp-for="EmailAddress" class="form-control" readonly />
+
+
+                <label asp-for="IdentifyCard" class="control-label"></label>
+                <input asp-for="IdentifyCard" class="form-control" readonly />
+
+            </div>
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" readonly />
+
+
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" style="min-height: 108px;" readonly></textarea>
+
+            </div>
         </div>
-        <div class="col-sm-3 mb-3 mb-sm-0">
-            <label asp-for="PhoneNumber" class="control-label"></label>
-            <input asp-for="PhoneNumber" class="form-control" readonly />
-
-
-            <label asp-for="EmailAddress" class="control-label"></label>
-            <input asp-for="EmailAddress" class="form-control" readonly />
-
-
-            <label asp-for="IdentifyCard" class="control-label"></label>
-            <input asp-for="IdentifyCard" class="form-control" readonly />
-
-        </div>
-        <div class="col-sm-6 mb-3 mb-sm-0">
-            <label asp-for="Address" class="control-label"></label>
-            <input asp-for="Address" class="form-control" readonly />
-
-
-            <label asp-for="Description" class="control-label"></label>
-            <textarea asp-for="Description" class="form-control" style="min-height: 108px;" readonly></textarea>
-
+        <div class="row">
+            <div class="col-sm-3">
+                @Html.ActionLink("Sửa thông tin", "Edit", "Customer", new { id = Model.Id }, new { @class = "btn btn-danger" })
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-3">
-            @Html.ActionLink("Quay về", "Index", "Customer", "", new { @class = "btn btn-outline-dark" })
-            @Html.ActionLink("Sửa", "Edit", "Customer", new { id = Model.Id }, new { @class = "btn btn-danger" })
-        </div>
-    </div>
+
 </div>

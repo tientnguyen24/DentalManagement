@@ -30,11 +30,11 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok(invoices);
         }
 
-        //http://localhost:port/invoice/filter
-        [HttpGet("filter")]
-        public async Task<IActionResult> Get([FromQuery] GetInvoiceByCustomerIdRequest request)
+        //http://localhost:port/invoice/customerId
+        [HttpGet("customerId")]
+        public async Task<IActionResult> Get([FromQuery] int customerId)
         {
-            var invoices = await _invoiceService.GetAllByCustomerId(request);
+            var invoices = await _invoiceService.GetAllByCustomerId(customerId);
             return Ok(invoices);
         }
 
@@ -94,9 +94,9 @@ namespace DentalManagement.BackendAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] InvoiceDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] int invoiceId)
         {
-            var affectedResult = await _invoiceService.Delete(request);
+            var affectedResult = await _invoiceService.Delete(invoiceId);
             if (affectedResult == 0)
             {
                 return BadRequest();

@@ -3,24 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines
+namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
 {
-    public class InvoiceLineViewModel
+    public class InvoiceDetailCreateRequest
     {
         [DisplayName("Mã sản phẩm")]
         public int ProductId { get; set; }
-
-        [DisplayName("Tên sản phẩm")]
-        public string ProductName { get; set; }
-
-        [DisplayName("Đơn giá")]
-        public decimal UnitPrice { get; set; }
-
-        [DisplayName("Mã danh mục")]
-        public int ProductCategoryId { get; set; }
-
-        [DisplayName("Tên danh mục")]
-        public string ProductCategoryName { get; set; }
 
         [DisplayName("% giảm giá")]
         public decimal ItemDiscountPercent { get; set; }

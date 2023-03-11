@@ -212,12 +212,12 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> Payment(BillViewModel request)
         {
             var model = GetBillViewModel();
-            var invoiceLines = new List<InvoiceLineCreateRequest>();
+            var invoiceLines = new List<InvoiceDetailCreateRequest>();
             decimal totalInvoiceAmount = 0;
             foreach (var item in model.BillItemViewModels)
             {
                 totalInvoiceAmount = totalInvoiceAmount + (item.UnitPrice * item.Quantity);
-                invoiceLines.Add(new InvoiceLineCreateRequest()
+                invoiceLines.Add(new InvoiceDetailCreateRequest()
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
