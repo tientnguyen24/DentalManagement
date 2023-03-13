@@ -16,8 +16,9 @@ namespace DentalManagement.ViewModels.Catalog.Customers
         public string FullName { get; set; }
         [DisplayName("Giới tính")]
         public Gender? Gender { get; set; }
+
         [DisplayName("Ngày sinh")]
-        [DisplayFormat(DataFormatString = "{0:d}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? BirthDay { get; set; }
         [DisplayName("Địa chỉ thường trú")]
         public string Address { get; set; }
