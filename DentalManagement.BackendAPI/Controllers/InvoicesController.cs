@@ -81,11 +81,11 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok();
         }
 
-        //http://localhost:port/invoice/{id}/{status}
-        [HttpPatch("{invoiceId}/{updatedStatus}")]
-        public async Task<IActionResult> UpdateStatus(int invoiceId, Status updatedStatus)
+        //http://localhost:port/invoice/{id}/{updatedPaymentStatus}
+        [HttpPatch("{invoiceId}/{updatedPaymentStatus}")]
+        public async Task<IActionResult> UpdateStatus(int invoiceId, PaymentStatus updatedPaymentStatus)
         {
-            var affectedResult = await _invoiceService.UpdateStatus(invoiceId, updatedStatus);
+            var affectedResult = await _invoiceService.UpdateStatus(invoiceId, updatedPaymentStatus);
             if (!affectedResult)
             {
                 return BadRequest();

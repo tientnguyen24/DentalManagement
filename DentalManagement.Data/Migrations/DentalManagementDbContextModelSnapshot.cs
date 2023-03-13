@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace DentalManagement.Data.Migrations
 {
     [DbContext(typeof(DentalManagementDbContext))]
@@ -15,9 +17,10 @@ namespace DentalManagement.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.14")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("DentalManagement.Data.Entities.AppRole", b =>
                 {
@@ -30,8 +33,8 @@ namespace DentalManagement.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -41,13 +44,13 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRoles");
+                    b.ToTable("AppRoles", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "9760133e-386d-445a-980a-6b2f9842fa8c",
+                            ConcurrencyStamp = "c5a2a610-bf5a-4288-8ba1-70d1bbb299f9",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -67,8 +70,8 @@ namespace DentalManagement.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
@@ -87,8 +90,8 @@ namespace DentalManagement.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -124,22 +127,22 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUsers");
+                    b.ToTable("AppUsers", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "45f7433d-a022-4ab2-8d17-cef913c48d4b",
+                            ConcurrencyStamp = "3fb11715-c9d0-4c35-a0a9-8fe09415c5d0",
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 497, DateTimeKind.Local).AddTicks(9882),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 808, DateTimeKind.Local).AddTicks(507),
                             Email = "nhakhoa.thuanviet@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "nhakhoa.thuanviet@gmail.com",
                             NormalizedUserName = "NHAKHOATHUANVIET",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPBmOaF6lDsDI9Caw4amZCRxg2VhP8hVhD1cTW2+PFKBPoBhC3TlITQzSrNoOWaE8Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAKMhCqqtZ7U61BzAwaTVDZCXd3a5xeCSNlynbAHaRQKT5z914rZb6chB/Zq0WLVRA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Status = 0,
@@ -152,63 +155,62 @@ namespace DentalManagement.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("BirthDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("CurrentBalance")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("EmailAddress")
-                        .HasColumnType("varchar(100)")
                         .HasMaxLength(100)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("IdentifyCard")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
@@ -217,7 +219,7 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
 
                     b.HasData(
                         new
@@ -226,7 +228,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1997, 10, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 486, DateTimeKind.Local).AddTicks(9796),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7838),
                             CurrentBalance = 0m,
                             Description = "",
                             EmailAddress = "tientnguyen24@gmail.com",
@@ -243,7 +245,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1997, 2, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(631),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7841),
                             CurrentBalance = 0m,
                             Description = "",
                             EmailAddress = "thanhlamtran.32@gmail.com",
@@ -260,7 +262,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(2004, 5, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(665),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7843),
                             CurrentBalance = 0m,
                             Description = "",
                             EmailAddress = "thuytrang160504@gmail.com",
@@ -277,7 +279,7 @@ namespace DentalManagement.Data.Migrations
                             Address = "Khánh Hoà",
                             BirthDay = new DateTime(1991, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(668),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7845),
                             CurrentBalance = 0m,
                             Description = "",
                             EmailAddress = "luutrongtan1991@gmail.com",
@@ -294,15 +296,14 @@ namespace DentalManagement.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
@@ -312,42 +313,42 @@ namespace DentalManagement.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(300)")
-                        .HasMaxLength(300);
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("PrepaymentAmount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("Status")
+                    b.Property<int>("PaymentStatus")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<decimal>("PrepaymentAmount")
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("TotalDiscountAmount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalDiscountPercent")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalInvoiceAmount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagement.Data.Entities.InvoiceDetail", b =>
@@ -359,55 +360,55 @@ namespace DentalManagement.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ItemAmount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemDiscountAmount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ItemDiscountPercent")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Quantity")
+                        .HasMaxLength(100)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("InvoiceId", "ProductId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InvoiceDetails");
+                    b.ToTable("InvoiceDetails", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagement.Data.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
@@ -418,21 +419,21 @@ namespace DentalManagement.Data.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(2176),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7858),
                             ModifiedBy = "",
                             Name = "Khám và tư vấn",
                             ProductCategoryId = 1,
@@ -443,7 +444,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 2,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3444),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7860),
                             ModifiedBy = "",
                             Name = "Chụp phim",
                             ProductCategoryId = 1,
@@ -454,7 +455,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 3,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3527),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7863),
                             ModifiedBy = "",
                             Name = "Cạo vôi răng, đánh bóng răng",
                             ProductCategoryId = 1,
@@ -465,7 +466,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 4,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3530),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7865),
                             ModifiedBy = "",
                             Name = "Nhổ răng cửa (số 1, số 2, số 3)",
                             ProductCategoryId = 1,
@@ -476,7 +477,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 5,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3533),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7866),
                             ModifiedBy = "",
                             Name = "Nhổ răng cối nhỏ (số 4, số 5)",
                             ProductCategoryId = 1,
@@ -487,7 +488,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 6,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3535),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7868),
                             ModifiedBy = "",
                             Name = "Nhổ răng cối lớn (số 6, số 7)",
                             ProductCategoryId = 1,
@@ -498,7 +499,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 7,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3537),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7869),
                             ModifiedBy = "",
                             Name = "Nhổ răng khôn",
                             ProductCategoryId = 1,
@@ -509,7 +510,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 8,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3539),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7871),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng trẻ em",
                             ProductCategoryId = 1,
@@ -520,7 +521,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 9,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3542),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7873),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cửa (số 1, số 2, số 3)",
                             ProductCategoryId = 1,
@@ -531,7 +532,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 10,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3544),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7874),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cối nhỏ (số 4, số 5)",
                             ProductCategoryId = 1,
@@ -542,7 +543,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 11,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3546),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7876),
                             ModifiedBy = "",
                             Name = "Chữa răng - nội nha răng cối lớn (số 6, số 7)",
                             ProductCategoryId = 1,
@@ -553,7 +554,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 12,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3548),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7877),
                             ModifiedBy = "",
                             Name = "Tẩy trắng răng tại nhà",
                             ProductCategoryId = 1,
@@ -564,7 +565,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 13,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3551),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7881),
                             ModifiedBy = "",
                             Name = "Tẩy trắng răng tại phòng khám",
                             ProductCategoryId = 1,
@@ -575,7 +576,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 14,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3553),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7883),
                             ModifiedBy = "",
                             Name = "Chỉnh nha",
                             ProductCategoryId = 1,
@@ -586,7 +587,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 15,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3555),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7884),
                             ModifiedBy = "",
                             Name = "Implant",
                             ProductCategoryId = 1,
@@ -597,7 +598,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 16,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3557),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7886),
                             ModifiedBy = "",
                             Name = "Răng sứ - Kim loại Mỹ",
                             ProductCategoryId = 1,
@@ -608,7 +609,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 17,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3559),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7887),
                             ModifiedBy = "",
                             Name = "Răng sứ - Hợp kim Titan",
                             ProductCategoryId = 1,
@@ -619,7 +620,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 18,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3561),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7888),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Zirconia",
                             ProductCategoryId = 1,
@@ -630,7 +631,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 19,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3563),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7891),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - DDBio",
                             ProductCategoryId = 1,
@@ -641,7 +642,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 20,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3565),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7892),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Cercon HT",
                             ProductCategoryId = 1,
@@ -652,7 +653,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 21,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3567),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7894),
                             ModifiedBy = "",
                             Name = "Răng sứ cao cấp - Lava Plus",
                             ProductCategoryId = 1,
@@ -663,7 +664,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 22,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3569),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7895),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Việt Nam",
                             ProductCategoryId = 1,
@@ -674,7 +675,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 23,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3572),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7897),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Nhật",
                             ProductCategoryId = 1,
@@ -685,7 +686,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 24,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3574),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7898),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Răng Ý",
                             ProductCategoryId = 1,
@@ -696,7 +697,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 25,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3576),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7899),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Hàm khung kim loại",
                             ProductCategoryId = 1,
@@ -707,7 +708,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 26,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 487, DateTimeKind.Local).AddTicks(3578),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7901),
                             ModifiedBy = "",
                             Name = "Răng nhựa tháo lắp - Nền dẻo",
                             ProductCategoryId = 1,
@@ -720,40 +721,39 @@ namespace DentalManagement.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 484, DateTimeKind.Local).AddTicks(9220),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7729),
                             ModifiedBy = "",
                             Name = "Dịch vụ nha khoa"
                         },
@@ -761,7 +761,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 2,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 485, DateTimeKind.Local).AddTicks(8235),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7740),
                             ModifiedBy = "",
                             Name = "Vật tư nha khoa"
                         },
@@ -769,7 +769,7 @@ namespace DentalManagement.Data.Migrations
                         {
                             Id = 3,
                             CreatedBy = "admin",
-                            CreatedDate = new DateTime(2023, 2, 2, 12, 29, 26, 485, DateTimeKind.Local).AddTicks(8279),
+                            CreatedDate = new DateTime(2023, 3, 11, 21, 54, 13, 806, DateTimeKind.Local).AddTicks(7742),
                             ModifiedBy = "",
                             Name = "Khác"
                         });
@@ -779,8 +779,9 @@ namespace DentalManagement.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -793,15 +794,16 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRoleClaims");
+                    b.ToTable("AppRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -814,7 +816,7 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUserClaims");
+                    b.ToTable("AppUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -834,7 +836,7 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("AppUserLogins");
+                    b.ToTable("AppUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -847,7 +849,7 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("UserId", "RoleId");
 
-                    b.ToTable("AppUserRoles");
+                    b.ToTable("AppUserRoles", (string)null);
 
                     b.HasData(
                         new
@@ -874,7 +876,7 @@ namespace DentalManagement.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("AppUserTokens");
+                    b.ToTable("AppUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("DentalManagement.Data.Entities.Invoice", b =>
@@ -884,6 +886,8 @@ namespace DentalManagement.Data.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("DentalManagement.Data.Entities.InvoiceDetail", b =>
@@ -899,6 +903,10 @@ namespace DentalManagement.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("DentalManagement.Data.Entities.Product", b =>
@@ -908,6 +916,28 @@ namespace DentalManagement.Data.Migrations
                         .HasForeignKey("ProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ProductCategory");
+                });
+
+            modelBuilder.Entity("DentalManagement.Data.Entities.Customer", b =>
+                {
+                    b.Navigation("Invoices");
+                });
+
+            modelBuilder.Entity("DentalManagement.Data.Entities.Invoice", b =>
+                {
+                    b.Navigation("InvoiceDetails");
+                });
+
+            modelBuilder.Entity("DentalManagement.Data.Entities.Product", b =>
+                {
+                    b.Navigation("InvoiceDetails");
+                });
+
+            modelBuilder.Entity("DentalManagement.Data.Entities.ProductCategory", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

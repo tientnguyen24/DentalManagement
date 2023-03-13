@@ -2,7 +2,7 @@
 using DentalManagement.ApiIntegration.ApiIntegrations;
 using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Invoices;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -212,12 +212,12 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> Payment(BillViewModel request)
         {
             var model = GetBillViewModel();
-            var invoiceLines = new List<InvoiceDetailCreateRequest>();
+            var invoiceDetails = new List<InvoiceDetailCreateRequest>();
             decimal totalInvoiceAmount = 0;
             foreach (var item in model.BillItemViewModels)
             {
                 totalInvoiceAmount = totalInvoiceAmount + (item.UnitPrice * item.Quantity);
-                invoiceLines.Add(new InvoiceDetailCreateRequest()
+                invoiceDetails.Add(new InvoiceDetailCreateRequest()
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
@@ -233,7 +233,7 @@ namespace DentalManagement.Admin.Controllers
                 TotalInvoiceAmount = model.BillSummaryViewModel.TotalInvoiceAmount,
                 TotalDiscountAmount = model.BillSummaryViewModel.TotalDiscountAmount,
                 PrepaymentAmount = model.BillSummaryViewModel.PrepaymentAmount,
-                InvoiceLines = invoiceLines
+                InvoiceDetails = invoiceDetails
             };
 
             var data = await _invoiceApiClient.Create(invoiceCreateRequest);

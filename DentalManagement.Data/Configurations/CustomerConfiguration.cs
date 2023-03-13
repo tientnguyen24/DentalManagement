@@ -28,7 +28,7 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.CreatedBy).HasMaxLength(100);
             builder.Property(x => x.ModifiedDate).IsRequired(false);
             builder.Property(x => x.ModifiedBy).HasMaxLength(100);
-            builder.Property(x => x.CurrentBalance).HasMaxLength(100);
+            builder.Property(x => x.CurrentBalance).HasMaxLength(100).HasColumnType("decimal(18,2)");
         }
     }
 }

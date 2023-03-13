@@ -14,7 +14,7 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
     {
         public int Id { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:d}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
 
@@ -31,11 +31,14 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
         public string Description { get; set; }
-        public Status Status { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal PrepaymentAmount { get; set; }
-        public CustomerViewModel CustomerViewModel { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+        public decimal RemainAmount { get; set; }
+
         public List<InvoiceDetailViewModel> InvoiceDetailViewModels { get; set; }
     }
 }

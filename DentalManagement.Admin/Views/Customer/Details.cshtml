@@ -4,57 +4,198 @@
     ViewData["Title"] = "Chi tiết khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="page-wrapper">
+    <div class="content">
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-7 col-6">
+                    <h4 class="page-title">Hồ sơ khách hàng: @Model.FullName</h4>
+                </div>
 
-<div class="container-fluid">
-    <div class="tab">
-        <button class="tablinks" onclick="openCustomerTab(event, 'customerInformation')" id="defaultOpen">Thông tin cá nhân</button>
-        <button class="tablinks" onclick="openCustomerTab(event, 'customerMedicalBill')">Khám & Điều trị</button>
-        <button class="tablinks" onclick="openCustomerTab(event, 'customerPaymentHistory')">Lịch sử giao dịch</button>
-    </div>
-
-    <div id="customerInformation" class="tabcontent">
-        <div class="form-group row">
-            <div class="col-sm-3 mb-3 mb-sm-0">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" readonly />
-
-
-                <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" readonly />
-
-
-                <label asp-for="BirthDay" class="control-label"></label>
-                <input asp-for="BirthDay" class="form-control" readonly />
-
+                <div class="col-sm-5 col-6 text-right m-b-30">
+                    <a href="#" class="btn btn-danger btn-rounded"><i class="fa fa-edit"></i> Sửa thông tin</a>
+                </div>
             </div>
-            <div class="col-sm-3 mb-3 mb-sm-0">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" readonly />
-
-
-                <label asp-for="EmailAddress" class="control-label"></label>
-                <input asp-for="EmailAddress" class="form-control" readonly />
-
-
-                <label asp-for="IdentifyCard" class="control-label"></label>
-                <input asp-for="IdentifyCard" class="form-control" readonly />
-
+            <div class="card-box profile-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="profile-view">
+                            <div class="profile-img-wrap">
+                                <div class="profile-img">
+                                    <a href="#"><img class="avatar" src="assets/img/user.jpg" alt="user"></a>
+                                </div>
+                            </div>
+                            <div class="profile-basic">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="profile-info-left">
+                                            <h3 class="user-name m-t-0 mb-0">@Model.FullName</h3>
+                                            <small class="text-muted">!!Loại khách hàng</small>
+                                            <div class="customer-id">Mã khách hàng : @Model.Id</div>
+                                            <div class="btn-create-medical"><a href="#" class="btn btn-primary">Tạo phiếu khám</a></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <ul class="personal-info">
+                                            <li>
+                                                <span class="title">Số điện thoại:</span>
+                                                <span class="text"><a href="#">@Model.PhoneNumber</a></span>
+                                            </li>
+                                            <li>
+                                                <span class="title">Email:</span>
+                                                <span class="text"><a href="#">@Model.EmailAddress</a></span>
+                                            </li>
+                                            <li>
+                                                <span class="title">Ngày sinh:</span>
+                                                <span class="text">@Model.BirthDay</span>
+                                            </li>
+                                            <li>
+                                                <span class="title">Địa chỉ:</span>
+                                                <span class="text">@Model.Address</span>
+                                            </li>
+                                            <li>
+                                                <span class="title">Giới tính:</span>
+                                                <span class="text">@Model.Gender</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6 mb-3 mb-sm-0">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" readonly />
+            <div class="profile-tabs">
+                <ul class="nav nav-tabs nav-tabs-bottom">
+                    <li class="nav-item"><a class="nav-link active" href="#customer-medical-tab" data-toggle="tab">Phiếu khám bệnh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#customer-payment-history-tab" data-toggle="tab">Lịch sử thanh toán</a></li>
+                </ul>
 
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="customer-medical-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-box">
+                                    <h3 class="card-title">Phiếu khám bệnh</h3>
+                                    <div class="card-body">
+                                    </div>
+                                </div>
 
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" style="min-height: 108px;" readonly></textarea>
-
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="customer-payment-history-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-box">
+                                    <h3 class="card-title">Lịch sử thanh toán</h3>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Số hóa đơn
+                                                        </th>
+                                                        <th>
+                                                            Ngày tạo
+                                                        </th>
+                                                        <th>
+                                                            Giảm giá
+                                                        </th>
+                                                        <th>
+                                                            Thành tiền
+                                                        </th>
+                                                        <th>
+                                                            Thanh toán
+                                                        </th>
+                                                        <th>
+                                                            Còn lại
+                                                        </th>
+                                                        <th>
+                                                            Trạng thái
+                                                        </th>
+                                                        <th class="text-right">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.InvoiceViewModels.Count == 0)
+                                                    {
+                                                        <tr>
+                                                            <td colspan="8">Không tìm thấy dữ liệu, vui lòng thử lại !!!</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var item in Model.InvoiceViewModels)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.TotalDiscountAmount)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.TotalInvoiceAmount)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.PrepaymentAmount)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.RemainAmount)
+                                                                </td>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => item.PaymentStatus)
+                                                                </td>
+                                                                <td class="text-right">
+                                                                    <div class="dropdown dropdown-action">
+                                                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                            <i class="fa fa-ellipsis-v"></i>
+                                                                        </a>
+                                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                                            <a href="@Url.Action("Details", "Invoice", new { id = item.Id })" class="dropdown-item">
+                                                                                <i class="fa fa-bars"></i> Chi tiết
+                                                                            </a>
+                                                                            <a href="@Url.Action("Edit", "Customer", new { id = item.Id })" class="dropdown-item">
+                                                                                <i class="fa fa-pencil"></i> Sửa
+                                                                            </a>
+                                                                            <a href="@Url.Action("Delete", "Invoice", new { id = item.Id })" class="dropdown-item" data-toggle="modal" data-target="#delete_invoice">
+                                                                                <i class="fa fa-trash"></i> Xóa
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-3">
-                @Html.ActionLink("Sửa thông tin", "Edit", "Customer", new { id = Model.Id }, new { @class = "btn btn-danger" })
+    </div>
+</div>
+<div id="delete_invoice" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Xóa thông tin phiếu khám?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Đóng</a>
+                    <button type="submit" class="btn btn-danger">Ok!</button>
+                </div>
             </div>
         </div>
     </div>
-
 </div>

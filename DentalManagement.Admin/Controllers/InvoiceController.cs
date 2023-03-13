@@ -2,7 +2,7 @@
 using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Invoices;
-using DentalManagement.ViewModels.Catalog.Invoices.InvoiceLines;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Catalog.Products;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Authorization;

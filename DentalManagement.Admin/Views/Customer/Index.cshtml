@@ -5,124 +5,147 @@
     ViewData["Title"] = "Danh sách khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div class="container-fluid">
-    <h1 class="h3 mb-2 text-gray-800">Danh sách khách hàng</h1>
-    <div class="row">
-        <div class="col-md-6 col-xs-12">
-            <a type="button" class="btn btn-outline-primary" asp-action="Create" asp-controller="Customer">
-                <i class="fa fa-user-plus"></i>
-                Tạo mới
-            </a>
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <form asp-action="Index" asp-controller="Customer" method="get">
-                <div class="input-group">
-                    <input type="text" class="form-control border-1 small" placeholder="Nhập từ khoá ..."
-                           aria-label="Search" aria-describedby="basic-addon2" value="@ViewBag.Keyword" name="keyword">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fas fa-search fa-sm"></i>
-                        </button>
-                        <button class="btn btn-outline-primary" type="button" onclick="window.location.href='/Customer/Index'">
-                            X
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <hr />
-    <!--number of record-->
-    <div class="row">
-        <form asp-action="Index" asp-controller="Customer" method="get" name="pageSize">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <select class="form-control" onchange="numberOfRecords()">
-                        <option value="10" selected>Số lượng hiển thị</option>
-                        <option value="20">20 khách hàng</option>
-                        <option value="50">50 khách hàng</option>
-                        <option value="100">100 khách hàng</option>
-                    </select>
-                </div>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <h4 class="page-title">KHÁCH HÀNG</h4>
             </div>
-        </form>
-    </div>
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive-md">
-                <table class="table table-striped table-bordered" width="100%" cellspacing="0">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>
-                                Họ và tên
-                            </th>
-                            <th>
-                                Giới tính
-                            </th>
-                            <th>
-                                Ngày sinh
-                            </th>
-                            <th>
-                                Số điện thoại
-                            </th>
-                            <th>
-                                Địa chỉ
-                            </th>
-                            <th>
-                                Ghi chú
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Items.Count == 0)
-                        {
+            <div class="col-md-6 col-xs-12">
+                <a asp-action="Create" asp-controller="Customer" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Thêm khách hàng</a>
+            </div>
+        </div>
+        <hr />
+        <div class="row filter-row">
+            <!--number of record-->
+            <div class="col-md-3 col-xs-12">
+                <form asp-action="Index" asp-controller="Customer" method="get" name="pageSize">
+                    <div class="form-group form-focus select-focus">
+                        <label class="focus-label">Hiển thị</label>
+                        <select class="select floating">
+                            <option value="20">20 dòng dữ liệu</option>
+                            <option value="50">50 dòng dữ liệu</option>
+                            <option value="100">100 dòng dữ liệu</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <!--search-->
+            <div class="col-md-9 col-xs-12">
+                <form asp-action="Index" asp-controller="Customer" method="get">
+                    <div class="form-group form-focus">
+                        <label class="focus-label">Tìm kiếm theo họ tên, số điện thoại</label>
+                        <input type="text" class="form-control floating"
+                               aria-label="Search" aria-describedby="basic-addon2" value="@ViewBag.Keyword" name="keyword">
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button class="btn btn-danger" type="button" onclick="window.location.href='/Customer/Index'">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table">
+                        <thead>
                             <tr>
-                                <td colspan="7">Không có kết quả</td>
+                                <th>
+                                    Họ và tên
+                                </th>
+                                <th>
+                                    Giới tính
+                                </th>
+                                <th>
+                                    Ngày sinh
+                                </th>
+                                <th>
+                                    Số điện thoại
+                                </th>
+                                <th>
+                                    Địa chỉ
+                                </th>
+                                <th>
+                                    Ghi chú
+                                </th>
+                                <th class="text-right">Thao tác</th>
                             </tr>
-                        }
-                        else
-                        {
-                            foreach (var item in Model.Items)
+                        </thead>
+                        <tbody>
+                            @if (Model.Items.Count == 0)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FullName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Gender)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BirthDay)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                @Html.ActionLink(" Sửa", "Edit", new { id = item.Id })<i class="fa fa-pencil m-r-5"></i>
-                                                @Html.ActionLink("Xem", "Details", new { id = item.Id })<i class="fa fa-trash-o m-r-5"></i>
-                                                @Html.ActionLink(" Xóa", "Delete", new { id = item.Id })<i class="fa fa-trash-o m-r-5"></i>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td colspan="7">Không tìm thấy dữ liệu, vui lòng thử lại !!!</td>
                                 </tr>
                             }
-                        }
-                    </tbody>
-                </table>
+                            else
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Gender)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BirthDay)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Address)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-v"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="@Url.Action("Details", "Customer", new { id = item.Id })" class="dropdown-item">
+                                                        <i class="fa fa-bars"></i> Chi tiết
+                                                    </a>
+                                                    <a href="@Url.Action("Edit", "Customer", new { id = item.Id })" class="dropdown-item">
+                                                        <i class="fa fa-edit"></i> Sửa
+                                                    </a>
+                                                    <a href="@Url.Action("Delete", "Customer", new { id = item.Id })" class="dropdown-item" data-toggle="modal" data-target="#delete_customer">
+                                                        <i class="fa fa-trash"></i> Xóa
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @await Component.InvokeAsync("Pager", Model)
             </div>
-            @await Component.InvokeAsync("Pager", Model)
+        </div>
+    </div>
+</div>
+<div id="delete_customer" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Xóa thông tin khách hàng?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Đóng</a>
+                    <button type="submit" class="btn btn-danger">Ok!</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
