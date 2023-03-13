@@ -16,7 +16,7 @@ namespace DentalManagement.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).IsRequired(true).HasMaxLength(100);
-            builder.Property(x => x.UnitPrice).IsRequired(true).HasMaxLength(100);
+            builder.Property(x => x.UnitPrice).IsRequired(true).HasMaxLength(100).HasColumnType("decimal(18,2)");
             builder.Property(x => x.CreatedDate).IsRequired(true);
             builder.Property(x => x.CreatedBy).HasMaxLength(100);
             builder.Property(x => x.ModifiedDate).IsRequired(false);

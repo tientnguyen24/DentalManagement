@@ -12,6 +12,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DentalManagement.Data.Enums;
 using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
+using DentalManagement.ViewModels.Catalog.Invoices;
 
 namespace DentalManagement.Application.Catalog.Customers
 {
@@ -64,12 +66,12 @@ namespace DentalManagement.Application.Catalog.Customers
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-        public async Task<bool> UpdateStatus(int customerId, Status updatedStatus)
+        public async Task<bool> UpdateStatus(int id, Status updatedStatus)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {id}");
             }
             else if (customer.Status == updatedStatus)
             {
@@ -81,12 +83,12 @@ namespace DentalManagement.Application.Catalog.Customers
             }
             return await _context.SaveChangesAsync() > 0;
         }
-        public async Task<int> Delete(int customerId)
+        public async Task<int> Delete(int id)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer == null)
             {
-                throw new DentalManagementException($"Không tìm thấy khách hàng: {customerId}");
+                throw new DentalManagementException($"Không tìm thấy khách hàng: {id}");
             }
             else
             {
@@ -162,13 +164,11 @@ namespace DentalManagement.Application.Catalog.Customers
             return pagedResult;
         }
 
-        public async Task<ApiResult<CustomerViewModel>> GetById(int customerId)
+        public async Task<ApiResult<CustomerViewModel>> GetById(int id)
         {
             var customer = await _context.Customers
                 .Include(c => c.Invoices)
-                .ThenInclude(c => c.InvoiceDetails)
-                .ThenInclude(c => c.Product)
-                .FirstOrDefaultAsync(c => c.Id == customerId);
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
@@ -189,7 +189,22 @@ namespace DentalManagement.Application.Catalog.Customers
                 CreatedDate = customer.CreatedDate,
                 CreatedBy = customer.CreatedBy,
                 ModifiedDate = customer.ModifiedDate,
-                ModifiedBy = customer.ModifiedBy
+                ModifiedBy = customer.ModifiedBy,
+                InvoiceViewModels = customer.Invoices?.Select(inv => new InvoiceViewModel()
+                {
+                    Id = inv.Id,
+                    CreatedDate = inv.CreatedDate,
+                    CreatedBy = inv.CreatedBy,
+                    TotalDiscountPercent = inv.TotalDiscountPercent,
+                    TotalDiscountAmount = inv.TotalDiscountAmount,
+                    TotalInvoiceAmount = inv.TotalInvoiceAmount,
+                    ModifiedDate = inv.ModifiedDate,
+                    ModifiedBy = inv.ModifiedBy,
+                    Description = inv.Description,
+                    PaymentStatus = inv.PaymentStatus,
+                    PrepaymentAmount = inv.PrepaymentAmount,
+                    RemainAmount = inv.TotalInvoiceAmount - inv.PrepaymentAmount
+                }).ToList()
             };
             return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
         }
