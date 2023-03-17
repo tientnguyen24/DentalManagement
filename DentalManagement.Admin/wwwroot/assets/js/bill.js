@@ -1,4 +1,4 @@
-﻿var BillController = function () {
+﻿let BillController = function () {
     this.initialize = function () {
         loadProductList();
         addProductToBill();
@@ -16,12 +16,12 @@
                 if (res.length === 0) {
                     $('#tbl_product_bill').hide();
                 }
-                var product_table_body_html = '';
+                let product_table_body_html = '';
                 $.each(res, function (i, item) {
                     product_table_body_html += "<tr>"
                         + " <td>"
                         + " <button type=\"button\" class=\"btn btn-add-product-to-bill\" data-id=\"" + item.productId + "\">"
-                        + " <i class=\"fas fa-plus-circle fa-sm\"></i>"
+                        + " <i class=\"fa fa-plus-circle\"></i>"
                         + " </button></td>"
                         + " <td>" + (i + 1) + "</td>"
                         + " </td >"
@@ -31,11 +31,6 @@
                         + " </tr>";
                 });
                 $('#product_bill_body').html(product_table_body_html);
-                $('#tbl_product_bill').DataTable({
-                    language: {
-                        url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json'
-                    }
-                });
             }
         });
     }
@@ -64,7 +59,7 @@
             type: "GET",
             url: '/Bill/GetListCustomers',
             success: function (res) {
-                var dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
+                let dropListCustomer_html = "<option value=\"\">-- Chọn khách hàng --</option>";
                 $.each(res, function (i, item) {
                     dropListCustomer_html += "<option value=\"" + item.customerId + "\">" + item.fullName + "</option>"
                 });
@@ -78,12 +73,12 @@
             type: "GET",
             url: '/Bill/GetCustomer',
             success: function (res) {
-                var item = $.parseJSON(res);
+                let item = $.parseJSON(res);
                 if (res.length === 0) {
                     $('#tbl_customer_bill').hide();
                 }
                 if (item['CustomerId'] > 0) {
-                    var customer_table_body_html = '';
+                    let customer_table_body_html = '';
                     if (item['Gender'] === 0) {
                         item['Gender'] = 'Nam';
                     }
@@ -115,11 +110,11 @@
                 url: '/Bill/AddCustomerToBill',
                 data: { id: id },
                 success: function (res) {
-                    var item = $.parseJSON(res);
+                    let item = $.parseJSON(res);
                     if (res.length === 0) {
                         $('#tbl_customer_bill').hide();
                     }
-                    var customer_table_body_html = '';
+                    let customer_table_body_html = '';
                     if (item['Gender'] === 0) {
                         item['Gender'] = 'Nam';
                     }
@@ -150,9 +145,8 @@
                 if (res.length === 0) {
                     $('#tbl_bill').hide();
                 }
-                var html = '';
-                var total = 0;
-                var tempTotal = 0;
+                let html = '';
+                let tempTotal = 0;
                 $.each(res, function (i, item) {
                     html += "<tr>"
                         + "<td class=\"col-md-1\"><button type=\"button\" class=\"btn btn-remove-item\" data-id=\"" + item.productId + "\"><i class=\"fas fa-trash fa-sm text-danger\"></i></button></td>"
@@ -184,8 +178,8 @@
                 if (res['description'] != null) {
                     $('#inp_decription').attr("value", "" + res['description'] + "");
                 }
-                var tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
-                var total = tempTotalAmount - res['totalDiscountAmount'];
+                let tempTotalAmount = parseInt($('#lbl_temp_total').text().replace(/,/g, ''), 10);
+                let total = tempTotalAmount - res['totalDiscountAmount'];
                 $('#lbl_total').text(numberWithCommas(total));
                 $('#inp_total_discount_amount').attr("value", "" + numberWithCommas(res['totalDiscountAmount']) + "");
                 if (res['prepaymentAmount'] == '' || res['totalDiscountAmount'] != '') {
@@ -199,7 +193,7 @@
                     $('#lbl_remaining_amount').text(numberWithCommas(total));
                 }
                 else {
-                    var prepaymentAmount = parseInt($('#inp_prepayment_amount').val().replace(/,/g, ''), 10);
+                    let prepaymentAmount = parseInt($('#inp_prepayment_amount').val().replace(/,/g, ''), 10);
                     $('#lbl_remaining_amount').text(numberWithCommas(total - prepaymentAmount));
                 }
             },
@@ -302,8 +296,8 @@
 
 $(document).ready(function () {
 
-    var current_fs, next_fs, previous_fs; //fieldsets
-    var opacity;
+    let current_fs, next_fs, previous_fs; //fieldsets
+    let opacity;
 
     $(".next").click(function () {
 
