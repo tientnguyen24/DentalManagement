@@ -109,6 +109,5 @@ namespace DentalManagement.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
-
     }
 }

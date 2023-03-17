@@ -9,7 +9,7 @@
         <div class="content">
             <div class="row">
                 <div class="col-sm-7 col-6">
-                    <h4 class="page-title">Hồ sơ khách hàng: @Model.FullName</h4>
+                    <h4 class="page-title">Hồ sơ khách hàng: @Html.DisplayFor(model => model.FullName)</h4>
                 </div>
 
                 <div class="col-sm-5 col-6 text-right m-b-30">
@@ -29,33 +29,35 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="profile-info-left">
-                                            <h3 class="user-name m-t-0 mb-0">@Model.FullName</h3>
+                                            <h3 class="user-name m-t-0 mb-0">@Html.DisplayFor(model => model.FullName)</h3>
                                             <small class="text-muted">!!Loại khách hàng</small>
-                                            <div class="customer-id">Mã khách hàng : @Model.Id</div>
-                                            <div class="btn-create-medical"><a href="#" class="btn btn-primary">Tạo phiếu khám</a></div>
+                                            <div class="customer-id">Mã khách hàng : @Html.DisplayFor(model => model.Id)</div>
+                                            <div class="customer-description">
+                                                @Html.DisplayFor(model => model.Description)
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <ul class="personal-info">
                                             <li>
                                                 <span class="title">Số điện thoại:</span>
-                                                <span class="text"><a href="#">@Model.PhoneNumber</a></span>
+                                                <span class="text"><a href="tel:@Model.PhoneNumber">@Html.DisplayFor(model => model.PhoneNumber)</a></span>
                                             </li>
                                             <li>
                                                 <span class="title">Email:</span>
-                                                <span class="text"><a href="#">@Model.EmailAddress</a></span>
+                                                <span class="text">@Html.DisplayFor(model => model.EmailAddress)</span>
                                             </li>
                                             <li>
                                                 <span class="title">Ngày sinh:</span>
-                                                <span class="text">@Model.BirthDay</span>
+                                                <span class="text">@Html.DisplayFor(model => model.BirthDay)</span>
                                             </li>
                                             <li>
                                                 <span class="title">Địa chỉ:</span>
-                                                <span class="text">@Model.Address</span>
+                                                <span class="text">@Html.DisplayFor(model => model.Address)</span>
                                             </li>
                                             <li>
                                                 <span class="title">Giới tính:</span>
-                                                <span class="text">@Model.Gender</span>
+                                                <span class="text">@Html.DisplayFor(model => model.Gender)</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -76,11 +78,23 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
-                                    <h3 class="card-title">Phiếu khám bệnh</h3>
+                                    <div class="row filter-row">
+                                        <div class="col-sm-6 col-md-3">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <a href="#" class="btn btn-primary btn-block"><i class=" fa fa-plus"></i> Tạo phiếu khám</a>
+                                        </div>
+                                    </div>
                                     <div class="card-body">
+                                        <div class="medical-box">
+
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -88,7 +102,38 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
-                                    <h3 class="card-title">Lịch sử thanh toán</h3>
+                                    <div class="row filter-row">
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="form-group form-focus">
+                                                <label class="focus-label">Từ</label>
+                                                <div class="cal-icon">
+                                                    <input class="form-control floating datetimepicker" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="form-group form-focus">
+                                                <label class="focus-label">Đến</label>
+                                                <div class="cal-icon">
+                                                    <input class="form-control floating datetimepicker" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="form-group form-focus select-focus">
+                                                <label class="focus-label">Trạng thái</label>
+                                                <select class="select floating">
+                                                    <option>Tất cả</option>
+                                                    <option>Chưa hoàn thành</option>
+                                                    <option>Đã hoàn thành</option>
+                                                    <option>Đã hủy</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <a href="#" class="btn btn-success btn-block"><i class="fa fa-filter"></i> Lọc</a>
+                                        </div>
+                                    </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-striped custom-table">
@@ -199,3 +244,4 @@
         </div>
     </div>
 </div>
+

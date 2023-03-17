@@ -2534,12 +2534,12 @@ ul.chat-user-total li i.old-users {
 	color: #777;
 	display: inline-block;
 }
-.staff-mail > a {
+.customer-mail > a {
 	color: #777;
 	display: inline-block;
 	margin-top: 5px;
 }
-.staff-action-btns {
+.customer-action-btns {
 	margin-top: 10px;
 }
 .customer-id {
@@ -2717,19 +2717,19 @@ a.fc-event:not([href]) {
 .profile-view .profile-basic {
 	margin-left: 170px;
 }
-.btn-create-medical {
+.customer-description {
 	margin-top: 30px;
 }
-.experience-box {
+.medical-box {
 	position: relative;
 }
-.experience-list {
+.medical-list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	position: relative;
 }
-.experience-list:before {
+.medical-list:before {
 	background: #ddd;
 	bottom: 0;
 	content: "";
@@ -2738,19 +2738,19 @@ a.fc-event:not([href]) {
 	top: 8px;
 	width: 2px;
 }
-.experience-list > li {
+.medical-list > li {
 	position: relative;
 }
-.experience-list > li:last-child .experience-content {
+.medical-list > li:last-child .medical-content {
 	margin-bottom: 0;
 }
-.experience-user .avatar {
+.medical-user .avatar {
 	height: 32px;
 	line-height: 32px;
 	margin: 0;
 	width: 32px;
 }
-.experience-list > li .experience-user {
+.medical-list > li .medical-user {
 	background: #fff;
 	height: 10px;
 	left: 4px;
@@ -2760,20 +2760,20 @@ a.fc-event:not([href]) {
 	top: 4px;
 	width: 10px;
 }
-.experience-list > li .experience-content {
+.medical-list > li .medical-content {
 	background-color: #fff;
 	margin: 0 0 20px 40px;
 	padding: 0;
 	position: relative;
 }
-.experience-list > li .experience-content .timeline-content {
+.medical-list > li .medical-content .timeline-content {
 	color: #9e9e9e;
 }
-.experience-list > li .experience-content .timeline-content a.name {
+.medical-list > li .medical-content .timeline-content a.name {
 	color: #616161;
 	font-weight: bold;
 }
-.experience-list > li .time {
+.medical-list > li .time {
 	color: #bdbdbd;
 	display: block;
 	font-size: 12px;
