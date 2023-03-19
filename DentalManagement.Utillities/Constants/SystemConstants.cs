@@ -7,9 +7,9 @@ namespace DentalManagement.Utilities.Constants
     public static class SystemConstants
     {
         public const string MainConnectionString = "DentalManagementDb";
-        public const string BillSession = "BillSession";
-        public const string BillSummarySession = "BillSummarySession";
-        public const string BillItemSession = "BillItemSession";
+        public const string InvoiceSession = "InvoiceSession";
+        public const string InvoiceSummarySession = "InvoiceSummarySession";
+        public const string InvoiceItemSession = "InvoiceItemSession";
         public const string ProductSession = "ProductSession";
         public const string CustomerSession = "CustomerSession";
         public static class AppSettings

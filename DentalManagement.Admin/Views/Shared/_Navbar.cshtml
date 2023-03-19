@@ -35,7 +35,7 @@
         </div>
     </div>
 </div>
-<div id="sign_out" class="modal fade delete-modal" role="dialog">
+<div id="sign_out" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
@@ -44,7 +44,7 @@
                 <div class="m-t-20">
                     <form method="post" asp-controller="User" asp-action="Logout">
                             <a href="#" class="btn btn-white" data-dismiss="modal">Đóng</a>
-                            <button type="submit" class="btn btn-danger">Ok!</button>
+                            <button type="submit" class="btn btn-danger">Xác nhận</button>
                     </form>
                 </div>
             </div>

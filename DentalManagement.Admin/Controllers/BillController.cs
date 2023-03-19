@@ -34,7 +34,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpGet]
         public IActionResult GetListItems()
         {
-            var session = HttpContext.Session.GetString(SystemConstants.BillItemSession);
+            var session = HttpContext.Session.GetString(SystemConstants.InvoiceItemSession);
             List<BillItemViewModel> currentBillItem = new List<BillItemViewModel>();
             if (session != null)
                 currentBillItem = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
@@ -44,7 +44,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpGet]
         public IActionResult GetListSummary()
         {
-            var session = HttpContext.Session.GetString(SystemConstants.BillSummarySession);
+            var session = HttpContext.Session.GetString(SystemConstants.InvoiceSummarySession);
             BillSummaryViewModel currentBillSummary = new BillSummaryViewModel();
             if (session != null)
             {
@@ -59,7 +59,7 @@ namespace DentalManagement.Admin.Controllers
                     Description = "",
                     PrepaymentAmount = 0
                 };
-                HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
+                HttpContext.Session.SetString(SystemConstants.InvoiceSummarySession, JsonConvert.SerializeObject(currentBillSummary));
             }
             return Ok(currentBillSummary);
         }
@@ -135,7 +135,7 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> AddProductToBill(int id)
         {
             var product = await _productApiClient.GetById(id);
-            var session = HttpContext.Session.GetString(SystemConstants.BillItemSession);
+            var session = HttpContext.Session.GetString(SystemConstants.InvoiceItemSession);
             List<BillItemViewModel> currentBillItem = new List<BillItemViewModel>();
             if (session != null)
                 currentBillItem = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
@@ -154,13 +154,13 @@ namespace DentalManagement.Admin.Controllers
                 Quantity = quantity
             };
             currentBillItem.Add(billItem);
-            HttpContext.Session.SetString(SystemConstants.BillItemSession, JsonConvert.SerializeObject(currentBillItem));
+            HttpContext.Session.SetString(SystemConstants.InvoiceItemSession, JsonConvert.SerializeObject(currentBillItem));
             return Ok(currentBillItem);
         }
 
         public IActionResult UpdateQuantity(int id, int quantity)
         {
-            var session = HttpContext.Session.GetString(SystemConstants.BillItemSession);
+            var session = HttpContext.Session.GetString(SystemConstants.InvoiceItemSession);
             List<BillItemViewModel> currentBillItem = new List<BillItemViewModel>();
             if (session != null)
                 currentBillItem = JsonConvert.DeserializeObject<List<BillItemViewModel>>(session);
@@ -176,13 +176,13 @@ namespace DentalManagement.Admin.Controllers
                     item.Quantity = quantity;
                 }
             }
-            HttpContext.Session.SetString(SystemConstants.BillItemSession, JsonConvert.SerializeObject(currentBillItem));
+            HttpContext.Session.SetString(SystemConstants.InvoiceItemSession, JsonConvert.SerializeObject(currentBillItem));
             return Ok(currentBillItem);
         }
 
         public IActionResult UpdateListSummary(decimal prepaymentAmount, decimal totalDiscountAmount, string description)
         {
-            var session = HttpContext.Session.GetString(SystemConstants.BillSummarySession);
+            var session = HttpContext.Session.GetString(SystemConstants.InvoiceSummarySession);
             BillSummaryViewModel currentBillSummary = new BillSummaryViewModel();
             if (session != null)
                 currentBillSummary = JsonConvert.DeserializeObject<BillSummaryViewModel>(session);
@@ -193,7 +193,7 @@ namespace DentalManagement.Admin.Controllers
                 PrepaymentAmount = prepaymentAmount,
                 Description = description
             };
-            HttpContext.Session.SetString(SystemConstants.BillSummarySession, JsonConvert.SerializeObject(currentBillSummary));
+            HttpContext.Session.SetString(SystemConstants.InvoiceSummarySession, JsonConvert.SerializeObject(currentBillSummary));
             return Ok(currentBillSummary);
         }
 
@@ -242,8 +242,8 @@ namespace DentalManagement.Admin.Controllers
                 TempData["errorMsg"] = "Thiếu thông tin";
                 return View(GetBillViewModel());
             }
-            HttpContext.Session.Remove(SystemConstants.BillItemSession);
-            HttpContext.Session.Remove(SystemConstants.BillSummarySession);
+            HttpContext.Session.Remove(SystemConstants.InvoiceItemSession);
+            HttpContext.Session.Remove(SystemConstants.InvoiceSummarySession);
             HttpContext.Session.Remove(SystemConstants.CustomerSession);
             TempData["successMsg"] = "Thành công";
             return RedirectToAction("Index");
@@ -251,11 +251,11 @@ namespace DentalManagement.Admin.Controllers
 
         private BillViewModel GetBillViewModel()
         {
-            var billItemSession = HttpContext.Session.GetString(SystemConstants.BillItemSession);
+            var billItemSession = HttpContext.Session.GetString(SystemConstants.InvoiceItemSession);
             List<BillItemViewModel> currentBillItem = new List<BillItemViewModel>();
             var customerSession = HttpContext.Session.GetString(SystemConstants.CustomerSession);
             CustomerViewModel currentCustomer = new CustomerViewModel();
-            var billSummarySession = HttpContext.Session.GetString(SystemConstants.BillSummarySession);
+            var billSummarySession = HttpContext.Session.GetString(SystemConstants.InvoiceSummarySession);
             BillSummaryViewModel currentBillSummary = new BillSummaryViewModel();
             if (billItemSession != null && customerSession != null && billSummarySession != null)
             {
