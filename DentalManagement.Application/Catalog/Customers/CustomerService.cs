@@ -136,7 +136,7 @@ namespace DentalManagement.Application.Catalog.Customers
 
             //paging
             int totalRow = await query.CountAsync();
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new CustomerViewModel()
+            var data = await query.OrderBy(x => x.Id).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new CustomerViewModel()
             {
                 Id = x.Id,
                 FullName = x.FullName,

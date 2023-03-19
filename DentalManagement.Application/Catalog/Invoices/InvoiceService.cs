@@ -215,7 +215,7 @@ namespace DentalManagement.Application.Catalog.Invoices
 
             //paging
             int totalRow = await query.CountAsync();
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new InvoiceViewModel()
+            var data = await query.OrderBy(x => x.i.Id).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).Select(x => new InvoiceViewModel()
             {
                 Id = x.i.Id,
                 CreatedDate = x.i.CreatedDate,
