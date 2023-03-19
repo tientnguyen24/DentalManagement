@@ -143,7 +143,6 @@ a {
     transition: all 0.4s ease;
     -moz-transition: all 0.4s ease;
     -o-transition: all 0.4s ease;
-    -ms-transition: all 0.4s ease;
     -webkit-transition: all 0.4s ease;
 }
 
@@ -426,8 +425,6 @@ table.table td h2 {
 .blur {
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
-    -o-filter: blur(3px);
-    -ms-filter: blur(3px);
     filter: blur(3px);
 }
 
@@ -1177,7 +1174,6 @@ textarea.form-control {
     transition: unset;
     -moz-transition: unset;
     -o-transition: unset;
-    -ms-transition: unset;
     -webkit-transition: unset;
 }
 
@@ -1589,6 +1585,7 @@ ul.chat-user-total li {
 .table.custom-table > thead > tr > td,
 .table.custom-table > thead > tr > th {
     padding: 10px 8px;
+    vertical-align: middle;
 }
 
 .table.custom-table > thead > tr > th.width-5-percent {
@@ -2008,7 +2005,6 @@ ul.chat-user-total li {
 
 .fileupload input.upload {
     cursor: pointer;
-    filter: alpha(opacity=0);
     font-size: 20px;
     margin: 0;
     opacity: 0;
@@ -3540,7 +3536,6 @@ a.fc-event:not([href]) {
     cursor: pointer;
     -webkit-transition: all 300ms ease;
     -moz-transition: all 300ms ease;
-    -ms-transition: all 300ms ease;
     -o-transition: all 300ms ease;
     transition: all 300ms ease;
 }
@@ -4184,7 +4179,6 @@ table.table-inbox tbody tr.checked {
             -ms-transform: scaleY(1);
             transform: scaleY(1);
             -moz-transition: all 0.5s ease-in-out 0s;
-            -ms-transition: all 0.5s ease-in-out 0s;
             -o-transition: all 0.5s ease-in-out 0s;
             -webkit-transition: all 0.5s ease-in-out 0s;
             transition: all 0.5s ease-in-out 0s;
@@ -4230,7 +4224,6 @@ table.table-inbox tbody tr.checked {
         color: #009efb;
         margin-left: 10px;
         -moz-transition: all 0.2s linear 0s;
-        -ms-transition: all 0.2s linear 0s;
         -o-transition: all 0.2s linear 0s;
         -webkit-transition: all 0.2s linear 0s;
         transition: all 0.2s linear 0s;
@@ -4261,7 +4254,6 @@ table.table-inbox tbody tr.checked {
 
         .blog-info a:hover {
             color: #009efb;
-            ;
         }
 
     .blog-info i {
@@ -4375,7 +4367,6 @@ table.table-inbox tbody tr.checked {
         -ms-transform: scale(1);
         transform: scale(1);
         -moz-transition: all 0.3s ease-in-out 0s;
-        -ms-transition: all 0.3s ease-in-out 0s;
         -o-transition: all 0.3s ease-in-out 0s;
         -webkit-transition: all 0.3s ease-in-out 0s;
         transition: all 0.3s ease-in-out 0s;
@@ -4441,7 +4432,6 @@ table.table-inbox tbody tr.checked {
                 color: #009efb;
                 margin-left: 10px;
                 -moz-transition: all 0.2s linear 0s;
-                -ms-transition: all 0.2s linear 0s;
                 -o-transition: all 0.2s linear 0s;
                 -webkit-transition: all 0.2s linear 0s;
                 transition: all 0.2s linear 0s;
@@ -4476,7 +4466,6 @@ table.table-inbox tbody tr.checked {
     margin: 0 10px 10px 0;
     text-decoration: none;
     -moz-transition: color 0.2s;
-    -ms-transition: color 0.2s;
     -o-transition: color 0.2s;
     -webkit-transition: color 0.2s;
     transition: color 0.2s;
@@ -5279,7 +5268,6 @@ blockquote p {
             transition: none 0s ease 0s;
             -moz-transition: none 0s ease 0s;
             -o-transition: none 0s ease 0s;
-            -ms-transition: none 0s ease 0s;
             -webkit-transition: none 0s ease 0s;
         }
 
@@ -5297,7 +5285,6 @@ blockquote p {
             transition: none 0s ease 0s;
             -moz-transition: none 0s ease 0s;
             -o-transition: none 0s ease 0s;
-            -ms-transition: none 0s ease 0s;
             -webkit-transition: none 0s ease 0s;
         }
 

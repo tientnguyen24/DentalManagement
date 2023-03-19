@@ -6,18 +6,13 @@ Version      : 1.0
 $(document).ready(function($) {
 	
 	// Variables declarations
-	var $wrapper = $('.main-wrapper');
-	var $pageWrapper = $('.page-wrapper');
-	var $slimScrolls = $('.slimscroll');
-	var $sidebarOverlay = $('.sidebar-overlay');
+	let $wrapper = $('.main-wrapper');
+	let $pageWrapper = $('.page-wrapper');
+	let $slimScrolls = $('.slimscroll');
+	let $sidebarOverlay = $('.sidebar-overlay');
 	
-	// Sidebar
-	var Sidemenu = function() {
-		this.$menuItem = $('#sidebar-menu a');
-	};
 
 	function init() {
-		var $this = Sidemenu;
 		$('#sidebar-menu a').on('click', function(e) {
 			if($(this).parent().hasClass('submenu')) {
 				e.preventDefault();
@@ -49,7 +44,7 @@ $(document).ready(function($) {
 	
 	// Mobile menu sidebar overlay
 	$(document).on('click', '#mobile_btn', function() {
-		var $target = $($(this).attr('href'));
+		let $target = $($(this).attr('href'));
 		sidebar_overlay($target);
 		$wrapper.toggleClass('slide-nav');
 		$('#chat_sidebar').removeClass('opened');
@@ -58,7 +53,7 @@ $(document).ready(function($) {
 	
 	// Chat sidebar overlay
 	$(document).on('click', '#task_chat', function() {
-		var $target = $($(this).attr('href'));
+		let $target = $($(this).attr('href'));
 		console.log($target);
 		sidebar_overlay($target);
 		return false;
@@ -66,7 +61,7 @@ $(document).ready(function($) {
 	
 	// Sidebar overlay reset
 	$sidebarOverlay.on('click', function() {
-		var $target = $($(this).attr('data-reff'));
+		let $target = $($(this).attr('data-reff'));
 		if($target.length) {
 			$target.removeClass('opened');
 			$('html').removeClass('menu-opened');
@@ -102,11 +97,11 @@ $(document).ready(function($) {
 			alwaysVisible: false,
 			touchScrollStep: 100
 		});
-		var msgHeight = $(window).height() - 124;
+		let msgHeight = $(window).height() - 124;
 		$('#msg_list').height(msgHeight);
 		$('.msg-sidebar .slimScrollDiv').height(msgHeight);
 		$(window).resize(function() {
-			var msgrHeight = $(window).height() - 124;
+			let msgrHeight = $(window).height() - 124;
 			$('#msg_list').height(msgrHeight);
 			$('.msg-sidebar .slimScrollDiv').height(msgrHeight);
 		});
@@ -123,21 +118,21 @@ $(document).ready(function($) {
 			wheelStep: 10,
 			touchScrollStep: 100
 		});
-		var wHeight = $(window).height() - 60;
+		let wHeight = $(window).height() - 60;
 		$slimScrolls.height(wHeight);
 		$('.sidebar .slimScrollDiv').height(wHeight);
 		$(window).resize(function() {
-			var rHeight = $(window).height() - 60;
+			let rHeight = $(window).height() - 60;
 			$slimScrolls.height(rHeight);
 			$('.sidebar .slimScrollDiv').height(rHeight);
 		});
 	}
 	
 	// Page wrapper height
-	var pHeight = $(window).height();
+	let pHeight = $(window).height();
 	$pageWrapper.css('min-height', pHeight);
 	$(window).resize(function() {
-		var prHeight = $(window).height();
+		let prHeight = $(window).height();
 		$pageWrapper.css('min-height', prHeight);
 	});
 	
@@ -213,13 +208,13 @@ $(document).ready(function($) {
 	
 	// Dropfiles
 	if($('#drop-zone').length > 0) {
-		var dropZone = document.getElementById('drop-zone');
-		var uploadForm = document.getElementById('js-upload-form');
-		var startUpload = function(files) {
+		let dropZone = document.getElementById('drop-zone');
+		let uploadForm = document.getElementById('js-upload-form');
+		let startUpload = function(files) {
 			console.log(files);
 		};
 		uploadForm.addEventListener('submit', function(e) {
-			var uploadFiles = document.getElementById('js-upload-files').files;
+			let uploadFiles = document.getElementById('js-upload-files').files;
 			e.preventDefault();
 			startUpload(uploadFiles);
 		});
@@ -253,7 +248,7 @@ $(document).ready(function($) {
 		$(document).on('mouseover', function(e) {
 			e.stopPropagation();
 			if($('body').hasClass('mini-sidebar') && $('#toggle_btn').is(':visible')) {
-				var targ = $(e.target).closest('.sidebar').length;
+				let targ = $(e.target).closest('.sidebar').length;
 				if(targ) {
 					$('body').addClass('expand-menu');
 					$('.subdrop + ul').slideDown();
