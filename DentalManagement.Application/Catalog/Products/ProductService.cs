@@ -71,7 +71,7 @@ namespace DentalManagement.Application.Catalog.Products
             //paging
             int totalRow = await query.CountAsync();
 
-            var data = await query.Skip((request.PageIndex - 1)*request.PageSize).Take(request.PageSize).Select(x=>new ProductViewModel()
+            var data = await query.OrderBy(x => x.p.Id).Skip((request.PageIndex - 1)*request.PageSize).Take(request.PageSize).Select(x=>new ProductViewModel()
             {
                 Id = x.p.Id,
                 Name = x.p.Name,

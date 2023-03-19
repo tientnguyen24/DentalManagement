@@ -33,5 +33,12 @@ namespace DentalManagement.Admin.Controllers
             var data = await _productApiClient.GetAllPaging(request);
             return View(data);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductList()
+        {
+            var productList = await _productApiClient.GetAll();
+            return Ok(productList);
+        }
     }
 }
