@@ -32,12 +32,6 @@
     <script src="~/assets/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/js/app.js"></script>
     <script src="~/assets/js/site-admin.js"></script>
-    @section scripts{
-        <script>
-            var siteAdminController = new SiteAdminController();
-            siteAdminController.initialize();
-        </script>
-    }
     @RenderSection("Scripts", required: false)
 </body>
 </html>

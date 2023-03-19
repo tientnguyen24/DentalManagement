@@ -1,11 +1,19 @@
-﻿using DentalManagement.ApiIntegration.ApiIntegrations;
+﻿using DentalManagement.Admin.Models;
+using DentalManagement.ApiIntegration.ApiIntegrations;
+using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DentalManagement.Admin.Controllers
@@ -14,13 +22,15 @@ namespace DentalManagement.Admin.Controllers
     public class CustomerController : BaseController
     {
         private readonly ICustomerApiClient _customerApiClient;
+        private readonly IProductApiClient _productApiClient;
         private readonly IConfiguration _configuration;
         private readonly IValidator<CustomerCreateRequest> _customerCreateRequestValidator;
         private readonly IValidator<CustomerUpdateRequest> _customerUpdateRequestValidator;
 
-        public CustomerController(ICustomerApiClient customerApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> customerCreateRequestValidator, IValidator<CustomerUpdateRequest> customerUpdateRequestValidator)
+        public CustomerController(ICustomerApiClient customerApiClient, IProductApiClient productApiClient, IConfiguration configuration, IValidator<CustomerCreateRequest> customerCreateRequestValidator, IValidator<CustomerUpdateRequest> customerUpdateRequestValidator)
         {
             _customerApiClient = customerApiClient;
+            _productApiClient = productApiClient;
             _configuration = configuration;
             _customerCreateRequestValidator = customerCreateRequestValidator;
             _customerUpdateRequestValidator = customerUpdateRequestValidator;
@@ -109,5 +119,47 @@ namespace DentalManagement.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductList()
+        {
+            var productList = await _productApiClient.GetAll();
+            return Ok(productList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProductToMedicalInvoice(int[] productIds)
+        {
+            var currentInvoice = new InvoiceViewModel();
+            var currentInvoiceDetail = new List<InvoiceDetailViewModel>();
+            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            if (invoiceSession != null)
+            {
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+            }
+
+            foreach (var id in productIds)
+            {
+                var product = await _productApiClient.GetById(id);
+                decimal quantity = 1;
+                if (currentInvoiceDetail.Any(x => x.ProductId == id))
+                {
+                    quantity = currentInvoiceDetail.First(x => x.ProductId == id).Quantity + 1;
+                    currentInvoiceDetail.Remove(currentInvoiceDetail.Single(x => x.ProductId == id));
+                }
+                var item = new InvoiceDetailViewModel()
+                {
+                    ProductId = id,
+                    ProductName = product.ResultObject.Name,
+                    UnitPrice = product.ResultObject.UnitPrice,
+                    Quantity = quantity
+                };
+                currentInvoiceDetail.Add(item);
+            }
+            currentInvoice.InvoiceDetailViewModels = currentInvoiceDetail;
+            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
+            return Ok(currentInvoice);
+        }
+
     }
 }

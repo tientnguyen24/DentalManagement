@@ -69,12 +69,12 @@
             </div>
             <div class="profile-tabs">
                 <ul class="nav nav-tabs nav-tabs-bottom">
-                    <li class="nav-item"><a class="nav-link active" href="#customer-medical-tab" data-toggle="tab">Phiếu khám bệnh</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#customer-payment-history-tab" data-toggle="tab">Lịch sử thanh toán</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#customer_medical_tab" data-toggle="tab">Phiếu khám bệnh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#customer_payment_history_tab" data-toggle="tab">Lịch sử thanh toán</a></li>
                 </ul>
 
                 <div class="tab-content">
-                    <div class="tab-pane show active" id="customer-medical-tab">
+                    <div class="tab-pane show active" id="customer_medical_tab">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
@@ -86,11 +86,14 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" class="btn btn-primary btn-block"><i class=" fa fa-plus"></i> Tạo phiếu khám</a>
+                                            <a href="#" type="button" class="btn btn-primary btn-block btn-product-list" data-toggle="modal" data-target="#create_medical_invoice">
+                                                <i class=" fa fa-plus"></i> Tạo phiếu khám
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="medical-box">
+
 
                                         </div>
                                     </div>
@@ -98,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="customer-payment-history-tab">
+                    <div class="tab-pane" id="customer_payment_history_tab">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
@@ -205,7 +208,7 @@
                                                                             <a href="@Url.Action("Details", "Invoice", new { id = item.Id })" class="dropdown-item">
                                                                                 <i class="fa fa-bars"></i> Chi tiết
                                                                             </a>
-                                                                            <a href="@Url.Action("Edit", "Customer", new { id = item.Id })" class="dropdown-item">
+                                                                            <a href="@Url.Action("Edit", "Invoice", new { id = item.Id })" class="dropdown-item">
                                                                                 <i class="fa fa-pencil"></i> Sửa
                                                                             </a>
                                                                             <a href="@Url.Action("Delete", "Invoice", new { id = item.Id })" class="dropdown-item" data-toggle="modal" data-target="#delete_invoice">
@@ -230,11 +233,11 @@
         </div>
     </div>
 </div>
-<div id="delete_invoice" class="modal fade delete-modal" role="dialog">
+<div id="delete_invoice" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <img src="~/assets/img/sent.png" alt="delete" width="50" height="46">
                 <h3>Xóa thông tin phiếu khám?</h3>
                 <div class="m-t-20">
                     <a href="#" class="btn btn-white" data-dismiss="modal">Đóng</a>
@@ -245,3 +248,89 @@
     </div>
 </div>
 
+<div id="create_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tạo phiếu khám</h3>
+                <a href="#" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#add_product_medical_invoice">
+                    <i class=" fa fa-plus"></i> Thêm kế hoạch điều trị
+                </a>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table text-left">
+                        <thead>
+                            <tr>
+                                <th class="width-5-percent"></th>
+                                <th>
+                                    Điều trị
+                                </th>
+                                <th class="width-15-percent">
+                                    Đơn giá (VND)
+                                </th>
+                                <th class="width-20-percent text-center">
+                                    Số lượng
+                                </th>
+                                <th class="width-20-percent">
+                                    Thành tiền (VND)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_medical_invoice">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="m-t-20">
+                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal">Đóng</a>
+                    <button type="submit" class="btn btn-success" id="btn_create_medical_invoice">
+                        Lưu thông tin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table text-left">
+                        <thead>
+                            <tr>
+                                <th class="width-5-percent"></th>
+                                <th>
+                                    Điều trị
+                                </th>
+                                <th class="width-15-percent">
+                                    Đơn giá (VND)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_product_list">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="m-t-20">
+                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal">Đóng</a>
+                    <button type="button" class="btn btn-primary" id="btn_add_product_to_medical_invoice" data-dismiss="modal">
+                        Tiếp tục
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
