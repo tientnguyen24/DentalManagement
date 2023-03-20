@@ -168,12 +168,34 @@ namespace DentalManagement.Application.Catalog.Customers
         {
             var customer = await _context.Customers
                 .Include(c => c.Invoices)
+                .ThenInclude(i => i.InvoiceDetails)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
                 return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
             }
+            var invoiceDetailViewModels = new List<InvoiceDetailViewModel>();
+            foreach(var item in customer.Invoices)
+            {
+
+            }
+
+            var invoiceViewModels = customer.Invoices?.Select(inv => new InvoiceViewModel()
+            {
+                Id = inv.Id,
+                CreatedDate = inv.CreatedDate,
+                CreatedBy = inv.CreatedBy,
+                TotalDiscountPercent = inv.TotalDiscountPercent,
+                TotalDiscountAmount = inv.TotalDiscountAmount,
+                TotalInvoiceAmount = inv.TotalInvoiceAmount,
+                ModifiedDate = inv.ModifiedDate,
+                ModifiedBy = inv.ModifiedBy,
+                Description = inv.Description,
+                PaymentStatus = inv.PaymentStatus,
+                PrepaymentAmount = inv.PrepaymentAmount,
+                RemainAmount = inv.TotalInvoiceAmount - inv.PrepaymentAmount,
+            }).ToList();
             var customerViewModel = new CustomerViewModel()
             {
                 Id = customer.Id,
@@ -190,21 +212,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 CreatedBy = customer.CreatedBy,
                 ModifiedDate = customer.ModifiedDate,
                 ModifiedBy = customer.ModifiedBy,
-                InvoiceViewModels = customer.Invoices?.Select(inv => new InvoiceViewModel()
-                {
-                    Id = inv.Id,
-                    CreatedDate = inv.CreatedDate,
-                    CreatedBy = inv.CreatedBy,
-                    TotalDiscountPercent = inv.TotalDiscountPercent,
-                    TotalDiscountAmount = inv.TotalDiscountAmount,
-                    TotalInvoiceAmount = inv.TotalInvoiceAmount,
-                    ModifiedDate = inv.ModifiedDate,
-                    ModifiedBy = inv.ModifiedBy,
-                    Description = inv.Description,
-                    PaymentStatus = inv.PaymentStatus,
-                    PrepaymentAmount = inv.PrepaymentAmount,
-                    RemainAmount = inv.TotalInvoiceAmount - inv.PrepaymentAmount
-                }).ToList()
+                InvoiceViewModels = invoiceViewModels
             };
             return new ApiSuccessResult<CustomerViewModel>(customerViewModel);
         }
