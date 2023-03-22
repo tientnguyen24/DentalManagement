@@ -56,7 +56,7 @@ function addProductToMedicalInvoice() {
 
 function getMedicalInvoice(res) {
     let tableMedicalInvoiceHtml = '';
-    if (res['totalInvoiceAmount'] === 0) {
+    if (res['invoiceDetailViewModels'] == '') {
         tableMedicalInvoiceHtml += "<tr><td class=\"width-5-percent\"></td><td colspan=\"6\"class=\"width-40-percent text-left\">Không có dữ liệu </td></tr>"
     }
     else {
@@ -66,12 +66,14 @@ function getMedicalInvoice(res) {
                 + "<td class=\"width-50-percent text-left\">" + item.productName + "</td>"
                 + "<td class=\"width-10-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
                 + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-danger\" id=\"btn_quantity_minus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-minus-circle fa-sm\"></i></a></td>"
-                + "<td class=\"width-10-percent\"><input type =\"text\" class=\"form-control border-1 small text-right inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/></td>"
+                + "<td class=\"width-10-percent\"><input type =\"text\" class=\"form-control border-1 small text-right inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\" /></td>"
                 + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-success\" id=\"btn_quantity_plus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-plus-circle fa-sm\"></i></a></td>"
                 + "<td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                 + "</tr>";
         });
-        tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right text-danger\">Tạm tính (<span>" + res['invoiceDetailViewModels'].length + "</span>):</td><td class=\"text-right\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>";
+        tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right\">Tạm tính (<span>" + res['invoiceDetailViewModels'].length + "</span>):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right\">Giảm giá:</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right\" placeholder=\"0\" id=\"inp_total_discount_amount\" value=\"" + numberWithCommas(res['totalDiscountAmount']) + "\" /></td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền:</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount'] - res['totalDiscountAmount']) + "</td></tr>";
     }
     $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
     registerButtonEvents();
@@ -110,8 +112,18 @@ function registerButtonEvents() {
         }
     });
 
-    $('body').on('input', '.inp-product-quantity', function (e) {
+    $('body').on('focusout', '#inp_total_discount_amount', function (e) {
+        e.preventDefault();
+        const totalDiscountAmount = $(this).val();
+        updateTotalDiscountAmount(totalDiscountAmount);
+    });
+
+    $('body').on('input', '.inp-product-quantity, #inp_total_discount_amount', function (e) {
         textWithNumberOnly(this);
+    });
+
+    $('body').on('keyup', '.inp-product-quantity, #inp_total_discount_amount', function (e) {
+        updateTextView($(this));
     });
 }
 
@@ -123,6 +135,20 @@ function updateProductQuantity(productId, productQuantity) {
             productId: productId,
             productQuantity: productQuantity
         },
+        success: function (res) {
+            getMedicalInvoice(res);
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    });
+}
+
+function updateTotalDiscountAmount(totalDiscountAmount) {
+    $.ajax({
+        type: "POST",
+        url: '/Invoice/UpdateTotalDiscountAmount',
+        data: { totalDiscountAmount: totalDiscountAmount },
         success: function (res) {
             getMedicalInvoice(res);
         },

@@ -104,6 +104,21 @@ namespace DentalManagement.Admin.Controllers
         }
 
         [HttpPost]
+        public IActionResult UpdateTotalDiscountAmount(decimal totalDiscountAmount)
+        {
+            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            var currentInvoice = new InvoiceViewModel();
+            if (invoiceSession != null)
+            {
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+            }
+            currentInvoice.TotalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount) - totalDiscountAmount;
+            currentInvoice.TotalDiscountAmount = totalDiscountAmount;
+            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
+            return Ok(currentInvoice);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Create(int customerId)
         {
             var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
@@ -121,7 +136,7 @@ namespace DentalManagement.Admin.Controllers
                     ItemDiscountPercent = item.ItemDiscountPercent,
                     ItemDiscountAmount = item.ItemDiscountAmount,
                     ItemAmount = item.ItemAmount,
-                    Quantity = item.Quantity,
+                    Quantity = item.Quantity
                 });
             }
             var invoiceCreateRequest = new InvoiceCreateRequest()
@@ -134,6 +149,7 @@ namespace DentalManagement.Admin.Controllers
                 CustomerId = customerId,
                 Description = currentInvoice.Description,
                 PrepaymentAmount = currentInvoice.PrepaymentAmount,
+                RemainAmount = currentInvoice.RemainAmount,
                 InvoiceDetails = currentInvoiceDetailList
             };
             var result = await _invoiceApiClient.Create(invoiceCreateRequest);

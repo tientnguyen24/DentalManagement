@@ -23,22 +23,20 @@ namespace DentalManagement.Application.Catalog.Invoices
         }
         public async Task<ApiResult<int>> Create(InvoiceCreateRequest request)
         {
-            //var products = _context.Products;
             var invoiceDetails = new List<InvoiceDetail>();
 
             foreach (var item in request.InvoiceDetails)
             {
-                //if (product.Id == request.ProductId)
-                //{
                 invoiceDetails.Add(new InvoiceDetail()
                 {
                     ProductId = item.ProductId,
                     ItemDiscountPercent = item.ItemDiscountPercent,
                     ItemDiscountAmount = item.ItemDiscountAmount,
                     ItemAmount = item.ItemAmount,
-                    Quantity = item.Quantity
+                    Quantity = item.Quantity,
+                    CompletedDate = item.CompletedDate,
+                    Status = item.Status
                 });
-                //}
             }
 
             var invoice = new Invoice()
@@ -51,6 +49,8 @@ namespace DentalManagement.Application.Catalog.Invoices
                 CustomerId = request.CustomerId,
                 Description = request.Description,
                 PrepaymentAmount = request.PrepaymentAmount,
+                RemainAmount = request.RemainAmount,
+                PaymentStatus = request.PaymentStatus,
                 InvoiceDetails = invoiceDetails
             };
             _context.Invoices.Add(invoice);
