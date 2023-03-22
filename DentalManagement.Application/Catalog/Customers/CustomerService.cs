@@ -168,20 +168,16 @@ namespace DentalManagement.Application.Catalog.Customers
         {
             var customer = await _context.Customers
                 .Include(c => c.Invoices)
-                .ThenInclude(i => i.InvoiceDetails)
+                .ThenInclude(c => c.InvoiceDetails)
+                .ThenInclude(c => c.Product)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
                 return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
             }
-            var invoiceDetailViewModels = new List<InvoiceDetailViewModel>();
-            foreach(var item in customer.Invoices)
-            {
 
-            }
-
-            var invoiceViewModels = customer.Invoices?.Select(inv => new InvoiceViewModel()
+            var invoiceViewModels = customer.Invoices?.OrderBy(inv => inv.PaymentStatus).Select(inv => new InvoiceViewModel()
             {
                 Id = inv.Id,
                 CreatedDate = inv.CreatedDate,
@@ -195,6 +191,19 @@ namespace DentalManagement.Application.Catalog.Customers
                 PaymentStatus = inv.PaymentStatus,
                 PrepaymentAmount = inv.PrepaymentAmount,
                 RemainAmount = inv.TotalInvoiceAmount - inv.PrepaymentAmount,
+                InvoiceDetailViewModels = inv.InvoiceDetails.Select(item => new InvoiceDetailViewModel()
+                {
+                    ProductId = item.ProductId,
+                    ProductName = item.Product.Name,
+                    UnitPrice = item.Product.UnitPrice,
+                    ItemDiscountPercent = item.ItemDiscountPercent,
+                    ItemDiscountAmount = item.ItemDiscountAmount,
+                    ItemAmount = item.ItemAmount,
+                    Quantity = item.Quantity,
+                    CompletedDate = item.CompletedDate,
+                    Status = item.Status
+
+                }).ToList()
             }).ToList();
             var customerViewModel = new CustomerViewModel()
             {

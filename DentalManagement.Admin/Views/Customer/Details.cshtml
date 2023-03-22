@@ -1,4 +1,5 @@
 ﻿@model DentalManagement.ViewModels.Catalog.Customers.CustomerViewModel
+@using DentalManagement.Data.Enums;
 
 @{
     ViewData["Title"] = "Chi tiết khách hàng";
@@ -78,77 +79,149 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
-                                    <div class="row filter-row">
-                                        <div class="col-sm-6 col-md-3">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3">
-                                            <a href="#" type="button" class="btn btn-primary btn-block btn-product-list" data-toggle="modal" data-target="#create_medical_invoice">
-                                                <i class=" fa fa-plus"></i> Tạo phiếu khám
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">Kế hoạch điều trị</h3>
-                                        <div class="medical-box">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped custom-table text-left">
-                                                    <thead class="sticky-top">
-                                                        <tr>
-                                                            <th class="width-5-percent text-left"></th>
-                                                            <th>
-                                                                Điều trị
-                                                            </th>
-                                                            <th class="width-15-percent text-right">
-                                                                Đơn giá (VND)
-                                                            </th>
-                                                            <th class="width-20-percent text-center">
-                                                                Số lượng
-                                                            </th>
-                                                            <th class="width-20-percent text-right">
-                                                                Thành tiền (VND)
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var item in Model.InvoiceViewModels)
-                                                        {
-                                                            @foreach (var itemDetail in item.InvoiceDetailViewModels)
-                                                            {
-                                                                <tr>
-                                                                    <td>@itemDetail.ProductName</td>
-                                                                    <td>@itemDetail.UnitPrice</td>
-                                                                    <td>@itemDetail.Quantity</td>
-                                                                    <td>@itemDetail.ItemAmount</td>
-                                                                    <td class="text-right">
-                                                                        <div class="dropdown dropdown-action">
-                                                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                                                <i class="fa fa-ellipsis-v"></i>
-                                                                            </a>
-                                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                                <a href="@Url.Action("Details", "Customer", new { id = item.Id })" class="dropdown-item">
-                                                                                    <i class="fa fa-bars"></i> Chi tiết
-                                                                                </a>
-                                                                                <a href="@Url.Action("Edit", "Customer", new { id = item.Id })" class="dropdown-item">
-                                                                                    <i class="fa fa-edit"></i> Sửa
-                                                                                </a>
-                                                                                <a href="@Url.Action("Delete", "Customer", new { id = item.Id })" class="dropdown-item" data-toggle="modal" data-target="#delete_customer">
-                                                                                    <i class="fa fa-trash"></i> Xóa
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            }
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                    @if (Model.InvoiceViewModels.Count(x => x.PaymentStatus == PaymentStatus.Processing) == 0)
+                                    {
+                                        <div class="row filter-row">
+                                            <div class="col-sm-6 col-md-3">
+                                                <h3 class="card-title">Chưa có kế hoạch điều trị</h3>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                                <a href="#" type="button" class="btn btn-primary btn-block btn-product-list" data-toggle="modal" data-target="#create_medical_invoice">
+                                                    <i class=" fa fa-plus"></i> Tạo phiếu khám
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row filter-row">
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                                <a href="#" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
+                                                    <i class=" fa fa-plus"></i> Thêm điều trị
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            @foreach (var item in Model.InvoiceViewModels)
+                                            {
+                                                if (item.PaymentStatus == PaymentStatus.Processing)
+                                                {
+                                                    <h3 class="card-title">Kế hoạch điều trị</h3>
+                                                    <div class="medical-box">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped custom-table">
+                                                                <thead class="sticky-top">
+                                                                    <tr>
+                                                                        <th class="width-5-percent"></th>
+                                                                        <th class="width-50-percent">
+                                                                            Điều trị
+                                                                        </th>
+                                                                        <th class="width-10-percent text-right">
+                                                                            Đơn giá
+                                                                        </th>
+                                                                        <th class="width-10-percent text-right">
+                                                                            Số lượng
+                                                                        </th>
+                                                                        <th class="width-10-percent text-right">
+                                                                            Thành tiền
+                                                                        </th>
+                                                                        <th class="width-10-percent text-right">
+                                                                            Trạng thái
+                                                                        </th>
+                                                                        <th class="width-5-percent"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var itemDetail in item.InvoiceDetailViewModels)
+                                                                    {
+                                                                        <tr>
+                                                                            <td class="width-5-percent">
+                                                                                <a href="@Url.Action("Details", "Invoice", new { id = itemDetail.ProductId })" class="text-success">
+                                                                                    <i class="fa fa-check-square-o"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                            <td class="width-50-percent">@itemDetail.ProductName</td>
+                                                                            <td class="width-10-percent text-right">@itemDetail.UnitPrice.ToString("N0")</td>
+                                                                            <td class="width-10-percent text-right">@itemDetail.Quantity.ToString("N0")</td>
+                                                                            <td class="width-10-percent text-right">@itemDetail.ItemAmount.ToString("N0")</td>
+                                                                            @if (itemDetail.Status == Status.Processing)
+                                                                            {
+                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-red">Đang điều trị</span></td>
+                                                                            }
+                                                                            @if (itemDetail.Status == Status.Completed)
+                                                                            {
+                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-green">Đã hoàn thành</span></td>
+                                                                            }
+                                                                            @if (itemDetail.Status == Status.Cancelled)
+                                                                            {
+                                                                                <td class="width-10-percent text-right"><span class="custom-badge">Đã hủy</span></td>
+                                                                            }
+                                                                            <td class="width-5-percent text-right">
+                                                                                <div class="dropdown dropdown-action">
+                                                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                                        <i class="fa fa-ellipsis-v"></i>
+                                                                                    </a>
+                                                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                                                        <a href="@Url.Action("AAB", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item">
+                                                                                            <i class="fa fa-edit"></i> Sửa
+                                                                                        </a>
+                                                                                        <a href="@Url.Action("AA", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item text-info">
+                                                                                            <i class="fa fa-comments-o"></i> Thêm ghi chú
+                                                                                        </a>
+                                                                                        <a href="@Url.Action("BB", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item text-danger" data-toggle="modal" data-target="#delete_customer">
+                                                                                            <i class="fa fa-trash"></i> Xóa
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-right">Tạm tính:</td>
+                                                                        @{
+                                                                            var tempTotalInvoiceAmount = item.TotalInvoiceAmount - item.TotalDiscountAmount;
+                                                                        }
+                                                                        <td class="width-10-percent text-right">@tempTotalInvoiceAmount.ToString("N0")</td>
+                                                                        <td colspan="2"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-right">Giảm giá:</td>
+                                                                        <td class="width-10-percent text-right">@item.TotalDiscountAmount.ToString("N0")</td>
+                                                                        <td colspan="2"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-right">Thành tiền:</td>
+                                                                        <td class="width-10-percent text-right">@item.TotalInvoiceAmount.ToString("N0")</td>
+                                                                        <td colspan="2"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-right">Thanh toán:</td>
+                                                                        <td class="width-10-percent text-right">@item.PrepaymentAmount.ToString("N0")</td>
+                                                                        <td colspan="2"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-right">Còn lại:</td>
+                                                                        <td class="width-10-percent text-right">@item.RemainAmount.ToString("N0")</td>
+                                                                        <td colspan="2"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -157,77 +230,88 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card-box">
-                                    <div class="row filter-row">
-                                        <div class="col-sm-6 col-md-3">
-                                            <div class="form-group form-focus">
-                                                <label class="focus-label">Từ</label>
-                                                <div class="cal-icon">
-                                                    <input class="form-control floating datetimepicker" type="text">
+                                    @if (Model.InvoiceViewModels.Count == 0)
+                                    {
+                                        <div class="row filter-row">
+                                            <div class="col-sm-6 col-md-3">
+                                                <h3 class="card-title">Chưa có lịch sử thanh toán</h3>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                                <a href="#" type="button" class="btn btn-primary btn-block btn-product-list" data-toggle="modal" data-target="#create_medical_invoice">
+                                                    <i class=" fa fa-plus"></i> Tạo phiếu khám
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row filter-row">
+                                            <div class="col-sm-6 col-md-3">
+                                                <div class="form-group form-focus">
+                                                    <label class="focus-label">Từ</label>
+                                                    <div class="cal-icon">
+                                                        <input class="form-control floating datetimepicker" type="text">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3">
-                                            <div class="form-group form-focus">
-                                                <label class="focus-label">Đến</label>
-                                                <div class="cal-icon">
-                                                    <input class="form-control floating datetimepicker" type="text">
+                                            <div class="col-sm-6 col-md-3">
+                                                <div class="form-group form-focus">
+                                                    <label class="focus-label">Đến</label>
+                                                    <div class="cal-icon">
+                                                        <input class="form-control floating datetimepicker" type="text">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3">
-                                            <div class="form-group form-focus select-focus">
-                                                <label class="focus-label">Trạng thái</label>
-                                                <select class="select floating">
-                                                    <option>Tất cả</option>
-                                                    <option>Chưa hoàn thành</option>
-                                                    <option>Đã hoàn thành</option>
-                                                    <option>Đã hủy</option>
-                                                </select>
+                                            <div class="col-sm-6 col-md-3">
+                                                <div class="form-group form-focus select-focus">
+                                                    <label class="focus-label">Trạng thái</label>
+                                                    <select class="select floating">
+                                                        <option>Tất cả</option>
+                                                        <option>Chưa hoàn thành</option>
+                                                        <option>Đã hoàn thành</option>
+                                                        <option>Đã hủy</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-3">
+                                                <a href="#" class="btn btn-success btn-block"><i class="fa fa-filter"></i> Lọc</a>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-3">
-                                            <a href="#" class="btn btn-success btn-block"><i class="fa fa-filter"></i> Lọc</a>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped custom-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            Số hóa đơn
-                                                        </th>
-                                                        <th>
-                                                            Ngày tạo
-                                                        </th>
-                                                        <th>
-                                                            Giảm giá
-                                                        </th>
-                                                        <th>
-                                                            Thành tiền
-                                                        </th>
-                                                        <th>
-                                                            Thanh toán
-                                                        </th>
-                                                        <th>
-                                                            Còn lại
-                                                        </th>
-                                                        <th>
-                                                            Trạng thái
-                                                        </th>
-                                                        <th class="text-right">Thao tác</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (Model.InvoiceViewModels.Count == 0)
-                                                    {
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped custom-table">
+                                                    <thead>
                                                         <tr>
-                                                            <td colspan="8">Không tìm thấy dữ liệu, vui lòng thử lại !!!</td>
+                                                            <th>
+                                                                Số hóa đơn
+                                                            </th>
+                                                            <th>
+                                                                Ngày tạo
+                                                            </th>
+                                                            <th>
+                                                                Giảm giá
+                                                            </th>
+                                                            <th>
+                                                                Thành tiền
+                                                            </th>
+                                                            <th>
+                                                                Thanh toán
+                                                            </th>
+                                                            <th>
+                                                                Còn lại
+                                                            </th>
+                                                            <th>
+                                                                Trạng thái
+                                                            </th>
+                                                            <th class="text-right">Thao tác</th>
                                                         </tr>
-                                                    }
-                                                    else
-                                                    {
-                                                        foreach (var item in Model.InvoiceViewModels)
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.InvoiceViewModels)
                                                         {
                                                             <tr>
                                                                 <td>
@@ -248,9 +332,18 @@
                                                                 <td>
                                                                     @Html.DisplayFor(modelItem => item.RemainAmount)
                                                                 </td>
-                                                                <td>
-                                                                    @Html.DisplayFor(modelItem => item.PaymentStatus)
-                                                                </td>
+                                                                @if (item.PaymentStatus == PaymentStatus.Processing)
+                                                                {
+                                                                    <td><span class="custom-badge status-red">Đang điều trị</span></td>
+                                                                }
+                                                                @if (item.PaymentStatus == PaymentStatus.Completed)
+                                                                {
+                                                                    <td><span class="custom-badge status-green">Đã hoàn thành</span></td>
+                                                                }
+                                                                @if (item.PaymentStatus == PaymentStatus.Cancelled)
+                                                                {
+                                                                    <td><span class="custom-badge status-grey">Đã hủy</span></td>
+                                                                }
                                                                 <td class="text-right">
                                                                     <div class="dropdown dropdown-action">
                                                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -271,11 +364,11 @@
                                                                 </td>
                                                             </tr>
                                                         }
-                                                    }
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -312,25 +405,31 @@
             </div>
             <div class="modal-body text-center">
                 <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
-                    <table class="table table-striped custom-table text-left">
+                    <table class="table table-striped custom-table">
                         <thead class="sticky-top">
                             <tr>
-                                <th class="width-5-percent text-left"></th>
-                                <th>
+                                <th class="width-5-percent"></th>
+                                <th class="width-50-percent text-left">
                                     Điều trị
                                 </th>
-                                <th class="width-15-percent text-right">
-                                    Đơn giá (VND)
+                                <th class="width-10-percent text-right">
+                                    Đơn giá
                                 </th>
-                                <th class="width-20-percent text-center">
+                                <th class="width-5-percent"></th>
+                                <th class="width-10-percent text-right">
                                     Số lượng
                                 </th>
-                                <th class="width-20-percent text-right">
-                                    Thành tiền (VND)
+                                <th class="width-5-percent"></th>
+                                <th class="width-15-percent text-right">
+                                    Thành tiền
                                 </th>
                             </tr>
                         </thead>
                         <tbody id="table_medical_invoice">
+                            <tr>
+                                <td class="width-5-percent"></td>
+                                <td colspan="6" class="text-left">Không có dữ liệu</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -368,11 +467,11 @@
                         <thead class="sticky-top">
                             <tr>
                                 <th class="width-5-percent"></th>
-                                <th>
+                                <th class="width-80-percent">
                                     Điều trị
                                 </th>
                                 <th class="width-15-percent text-right">
-                                    Đơn giá (VND)
+                                    Đơn giá
                                 </th>
                             </tr>
                         </thead>

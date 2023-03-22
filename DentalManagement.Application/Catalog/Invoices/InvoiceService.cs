@@ -244,7 +244,7 @@ namespace DentalManagement.Application.Catalog.Invoices
         {
             var invoice = await _context.Invoices
                 .Include(i => i.InvoiceDetails)
-                .ThenInclude(i=>i.Product)
+                .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (invoice == null)
             {
@@ -266,16 +266,16 @@ namespace DentalManagement.Application.Catalog.Invoices
                     Description = invoice.Description,
                     PaymentStatus = invoice.PaymentStatus,
                     //check invoice details entity, if invoice details is null then do not create new instance InvoiceDetailViewModel and fill to list
-                    InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(invd => new InvoiceDetailViewModel()
+                    InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(item => new InvoiceDetailViewModel()
                     {
-                        InvoiceId = invd.InvoiceId,
-                        ProductId = invd.ProductId,
-                        ProductName = invd.Product.Name,
-                        Quantity = invd.Quantity,
-                        UnitPrice = invd.Product.UnitPrice,
-                        ItemDiscountPercent = invd.ItemDiscountPercent,
-                        ItemDiscountAmount = invd.ItemDiscountAmount,
-                        ItemAmount = invd.ItemAmount
+                        InvoiceId = item.InvoiceId,
+                        ProductId = item.ProductId,
+                        ProductName = item.Product.Name,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.Product.UnitPrice,
+                        ItemDiscountPercent = item.ItemDiscountPercent,
+                        ItemDiscountAmount = item.ItemDiscountAmount,
+                        ItemAmount = item.ItemAmount
                     }).ToList()
                 };
                 return invoiceViewModel;
