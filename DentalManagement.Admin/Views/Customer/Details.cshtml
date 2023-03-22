@@ -189,7 +189,7 @@
                                                                     <tr>
                                                                         <td colspan="4" class="text-right">Tạm tính:</td>
                                                                         @{
-                                                                            var tempTotalInvoiceAmount = item.TotalInvoiceAmount - item.TotalDiscountAmount;
+                                                                            var tempTotalInvoiceAmount = item.TotalInvoiceAmount + item.TotalDiscountAmount;
                                                                         }
                                                                         <td class="width-10-percent text-right">@tempTotalInvoiceAmount.ToString("N0")</td>
                                                                         <td colspan="2"></td>

@@ -21,5 +21,7 @@ namespace DentalManagement.Data.Entities
         public List<InvoiceDetail> InvoiceDetails { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public decimal PrepaymentAmount { get; set; }
+        public decimal RemainAmount { get; set; }
+        
     }
 }
