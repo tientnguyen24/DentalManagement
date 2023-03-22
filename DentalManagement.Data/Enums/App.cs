@@ -4,21 +4,24 @@ namespace DentalManagement.Data.Enums
 {
     public enum Gender
     {
-        [Display(Name = "Nam")] Male,
-        [Display(Name = "Nữ")] Female,
-        [Display(Name = "Khác")] Other
+        [Display(Name = "Nam")] Male = 0,
+        [Display(Name = "Nữ")] Female = 1,
+        [Display(Name = "Khác")] Other = 2
     }
 
     public enum Status
     {
-        [Display(Name = "Hoạt động")] Active,
-        [Display(Name = "Tạm khóa")] Inactive
+        [Display(Name = "Hoạt động")] Active = 0,
+        [Display(Name = "Tạm khóa")] Inactive = 1,
+        [Display(Name = "Đang thực hiện")] Processing = 2,
+        [Display(Name = "Đã hủy")] Cancelled = 3,
+        [Display(Name = "Đã hoàn thành")] Completed = 4
     }
 
     public enum PaymentStatus
     {
-        [Display(Name = "Chưa hoàn thành")] Processing,
-        [Display(Name = "Đã hủy")] Cancelled,
-        [Display(Name = "Đã hoàn thành")] Completed
+        [Display(Name = "Đang thực hiện")] Processing = 0,
+        [Display(Name = "Đã hủy")] Cancelled = 1,
+        [Display(Name = "Đã hoàn thành")] Completed = 2
     }
 }

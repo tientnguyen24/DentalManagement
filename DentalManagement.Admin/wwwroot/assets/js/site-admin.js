@@ -11,11 +11,11 @@
                     let tableProductListHtml = '';
                     $.each(res, function (i, item) {
                         tableProductListHtml += "<tr>"
-                            + " <td>"
+                            + " <td class=\"width-5-percent\">"
                             + " <input type=\"checkbox\" name=\"product\" data-id=\"" + item.id + "\"/>"
-                            + " </td >"
-                            + " <td class=\"text-left\">" + item.name + "</td>"
-                            + " <td class=\"text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
+                            + " </td>"
+                            + " <td class=\"width-80-percent\">" + item.name + "</td>"
+                            + " <td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
                             + " </tr>";
                     });
                     $('#table_product_list').html(tableProductListHtml);
@@ -57,23 +57,21 @@ function addProductToMedicalInvoice() {
 function getMedicalInvoice(res) {
     let tableMedicalInvoiceHtml = '';
     if (res['totalInvoiceAmount'] === 0) {
-        tableMedicalInvoiceHtml += "<tr><td colspan=\"5\">Không có dữ liệu </td></tr>"
+        tableMedicalInvoiceHtml += "<tr><td class=\"width-5-percent\"></td><td colspan=\"6\"class=\"width-40-percent text-left\">Không có dữ liệu </td></tr>"
     }
     else {
         $.each(res['invoiceDetailViewModels'], function (i, item) {
             tableMedicalInvoiceHtml += "<tr>"
-                + "<td><button type=\"button\" class=\"btn\" id=\"btn_item_remove\" data-id=\"" + item.productId + "\"><i class=\"fa fa-trash fa-sm text-danger\"></i></button></td>"
-                + "<td>" + item.productName + "</td>"
-                + "<td class=\"text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
-                + "<td><div class=\"input-group input-group-sm mb-3\">"
-                + "<div class=\"input-group-prepend\"><button type =\"button\" class=\"btn\" id=\"btn_quantity_minus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-minus-circle fa-sm text-danger\"></i></button></div>"
-                + "<input type =\"text\" class=\"form-control border-1 small text-center inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/>"
-                + "<div class=\"input-group-append\"><button type =\"button\" class=\"btn\" id=\"btn_quantity_plus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-plus-circle fa-sm text-success\"></i></button></div>"
-                + "</div></td>"
-                + "<td class=\"text-right\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
+                + "<td class=\"width-5-percent\"><a type=\"button\" class=\"text-danger\" id=\"btn_item_remove\" data-id=\"" + item.productId + "\"><i class=\"fa fa-trash fa-sm text-danger\"></i></a></td>"
+                + "<td class=\"width-50-percent text-left\">" + item.productName + "</td>"
+                + "<td class=\"width-10-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
+                + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-danger\" id=\"btn_quantity_minus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-minus-circle fa-sm\"></i></a></td>"
+                + "<td class=\"width-10-percent\"><input type =\"text\" class=\"form-control border-1 small text-right inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\"/></td>"
+                + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-success\" id=\"btn_quantity_plus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-plus-circle fa-sm\"></i></a></td>"
+                + "<td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                 + "</tr>";
         });
-        tableMedicalInvoiceHtml += "<tr><td colspan=\"4\" class=\"text-right text-danger\">Tạm tính (<span>" + res['invoiceDetailViewModels'].length + "</span>):</td><td class=\"text-right\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>";
+        tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right text-danger\">Tạm tính (<span>" + res['invoiceDetailViewModels'].length + "</span>):</td><td class=\"text-right\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>";
     }
     $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
     registerButtonEvents();

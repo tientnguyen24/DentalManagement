@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DentalManagement.Data.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
@@ -30,5 +32,11 @@ namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
 
         [DisplayName("Số lượng")]
         public decimal Quantity { get; set; }
+
+        [DisplayName("Trạng thái")]
+        public Status Status { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? CompletedDate { get; set; }
     }
 }
