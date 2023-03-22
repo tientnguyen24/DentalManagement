@@ -1608,12 +1608,23 @@ ul.chat-user-total li {
         width: 25%;
 }
 
+.table.custom-table > thead > tr > th.width-40-percent {
+    width: 40%;
+}
+
 .table.custom-table > thead > tr > th.width-50-percent {
         width: 50%;
 }
 
+.table.custom-table > thead > tr > th.width-55-percent {
+    width: 55%;
+}
+
 .table.custom-table > thead > tr > th.width-75-percent {
         width: 75%;
+}
+.table.custom-table > thead > tr > th.width-80-percent {
+    width: 80%;
 }
 
 .dash-widget-info > h3 {
