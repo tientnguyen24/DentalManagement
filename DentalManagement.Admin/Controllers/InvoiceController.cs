@@ -3,6 +3,7 @@ using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Common;
+using DentalManagement.Data.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -136,7 +137,9 @@ namespace DentalManagement.Admin.Controllers
                     ItemDiscountPercent = item.ItemDiscountPercent,
                     ItemDiscountAmount = item.ItemDiscountAmount,
                     ItemAmount = item.ItemAmount,
-                    Quantity = item.Quantity
+                    Quantity = item.Quantity,
+                    CompletedDate = null,
+                    Status = Status.Processing
                 });
             }
             var invoiceCreateRequest = new InvoiceCreateRequest()

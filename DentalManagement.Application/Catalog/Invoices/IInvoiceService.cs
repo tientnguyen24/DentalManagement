@@ -14,12 +14,13 @@ namespace DentalManagement.Application.Catalog.Invoices
     {
         Task<ApiResult<int>> Create(InvoiceCreateRequest request);
         Task<int> Update(InvoiceUpdateRequest request);
-        Task<int> Delete(int id);
-        Task<bool> UpdateStatus(int id, PaymentStatus updatedPaymentStatus);
+        Task<int> Delete(int invoiceId);
+        Task<bool> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus);
         Task<List<InvoiceViewModel>> GetAll();
-        Task<InvoiceViewModel> GetById(int id);
+        Task<InvoiceViewModel> GetById(int invoiceId);
         Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
-        Task<List<InvoiceViewModel>> GetAllByCustomerId(int id);
-        Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int id);
+        Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId);
+        Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId);
+        Task<bool> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus);
     }
 }
