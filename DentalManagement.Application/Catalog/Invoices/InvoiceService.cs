@@ -34,7 +34,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                     ItemDiscountAmount = item.ItemDiscountAmount,
                     ItemAmount = item.ItemAmount,
                     Quantity = item.Quantity,
-                    CompletedDate = item.CompletedDate,
+                    CompletedDate = null,
                     Status = item.Status
                 });
             }
@@ -58,12 +58,12 @@ namespace DentalManagement.Application.Catalog.Invoices
             return new ApiSuccessResult<int>(invoice.Id);
         }
 
-        public async Task<int> Delete(int id)
+        public async Task<int> Delete(int invoiceId)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn: {id}");
+                throw new DentalManagementException($"Không tìm thấy hoá đơn: {invoiceId}");
             }
             else
             {
@@ -102,12 +102,12 @@ namespace DentalManagement.Application.Catalog.Invoices
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateStatus(int id, PaymentStatus updatedPaymentStatus)
+        public async Task<bool> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn {id}");
+                throw new DentalManagementException($"Không tìm thấy hoá đơn {invoiceId}");
             }
             else if (invoice.PaymentStatus == updatedPaymentStatus)
             {
@@ -139,14 +139,14 @@ namespace DentalManagement.Application.Catalog.Invoices
             return data;
         }
 
-        public async Task<List<InvoiceViewModel>> GetAllByCustomerId(int id)
+        public async Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId)
         {
             var query = from c in _context.Customers
                         join i in _context.Invoices on c.Id equals i.CustomerId
                         select new { c, i };
-            if (id > 0)
+            if (customerId > 0)
             {
-                query = query.Where(x => x.c.Id == id);
+                query = query.Where(x => x.c.Id == customerId);
                 if (!query.Any())
                 {
                     var data = await query.Select(x => new InvoiceViewModel()
@@ -166,7 +166,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 }
                 else
                 {
-                    throw new DentalManagementException($"Không có hoá đơn cho khách hàng {id}");
+                    throw new DentalManagementException($"Không có hoá đơn cho khách hàng {customerId}");
                 }
 
             }
@@ -176,14 +176,14 @@ namespace DentalManagement.Application.Catalog.Invoices
             }
         }
 
-        public async Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int id)
+        public async Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId)
         {
             var query = from inv in _context.Invoices
                         join invd in _context.InvoiceDetails on inv.Id equals invd.InvoiceId
                         select new {inv, invd};
-            if (id > 0)
+            if (invoiceId > 0)
             {
-                query = query.Where(x => x.invd.InvoiceId == id);
+                query = query.Where(x => x.invd.InvoiceId == invoiceId);
                 var data = await query.Select(x => new InvoiceDetailViewModel()
                 {
                     ProductId = x.invd.ProductId,
@@ -240,15 +240,15 @@ namespace DentalManagement.Application.Catalog.Invoices
             return new ApiSuccessResult<PagedResult<InvoiceViewModel>>(pagedResult);
         }
 
-        public async Task<InvoiceViewModel> GetById(int id)
+        public async Task<InvoiceViewModel> GetById(int invoiceId)
         {
             var invoice = await _context.Invoices
                 .Include(i => i.InvoiceDetails)
                 .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn có id: {id}");
+                throw new DentalManagementException($"Không tìm thấy hoá đơn có id: {invoiceId}");
             }
             else
             {
@@ -280,6 +280,37 @@ namespace DentalManagement.Application.Catalog.Invoices
                 };
                 return invoiceViewModel;
             }
+        }
+
+        public async Task<bool> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        {
+            var invoiceDetail = await _context.InvoiceDetails.FirstOrDefaultAsync(i => i.InvoiceId == invoiceId && i.ProductId == productId);
+            if (invoiceDetail == null)
+            {
+                throw new DentalManagementException($"Không tìm thấy hoá đơn {invoiceId}");
+            }
+            else if (invoiceDetail.Status == updatedInvoiceDetailStatus)
+            {
+                throw new DentalManagementException($"Trạng thái hiện tại của hoá đơn trùng với trạng thái cần cập nhật.");
+            }
+            else
+            {
+                if (updatedInvoiceDetailStatus == Status.Cancelled)
+                {
+                    invoiceDetail.Status = updatedInvoiceDetailStatus;
+                }
+                if (updatedInvoiceDetailStatus == Status.Completed)
+                {
+                    invoiceDetail.Status = updatedInvoiceDetailStatus;
+                    invoiceDetail.CompletedDate = DateTime.Now;
+                }
+                if (updatedInvoiceDetailStatus == Status.Processing)
+                {
+                    invoiceDetail.Status = updatedInvoiceDetailStatus;
+                    invoiceDetail.CompletedDate = null;
+                }
+            }
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

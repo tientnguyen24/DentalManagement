@@ -13,7 +13,7 @@ namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
         public decimal ItemDiscountAmount { get; set; }
         public decimal ItemAmount { get; set; }
         public decimal Quantity { get; set; }
-        public DateTime CompletedDate { get; set; }
+        public DateTime? CompletedDate { get; set; }
         public Status Status { get; set; }
     }
 }
