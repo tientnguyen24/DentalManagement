@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DentalManagement.Data.Enums;
 using DentalManagement.ViewModels.Catalog.Customers;
+using DentalManagement.Utilities.Constants;
 
 namespace DentalManagement.Application.Catalog.Invoices
 {
@@ -240,15 +241,16 @@ namespace DentalManagement.Application.Catalog.Invoices
             return new ApiSuccessResult<PagedResult<InvoiceViewModel>>(pagedResult);
         }
 
-        public async Task<InvoiceViewModel> GetById(int invoiceId)
+        public async Task<ApiResult<InvoiceViewModel>> GetById(int invoiceId)
         {
             var invoice = await _context.Invoices
                 .Include(i => i.InvoiceDetails)
                 .ThenInclude(i => i.Product)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn có id: {invoiceId}");
+                return new ApiErrorResult<InvoiceViewModel>("Không tìm thấy hóa đơn");
             }
             else
             {
@@ -278,26 +280,23 @@ namespace DentalManagement.Application.Catalog.Invoices
                         ItemAmount = item.ItemAmount
                     }).ToList()
                 };
-                return invoiceViewModel;
+                return new ApiSuccessResult<InvoiceViewModel>(invoiceViewModel);
             }
         }
 
-        public async Task<bool> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
         {
             var invoiceDetail = await _context.InvoiceDetails.FirstOrDefaultAsync(i => i.InvoiceId == invoiceId && i.ProductId == productId);
-            if (invoiceDetail == null)
+            if (invoiceDetail == null || invoiceDetail.Status == updatedInvoiceDetailStatus)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn {invoiceId}");
-            }
-            else if (invoiceDetail.Status == updatedInvoiceDetailStatus)
-            {
-                throw new DentalManagementException($"Trạng thái hiện tại của hoá đơn trùng với trạng thái cần cập nhật.");
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             else
             {
                 if (updatedInvoiceDetailStatus == Status.Cancelled)
                 {
                     invoiceDetail.Status = updatedInvoiceDetailStatus;
+                    invoiceDetail.CompletedDate = null;
                 }
                 if (updatedInvoiceDetailStatus == Status.Completed)
                 {
@@ -310,7 +309,16 @@ namespace DentalManagement.Application.Catalog.Invoices
                     invoiceDetail.CompletedDate = null;
                 }
             }
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
+            var invoice = await _context.Invoices
+                                .Include(x => x.InvoiceDetails)
+                                .AsSplitQuery()
+                                .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            if (!invoice.InvoiceDetails.Any(inv => inv.Status == Status.Processing))
+            {
+                await UpdatePaymentStatus(invoiceId, PaymentStatus.Completed);
+            }
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
     }
 }

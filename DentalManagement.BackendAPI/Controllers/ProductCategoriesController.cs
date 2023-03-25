@@ -26,7 +26,7 @@ namespace DentalManagement.BackendAPI.Controllers
         {
             var result = await _productCategoryService.Create(request);
             if (!result.IsSuccessed) return BadRequest();
-            return CreatedAtAction("", result.ResultObject);
+            return CreatedAtAction("", result.Data);
         }
     }
 }

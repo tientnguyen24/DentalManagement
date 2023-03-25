@@ -50,19 +50,19 @@ namespace DentalManagement.Admin.Controllers
                 return View("Index", request);
             }
             var token = await _userApiClient.Authenticate(request);
-            if (token.ResultObject == null)
+            if (token.Data == null)
             {
                 result.AddToModelState(this.ModelState);
                 this.ModelState.AddModelError("", token.Message);
                 return View("Index", request);
             }
-            var userPrincipal = this.ValidateToken(token.ResultObject);
+            var userPrincipal = this.ValidateToken(token.Data);
             var authProperties = new AuthenticationProperties
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(2),
                 IsPersistent = true
             };
-            HttpContext.Session.SetString("Token", token.ResultObject);
+            HttpContext.Session.SetString("Token", token.Data);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authProperties);
             return RedirectToAction("Index", "Home");
         }
