@@ -71,10 +71,13 @@ function getMedicalInvoice(res) {
                 + "<td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                 + "</tr>";
         });
-        tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right\">Tạm tính (<span>" + res['invoiceDetailViewModels'].length + "</span>):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>"
-            + "<tr><td colspan=\"6\" class=\"text-right\">Giảm giá:</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right\" placeholder=\"0\" id=\"inp_total_discount_amount\" value=\"" + numberWithCommas(res['totalDiscountAmount']) + "\" /></td></tr>"
-            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền:</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount'] - res['totalDiscountAmount']) + "</td></tr>";
+        tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right\">Tạm tính (1):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount'] + res['totalDiscountAmount']) + "</td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right\">Giảm giá (2):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-total-discount-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['totalDiscountAmount']) + "\" /></td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền (1 - 2):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right\">Thanh toán (3):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-prepayment-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['prepaymentAmount']) + "\" /></td></tr>"
+            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['remainAmount']) + "</td></tr>";
     }
+    $('.no-of-products').text("("+res['invoiceDetailViewModels'].length+")");
     $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
     registerButtonEvents();
 }
@@ -112,17 +115,25 @@ function registerButtonEvents() {
         }
     });
 
-    $('body').on('focusout', '#inp_total_discount_amount', function (e) {
+    $('body').on('focusout', '.inp-total-discount-amount', function (e) {
         e.preventDefault();
         const totalDiscountAmount = $(this).val();
-        updateTotalDiscountAmount(totalDiscountAmount);
+        const prepaymentAmount = $('.inp-prepayment-amount').val();
+        updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount);
     });
 
-    $('body').on('input', '.inp-product-quantity, #inp_total_discount_amount', function (e) {
+    $('body').on('focusout', '.inp-prepayment-amount', function (e) {
+        e.preventDefault();
+        const totalDiscountAmount = $('.inp-total-discount-amount').val();
+        const prepaymentAmount = $(this).val();
+        updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount);
+    });
+
+    $('body').on('input', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', function (e) {
         textWithNumberOnly(this);
     });
 
-    $('body').on('keyup', '.inp-product-quantity, #inp_total_discount_amount', function (e) {
+    $('body').on('keyup', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', function (e) {
         updateTextView($(this));
     });
 }
@@ -144,11 +155,14 @@ function updateProductQuantity(productId, productQuantity) {
     });
 }
 
-function updateTotalDiscountAmount(totalDiscountAmount) {
+function updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount) {
     $.ajax({
         type: "POST",
-        url: '/Invoice/UpdateTotalDiscountAmount',
-        data: { totalDiscountAmount: totalDiscountAmount },
+        url: '/Invoice/UpdateTotalInvoiceAmount',
+        data: {
+            totalDiscountAmount: totalDiscountAmount,
+            prepaymentAmount: prepaymentAmount
+        },
         success: function (res) {
             getMedicalInvoice(res);
         },
@@ -170,7 +184,12 @@ $(document).ready(function () {
         invoiceId = values[0];
         productId = values[1];
         updatedInvoiceDetailStatus = values[2];
-        $('#complete_invoice_detail_status').modal('show');
+        if (updatedInvoiceDetailStatus == 'Completed') {
+            $('#complete_invoice_detail_status').modal('show');
+        }
+        if (updatedInvoiceDetailStatus == 'Cancelled') {
+            $('#cancel_invoice_detail_status').modal('show');
+        }
     });
 
     $('.btn-update-status').click(function (e) {
