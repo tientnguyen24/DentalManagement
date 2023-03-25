@@ -6,10 +6,10 @@ namespace DentalManagement.ViewModels.Common
 {
     public class ApiSuccessResult<T> : ApiResult<T>
     {
-        public ApiSuccessResult(T resultObject)
+        public ApiSuccessResult(T data)
         {
             IsSuccessed = true;
-            ResultObject = resultObject;
+            Data = data;
         }
         public ApiSuccessResult()
         {
@@ -20,11 +20,11 @@ namespace DentalManagement.ViewModels.Common
             IsSuccessed = true;
             Message = message;
         }
-        public ApiSuccessResult(string message, T resultObject)
+        public ApiSuccessResult(string message, T data)
         {
             IsSuccessed = true;
             Message = message;
-            ResultObject = resultObject;
+            Data = data;
         }
     }
 }

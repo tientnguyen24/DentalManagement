@@ -90,7 +90,7 @@
                                             <div class="col-sm-6 col-md-3">
                                             </div>
                                             <div class="col-sm-6 col-md-3">
-                                                <a href="#" type="button" class="btn btn-primary btn-block btn-product-list" data-toggle="modal" data-target="#create_medical_invoice">
+                                                <a href="#" type="button" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
                                                     <i class=" fa fa-plus"></i> Tạo phiếu khám
                                                 </a>
                                             </div>
@@ -146,9 +146,12 @@
                                                                     {
                                                                         <tr>
                                                                             <td class="width-5-percent">
-                                                                                <a href="@Url.Action("Details", "Invoice", new { id = itemDetail.ProductId })" class="text-success">
-                                                                                    <i class="fa fa-check-square-o"></i>
-                                                                                </a>
+                                                                                @if (itemDetail.Status == Status.Processing)
+                                                                                {
+                                                                                    <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Completed" class="text-success btn-get-status">
+                                                                                        <i class="fa fa-check-square-o"></i>
+                                                                                    </a>
+                                                                                }
                                                                             </td>
                                                                             <td class="width-50-percent">@itemDetail.ProductName</td>
                                                                             <td class="width-10-percent text-right">@itemDetail.UnitPrice.ToString("N0")</td>
@@ -172,14 +175,14 @@
                                                                                         <i class="fa fa-ellipsis-v"></i>
                                                                                     </a>
                                                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                                                        <a href="@Url.Action("AAB", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item">
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item">
                                                                                             <i class="fa fa-edit"></i> Sửa
                                                                                         </a>
-                                                                                        <a href="@Url.Action("AA", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item text-info">
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-info">
                                                                                             <i class="fa fa-comments-o"></i> Thêm ghi chú
                                                                                         </a>
-                                                                                        <a href="@Url.Action("BB", "Customer", new { id = itemDetail.ProductId })" class="dropdown-item text-danger" data-toggle="modal" data-target="#delete_customer">
-                                                                                            <i class="fa fa-trash"></i> Xóa
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Cancelled" class="dropdown-item text-danger btn-get-status">
+                                                                                            <i class="fa fa-trash"></i> Hủy
                                                                                         </a>
                                                                                     </div>
                                                                                 </div>
@@ -379,21 +382,6 @@
     </div>
 </div>
 
-<div id="delete_invoice" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <img src="~/assets/img/sent.png" alt="delete" width="50" height="46">
-                <h3>Xóa thông tin phiếu khám?</h3>
-                <div class="m-t-20">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Hủy</a>
-                    <button type="submit" class="btn btn-danger">Xác nhận</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="create_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -486,6 +474,37 @@
                     <a href="#" type="button" class="btn btn-primary" id="btn_add_product_to_medical_invoice" data-dismiss="modal">
                         <i class="fa fa-check-square-o"></i> Tiếp tục
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="complete_invoice_detail_status" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/assets/img/complete.png" alt="delete" width="50" height="46">
+                <h3>Hoàn thành điều trị</h3>
+                <h4><span class="text-info product_name"></span></h4>
+                <div class="m-t-20">
+                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal">Hủy</a>
+                    <a href="#" type="button" class="btn btn-success btn-update-status">Xác nhận</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cancel_invoice_detail_status" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/assets/img/delete.png" alt="delete" width="50" height="46">
+                <h3>Xóa thông tin phiếu khám?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Hủy</a>
+                    <a href="#" type="button" class="btn btn-danger btn-update-status">Xác nhận</a>
                 </div>
             </div>
         </div>

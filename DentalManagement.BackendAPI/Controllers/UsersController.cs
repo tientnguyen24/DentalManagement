@@ -26,7 +26,7 @@ namespace DentalManagement.BackendAPI.Controllers
         public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
             var result = await _userService.Authenticate(request);
-            if (string.IsNullOrEmpty(result.ResultObject))
+            if (string.IsNullOrEmpty(result.Data))
             {
                 return BadRequest(result);
             }
@@ -42,7 +42,7 @@ namespace DentalManagement.BackendAPI.Controllers
             {
                 return BadRequest(result.Message);
             }
-            return Ok(new { result.Message, result.ResultObject});
+            return Ok(new { result.Message, result.Data});
         }
 
         //http://localhost:port/api/users/search?keyword=?pageIndex=1?pageSize=10
@@ -60,7 +60,7 @@ namespace DentalManagement.BackendAPI.Controllers
         {
             var data = await _userService.GetByUserName(userName);
             if (!data.IsSuccessed) return BadRequest(data.Message);
-            return Ok(data.ResultObject);
+            return Ok(data.Data);
         }
     }
 }
