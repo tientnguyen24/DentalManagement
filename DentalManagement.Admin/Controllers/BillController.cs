@@ -120,13 +120,13 @@ namespace DentalManagement.Admin.Controllers
             var customer = await _customerApiClient.GetById(id);
             var currentCustomer = new CustomerViewModel()
             {
-                CustomerId = customer.ResultObject.Id,
-                FullName = customer.ResultObject.FullName,
-                Gender = (int)customer.ResultObject.Gender,
-                BirthDay = customer.ResultObject.BirthDay,
-                Address = customer.ResultObject.Address,
-                PhoneNumber = customer.ResultObject.PhoneNumber,
-                Description = customer.ResultObject.Description
+                CustomerId = customer.Data.Id,
+                FullName = customer.Data.FullName,
+                Gender = (int)customer.Data.Gender,
+                BirthDay = customer.Data.BirthDay,
+                Address = customer.Data.Address,
+                PhoneNumber = customer.Data.PhoneNumber,
+                Description = customer.Data.Description
             };
             HttpContext.Session.SetString(SystemConstants.CustomerSession, JsonConvert.SerializeObject(currentCustomer));
             return Ok(JsonConvert.SerializeObject(currentCustomer));
@@ -149,8 +149,8 @@ namespace DentalManagement.Admin.Controllers
             var billItem = new BillItemViewModel()
             {
                 ProductId = id,
-                ProductName = product.ResultObject.Name,
-                UnitPrice = product.ResultObject.UnitPrice,
+                ProductName = product.Data.Name,
+                UnitPrice = product.Data.UnitPrice,
                 Quantity = quantity
             };
             currentBillItem.Add(billItem);

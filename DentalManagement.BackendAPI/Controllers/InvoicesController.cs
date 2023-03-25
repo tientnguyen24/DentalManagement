@@ -61,13 +61,13 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] InvoiceCreateRequest request)
         {
-            var data = await _invoiceService.Create(request);
-            if (!data.IsSuccessed)
+            var result = await _invoiceService.Create(request);
+            if (!result.IsSuccessed)
             {
                 return BadRequest();
             }
-            var invoice = await _invoiceService.GetById(data.ResultObject);
-            return CreatedAtAction(nameof(GetById), new { id = data.ResultObject }, invoice);
+            var invoice = await _invoiceService.GetById(result.Data);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, invoice);
         }
 
         [HttpPut]
@@ -98,11 +98,11 @@ namespace DentalManagement.BackendAPI.Controllers
         public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
         {
             var result = await _invoiceService.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
-            if (!result)
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok();
+            return Ok(result.Message);
         }
 
         [HttpDelete]

@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('.btn-product-list').click(function () {
+    $('body').on('click', '#btn_product_list', function (e) {
         $.ajax({
             type: "GET",
             url: '/Product/GetProductList',
@@ -27,7 +27,7 @@
             }
         });
     });
-});
+})
 
 function addProductToMedicalInvoice() {
     $('#btn_add_product_to_medical_invoice').click(function () {
@@ -62,12 +62,12 @@ function getMedicalInvoice(res) {
     else {
         $.each(res['invoiceDetailViewModels'], function (i, item) {
             tableMedicalInvoiceHtml += "<tr>"
-                + "<td class=\"width-5-percent\"><a type=\"button\" class=\"text-danger\" id=\"btn_item_remove\" data-id=\"" + item.productId + "\"><i class=\"fa fa-trash fa-sm text-danger\"></i></a></td>"
+                + "<td class=\"width-5-percent\"><a href=\"#\" type=\"button\" class=\"text-danger btn-item-remove\" data-id=\"" + item.productId + "\"><i class=\"fa fa-trash fa-sm text-danger\"></i></a></td>"
                 + "<td class=\"width-50-percent text-left\">" + item.productName + "</td>"
                 + "<td class=\"width-10-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
-                + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-danger\" id=\"btn_quantity_minus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-minus-circle fa-sm\"></i></a></td>"
-                + "<td class=\"width-10-percent\"><input type =\"text\" class=\"form-control border-1 small text-right inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"txt_quantity_" + item.productId + "\" value=\"" + item.quantity + "\" /></td>"
-                + "<td class=\"width-5-percent\"><a type =\"button\" class=\"text-success\" id=\"btn_quantity_plus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-plus-circle fa-sm\"></i></a></td>"
+                + "<td class=\"width-5-percent\"><a href=\"#\" type =\"button\" class=\"text-danger btn-quantity-minus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-minus-circle fa-sm\"></i></a></td>"
+                + "<td class=\"width-10-percent\"><input type =\"text\" class=\"form-control border-1 small text-right inp-product-quantity\" placeholder=\"1\" data-id=\"" + item.productId + "\" id=\"quantity_" + item.productId + "\" value=\"" + item.quantity + "\" /></td>"
+                + "<td class=\"width-5-percent\"><a href=\"#\" type =\"button\" class=\"text-success btn-quantity-plus\" data-id=\"" + item.productId + "\"><i class=\"fa fa-plus-circle fa-sm\"></i></a></td>"
                 + "<td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice * item.quantity) + "</td>"
                 + "</tr>";
         });
@@ -80,21 +80,21 @@ function getMedicalInvoice(res) {
 }
 
 function registerButtonEvents() {
-    $('body').on('click', '#btn_quantity_plus', function (e) {
+    $('body').on('click', '.btn-quantity-plus', function (e) {
         e.preventDefault();
         const productId = $(this).data('id');
-        const productQuantity = parseInt($('#txt_quantity_' + productId).val()) + 1;
+        const productQuantity = parseInt($('#quantity_' + productId).val()) + 1;
         updateProductQuantity(productId, productQuantity);
     });
 
-    $('body').on('click', '#btn_quantity_minus', function (e) {
+    $('body').on('click', '.btn-quantity-minus', function (e) {
         e.preventDefault();
         const productId = $(this).data('id');
-        const productQuantity = parseInt($('#txt_quantity_' + productId).val()) - 1;
+        const productQuantity = parseInt($('#quantity_' + productId).val()) - 1;
         updateProductQuantity(productId, productQuantity);
     });
 
-    $('body').on('click', '#btn_item_remove', function (e) {
+    $('body').on('click', '.btn-item-remove', function (e) {
         e.preventDefault();
         const productId = $(this).data('id');
         updateProductQuantity(productId, 0);
@@ -103,7 +103,7 @@ function registerButtonEvents() {
     $('body').on('focusout', '.inp-product-quantity', function (e) {
         e.preventDefault();
         const productId = $(this).data('id');
-        const productQuantity = $('#txt_quantity_' + productId).val();
+        const productQuantity = $('#quantity_' + productId).val();
         if (productQuantity == '') {
             updateProductQuantity(productId, 1);
         }
@@ -154,6 +154,45 @@ function updateTotalDiscountAmount(totalDiscountAmount) {
         },
         error: function (err) {
             console.log(err)
+        }
+    });
+}
+
+$(document).ready(function () {
+    let invoiceId;
+    let productId;
+    let updatedInvoiceDetailStatus;
+
+    $('.btn-get-status').click(function (e) {
+        e.preventDefault();
+        let data = $(this).data('id');
+        let values = data.split(" ");
+        invoiceId = values[0];
+        productId = values[1];
+        updatedInvoiceDetailStatus = values[2];
+        $('#complete_invoice_detail_status').modal('show');
+    });
+
+    $('.btn-update-status').click(function (e) {
+        e.preventDefault();
+        updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
+    });
+})
+
+function updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus) {
+    $.ajax({
+        type: "POST",
+        url: '/Invoice/UpdateInvoiceDetailStatus',
+        data: {
+            invoiceId: invoiceId,
+            productId: productId,
+            updatedInvoiceDetailStatus: updatedInvoiceDetailStatus
+        },
+        success: function (res) {
+            location.reload();
+        },
+        error: function (err) {
+            console.log(err);
         }
     });
 }

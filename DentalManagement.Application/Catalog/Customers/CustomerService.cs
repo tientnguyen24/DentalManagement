@@ -170,6 +170,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 .Include(c => c.Invoices)
                 .ThenInclude(c => c.InvoiceDetails)
                 .ThenInclude(c => c.Product)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
@@ -193,6 +194,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 RemainAmount = inv.TotalInvoiceAmount - inv.PrepaymentAmount,
                 InvoiceDetailViewModels = inv.InvoiceDetails.Select(item => new InvoiceDetailViewModel()
                 {
+                    InvoiceId = item.InvoiceId,
                     ProductId = item.ProductId,
                     ProductName = item.Product.Name,
                     UnitPrice = item.Product.UnitPrice,

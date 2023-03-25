@@ -8,6 +8,6 @@ namespace DentalManagement.ViewModels.Common
     {
         public bool IsSuccessed { get; set; }
         public string Message { get; set; }
-        public T ResultObject { get; set; }
+        public T Data { get; set; }
     }
 }

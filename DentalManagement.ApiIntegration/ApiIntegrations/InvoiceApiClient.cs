@@ -1,4 +1,6 @@
-﻿using DentalManagement.Utilities.Constants;
+﻿using DentalManagement.Data.Enums;
+using DentalManagement.Utilities.Constants;
+using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +27,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }
+
         public async Task<ApiResult<bool>> Create(InvoiceCreateRequest request)
         {
             var json = JsonConvert.SerializeObject(request);
@@ -50,10 +53,39 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             var response = await client.GetAsync($"/api/invoices/search?keyword={request.Keyword}&pageIndex={request.PageIndex}&pageSize={request.PageSize}");
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<InvoiceViewModel>>>(result);
+                var data = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<InvoiceViewModel>>>(data);
             }
             return new ApiErrorResult<PagedResult<InvoiceViewModel>>("Không tìm thấy hoá đơn");
+        }
+
+        public async Task<ApiResult<InvoiceViewModel>> GetbyId(int id)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.GetAsync($"/api/invoices/{id}");
+            var data = await response.Content.ReadAsStringAsync();
+            var invoice = JsonConvert.DeserializeObject<ApiSuccessResult<InvoiceViewModel>>(data);
+            return invoice;
+        }
+
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        {
+            //issue here
+            var json = JsonConvert.SerializeObject(new { invoiceId, productId, updatedInvoiceDetailStatus });
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.PatchAsync($"/api/invoices/{invoiceId}/{productId}/{updatedInvoiceDetailStatus}", httpContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
+            }
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
     }
 }

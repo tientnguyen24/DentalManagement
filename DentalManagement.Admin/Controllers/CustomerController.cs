@@ -49,8 +49,8 @@ namespace DentalManagement.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var data = await _customerApiClient.GetById(id);
-            return View(data.ResultObject);
+            var result = await _customerApiClient.GetById(id);
+            return View(result.Data);
         }
 
         [HttpGet]
@@ -82,7 +82,7 @@ namespace DentalManagement.Admin.Controllers
             var result = await _customerApiClient.GetById(id);
             if (result.IsSuccessed)
             {
-                var customer = result.ResultObject;
+                var customer = result.Data;
                 var updateRequest = new CustomerUpdateRequest()
                 {
                     FullName = customer.FullName,

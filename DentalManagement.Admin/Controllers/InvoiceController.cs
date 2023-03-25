@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Build.Framework;
 
 namespace DentalManagement.Admin.Controllers
 {
@@ -37,8 +38,15 @@ namespace DentalManagement.Admin.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var data = await _invoiceApiClient.GetAllPaging(request);
-            return View(data.ResultObject);
+            var invoices = await _invoiceApiClient.GetAllPaging(request);
+            return View(invoices.Data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var invoice = await _invoiceApiClient.GetbyId(id);
+            return Ok(invoice.Data);
         }
 
         [HttpPost]
@@ -64,10 +72,10 @@ namespace DentalManagement.Admin.Controllers
                 var item = new InvoiceDetailViewModel()
                 {
                     ProductId = id,
-                    ProductName = product.ResultObject.Name,
-                    UnitPrice = product.ResultObject.UnitPrice,
+                    ProductName = product.Data.Name,
+                    UnitPrice = product.Data.UnitPrice,
                     Quantity = quantity,
-                    ItemAmount = product.ResultObject.UnitPrice * quantity,
+                    ItemAmount = product.Data.UnitPrice * quantity,
                 };
                 currentInvoiceDetailList.Add(item);
             }
@@ -163,6 +171,13 @@ namespace DentalManagement.Admin.Controllers
             HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             TempData["successMsg"] = "Thành công";
             return RedirectToAction("Details", "Customer", new { id = customerId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        {
+            var result = await _invoiceApiClient.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
+            return Ok(result.Message);
         }
     }
 }

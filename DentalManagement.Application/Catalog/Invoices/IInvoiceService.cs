@@ -17,10 +17,10 @@ namespace DentalManagement.Application.Catalog.Invoices
         Task<int> Delete(int invoiceId);
         Task<bool> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus);
         Task<List<InvoiceViewModel>> GetAll();
-        Task<InvoiceViewModel> GetById(int invoiceId);
+        Task<ApiResult<InvoiceViewModel>> GetById(int invoiceId);
         Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
         Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId);
         Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId);
-        Task<bool> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus);
+        Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus);
     }
 }

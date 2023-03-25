@@ -50,12 +50,12 @@ namespace DentalManagement.BackendAPI.Controllers
         public async Task<IActionResult> Create([FromBody] CustomerCreateRequest request)
         {
             var result = await _customerService.Create(request);
-            if (result.ResultObject == 0)
+            if (result.Data == 0)
             {
                 return BadRequest(result);
             }
-            var customer = await _customerService.GetById(result.ResultObject);
-            return CreatedAtAction(nameof(GetById), new { id = result.ResultObject }, customer);
+            var customer = await _customerService.GetById(result.Data);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, customer);
         }
 
         [HttpPut]
