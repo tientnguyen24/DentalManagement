@@ -80,7 +80,8 @@ namespace DentalManagement.Admin.Controllers
                 currentInvoiceDetailList.Add(item);
             }
             currentInvoice.InvoiceDetailViewModels = currentInvoiceDetailList;
-            currentInvoice.TotalInvoiceAmount = currentInvoiceDetailList.Sum(x => x.ItemAmount);
+            currentInvoice.TotalInvoiceAmount = currentInvoiceDetailList.Sum(x => x.ItemAmount) - currentInvoice.TotalDiscountAmount;
+            currentInvoice.RemainAmount = currentInvoice.TotalInvoiceAmount - currentInvoice.PrepaymentAmount;
             HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
             return Ok(currentInvoice);
         }
@@ -107,13 +108,17 @@ namespace DentalManagement.Admin.Controllers
                     item.ItemAmount = item.UnitPrice * item.Quantity;
                 }
             }
-            currentInvoice.TotalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount);
+            var totalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount);
+            var prepaymentAmount = currentInvoice.PrepaymentAmount;
+            var totalDiscountAmount = currentInvoice.TotalDiscountAmount;
+            currentInvoice.TotalInvoiceAmount = totalInvoiceAmount - totalDiscountAmount;
+            currentInvoice.RemainAmount = totalInvoiceAmount - totalDiscountAmount - prepaymentAmount;
             HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
             return Ok(currentInvoice);
         }
 
         [HttpPost]
-        public IActionResult UpdateTotalDiscountAmount(decimal totalDiscountAmount)
+        public IActionResult UpdateTotalInvoiceAmount(decimal totalDiscountAmount, decimal prepaymentAmount)
         {
             var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
             var currentInvoice = new InvoiceViewModel();
@@ -121,8 +126,11 @@ namespace DentalManagement.Admin.Controllers
             {
                 currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
             }
-            currentInvoice.TotalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount) - totalDiscountAmount;
+            var totalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount);
             currentInvoice.TotalDiscountAmount = totalDiscountAmount;
+            currentInvoice.PrepaymentAmount = prepaymentAmount;
+            currentInvoice.TotalInvoiceAmount = totalInvoiceAmount - totalDiscountAmount;
+            currentInvoice.RemainAmount = totalInvoiceAmount - totalDiscountAmount - prepaymentAmount;
             HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
             return Ok(currentInvoice);
         }

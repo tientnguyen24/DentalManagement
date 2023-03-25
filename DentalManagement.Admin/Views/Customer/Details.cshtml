@@ -116,7 +116,11 @@
                                             {
                                                 if (item.PaymentStatus == PaymentStatus.Processing)
                                                 {
-                                                    <h3 class="card-title">Kế hoạch điều trị</h3>
+                                                    var no_of_products = item.InvoiceDetailViewModels.Count(x => x.Status == Status.Processing);
+                                                    <div class="row">
+                                                        <div class="col-md-6"><h3 class="card-title">Kế hoạch điều trị</h3></div>
+                                                        <div class="col-md-6"><h3 class="card-title text-right">Ngày tạo phiếu: @Html.DisplayFor(modelItem => item.CreatedDate)</h3></div>
+                                                    </div>
                                                     <div class="medical-box">
                                                         <div class="table-responsive">
                                                             <table class="table table-striped custom-table">
@@ -124,7 +128,7 @@
                                                                     <tr>
                                                                         <th class="width-5-percent"></th>
                                                                         <th class="width-50-percent">
-                                                                            Điều trị
+                                                                            Điều trị <span class="text-danger">(@no_of_products)</span>
                                                                         </th>
                                                                         <th class="width-10-percent text-right">
                                                                             Đơn giá
@@ -159,11 +163,11 @@
                                                                             <td class="width-10-percent text-right">@itemDetail.ItemAmount.ToString("N0")</td>
                                                                             @if (itemDetail.Status == Status.Processing)
                                                                             {
-                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-red">Đang điều trị</span></td>
+                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-red" data-toggle="tooltip" title="Bắt đầu vào lúc <b> @item.CreatedDate">Đang điều trị</span></td>
                                                                             }
                                                                             @if (itemDetail.Status == Status.Completed)
                                                                             {
-                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-green">Hoàn thành</span></td>
+                                                                                <td class="width-10-percent text-right"><span class="custom-badge status-green" data-toggle="tooltip" title="Hoàn thành vào lúc <b> @itemDetail.CompletedDate">Hoàn thành</span></td>
                                                                             }
                                                                             @if (itemDetail.Status == Status.Cancelled)
                                                                             {
@@ -190,7 +194,7 @@
                                                                         </tr>
                                                                     }
                                                                     <tr>
-                                                                        <td colspan="4" class="text-right">Tạm tính:</td>
+                                                                        <td colspan="4" class="text-right">Tạm tính (1):</td>
                                                                         @{
                                                                             var tempTotalInvoiceAmount = item.TotalInvoiceAmount + item.TotalDiscountAmount;
                                                                         }
@@ -198,22 +202,22 @@
                                                                         <td colspan="2"></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="4" class="text-right">Giảm giá:</td>
+                                                                        <td colspan="4" class="text-right">Giảm giá (2):</td>
                                                                         <td class="width-10-percent text-right">@item.TotalDiscountAmount.ToString("N0")</td>
                                                                         <td colspan="2"></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="4" class="text-right">Thành tiền:</td>
+                                                                        <td colspan="4" class="text-right text-danger">Thành tiền (1 - 2):</td>
                                                                         <td class="width-10-percent text-right">@item.TotalInvoiceAmount.ToString("N0")</td>
                                                                         <td colspan="2"></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="4" class="text-right">Thanh toán:</td>
+                                                                        <td colspan="4" class="text-right">Thanh toán (3):</td>
                                                                         <td class="width-10-percent text-right">@item.PrepaymentAmount.ToString("N0")</td>
                                                                         <td colspan="2"></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="4" class="text-right">Còn lại:</td>
+                                                                        <td colspan="4" class="text-right text-danger">Còn lại (1 - 2 - 3):</td>
                                                                         <td class="width-10-percent text-right">@item.RemainAmount.ToString("N0")</td>
                                                                         <td colspan="2"></td>
                                                                     </tr>
@@ -387,7 +391,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Tạo phiếu khám</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='/Customer/Details/@Model.Id'">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -398,7 +402,7 @@
                             <tr>
                                 <th class="width-5-percent"></th>
                                 <th class="width-50-percent text-left">
-                                    Điều trị
+                                    Điều trị <span class="text-danger no-of-products"></span>
                                 </th>
                                 <th class="width-10-percent text-right">
                                     Đơn giá
@@ -424,7 +428,7 @@
 
                 <div class="m-t-20">
                     <form class="user" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                        <a href="#" type="button" class="btn btn-white" data-dismiss="modal">
+                        <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
                             <i class="fa fa-ban"></i> Hủy
                         </a>
                         <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_medical_invoice">
@@ -485,11 +489,15 @@
         <div class="modal-content">
             <div class="modal-body text-center">
                 <img src="~/assets/img/complete.png" alt="delete" width="50" height="46">
-                <h3>Hoàn thành điều trị</h3>
+                <h3>Hoàn thành điều trị?</h3>
                 <h4><span class="text-info product_name"></span></h4>
                 <div class="m-t-20">
-                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal">Hủy</a>
-                    <a href="#" type="button" class="btn btn-success btn-update-status">Xác nhận</a>
+                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                        <i class="fa fa-ban"></i> Hủy
+                    </a>
+                    <a href="#" type="button" class="btn btn-success btn-update-status">
+                        <i class="fa fa-floppy-o"></i> Lưu
+                    </a>
                 </div>
             </div>
         </div>
@@ -501,10 +509,14 @@
         <div class="modal-content">
             <div class="modal-body text-center">
                 <img src="~/assets/img/delete.png" alt="delete" width="50" height="46">
-                <h3>Xóa thông tin phiếu khám?</h3>
+                <h3>Hủy điều trị?</h3>
                 <div class="m-t-20">
-                    <a href="#" class="btn btn-white" data-dismiss="modal">Hủy</a>
-                    <a href="#" type="button" class="btn btn-danger btn-update-status">Xác nhận</a>
+                    <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                        <i class="fa fa-ban"></i> Hủy
+                    </a>
+                    <a href="#" type="button" class="btn btn-danger btn-update-status">
+                        <i class="fa fa-floppy-o"></i> Lưu
+                    </a>
                 </div>
             </div>
         </div>

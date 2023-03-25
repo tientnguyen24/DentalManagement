@@ -8,10 +8,6 @@ namespace DentalManagement.Utilities.Constants
     {
         public const string MainConnectionString = "DentalManagementDb";
         public const string InvoiceSession = "InvoiceSession";
-        public const string InvoiceSummarySession = "InvoiceSummarySession";
-        public const string InvoiceItemSession = "InvoiceItemSession";
-        public const string ProductSession = "ProductSession";
-        public const string CustomerSession = "CustomerSession";
         public static class AppSettings
         {
             public const string Token = "Token";
