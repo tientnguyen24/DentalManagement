@@ -24,23 +24,15 @@ namespace DentalManagement.BackendAPI.Controllers
 
         //http://localhost:port/invoice
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var invoices = await _invoiceService.GetAll();
             return Ok(invoices);
         }
 
-        //http://localhost:port/invoice/customerId
-        [HttpGet("customerId")]
-        public async Task<IActionResult> Get([FromQuery] int customerId)
-        {
-            var invoices = await _invoiceService.GetAllByCustomerId(customerId);
-            return Ok(invoices);
-        }
-
         //http://localhost:port/invoice/search
         [HttpGet("search")]
-        public async Task<IActionResult> Get([FromQuery] GetInvoicePagingRequest request)
+        public async Task<IActionResult> GetAllPaging([FromQuery] GetInvoicePagingRequest request)
         {
             var invoices = await _invoiceService.GetAllPaging(request);
             return Ok(invoices);
@@ -73,12 +65,12 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] InvoiceUpdateRequest request)
         {
-            var affectedResult = await _invoiceService.Update(request);
-            if (affectedResult == 0)
+            var result = await _invoiceService.Update(request);
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok();
+            return Ok(result.Message);
         }
 
         //http://localhost:port/invoice/{invoiceId}/{updatedPaymentStatus}
@@ -93,11 +85,11 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok();
         }
 
-        //http://localhost:port/invoice/{invoiceId}/{productId}/{updatedInvoiceDetailStatus}
-        [HttpPatch("{invoiceId}/{productId}/{updatedInvoiceDetailStatus}")]
-        public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        //http://localhost:port/invoice/{invoiceId}/{productId}/{updatedInvoiceDetailStatus}/{prepaymentAmount}
+        [HttpPatch("{invoiceId}/{productId}/{updatedInvoiceDetailStatus}/{prepaymentAmount}")]
+        public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
-            var result = await _invoiceService.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
+            var result = await _invoiceService.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result.Message);

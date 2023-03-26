@@ -13,6 +13,6 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
         Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
         Task<ApiResult<InvoiceViewModel>> GetbyId(int id);
         Task<ApiResult<bool>> Create(InvoiceCreateRequest request);
-        Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus);
+        Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount);
     }
 }

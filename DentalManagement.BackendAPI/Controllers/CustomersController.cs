@@ -32,7 +32,7 @@ namespace DentalManagement.BackendAPI.Controllers
 
         //http://localhost:port/api/customer/search
         [HttpGet("search")]
-        public async Task<IActionResult> Get([FromQuery] GetCustomerPagingRequest request)
+        public async Task<IActionResult> GetAllPaging([FromQuery] GetCustomerPagingRequest request)
         {
             var customers = await _customerService.GetAllPaging(request);
             return Ok(customers);

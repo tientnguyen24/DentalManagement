@@ -182,9 +182,9 @@ namespace DentalManagement.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
-            var result = await _invoiceApiClient.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
+            var result = await _invoiceApiClient.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
             return Ok(result.Message);
         }
     }

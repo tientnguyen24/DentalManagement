@@ -79,10 +79,10 @@ function getMedicalInvoice(res) {
     }
     $('.no-of-products').text("("+res['invoiceDetailViewModels'].length+")");
     $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
-    registerButtonEvents();
+    registerEvents();
 }
 
-function registerButtonEvents() {
+function registerEvents() {
     $('body').on('click', '.btn-quantity-plus', function (e) {
         e.preventDefault();
         const productId = $(this).data('id');
@@ -176,6 +176,8 @@ $(document).ready(function () {
     let invoiceId;
     let productId;
     let updatedInvoiceDetailStatus;
+    let prepaymentAmount;
+    let processingStatusCount = 0;
 
     $('.btn-get-status').click(function (e) {
         e.preventDefault();
@@ -184,37 +186,93 @@ $(document).ready(function () {
         invoiceId = values[0];
         productId = values[1];
         updatedInvoiceDetailStatus = values[2];
-        if (updatedInvoiceDetailStatus == 'Completed') {
-            $('#complete_invoice_detail_status').modal('show');
-        }
-        if (updatedInvoiceDetailStatus == 'Cancelled') {
-            $('#cancel_invoice_detail_status').modal('show');
-        }
+        $.ajax({
+            type: "GET",
+            url: '/Invoice/GetById/' + invoiceId,
+            success: function (res) {
+                checkInvoiceDetailProcessingStatus(res['invoiceDetailViewModels']);
+                $.each(res['invoiceDetailViewModels'], function (i, item) {
+                    if (item.productId == productId) {
+                        if (updatedInvoiceDetailStatus == 'Completed') {
+                            showCompleteInvoiceDetailModal(item, res['remainAmount']);
+                        }
+                        if (updatedInvoiceDetailStatus == 'Cancelled') {
+                            showCancelInvoiceDetailModal(item);
+                        }
+                    }
+                });
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
     });
+
+    function checkInvoiceDetailProcessingStatus(res) {
+        $.each(res, function (i, item) {
+            //2 is processing status for invoice detail
+            if (item.status == '2') {
+                processingStatusCount++;
+            }
+        });
+        console.log(processingStatusCount);
+        return processingStatusCount;
+    }
+
+    function showCompleteInvoiceDetailModal(item, remainAmount) {
+        $('#complete_invoice_detail_status').modal('show');
+        $('.product-name').text(item.productName);
+        $('.remain-amount').text("Dư nợ còn lại: " + numberWithCommas(remainAmount));
+        if (processingStatusCount == 1 && remainAmount > 0) {
+            alert('Điều trị cuối cùng của phiếu khám, vui lòng thanh toán tất cả dư nợ còn lại.');
+            $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
+        }
+        if (remainAmount == 0) {
+            $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
+        }
+        $('#complete_invoice_detail_status').on('input', '.inp-prepayment-amount', function () {
+            textWithNumberOnly(this);
+            updateTextView($(this));
+        });
+        $('#complete_invoice_detail_status').on('focusout', '.inp-prepayment-amount', function () {
+            //remove commas out of prepayment amount after user input
+            prepaymentAmount = $(this).val().replace(/,/g, '');
+            if (remainAmount < prepaymentAmount) {
+                alert('Giá trị không hợp lệ, số tiền cần thanh toán vượt mức dư nợ.');
+                $(this).val('0');
+            }
+        });
+    }
+
+    function showCancelInvoiceDetailModal(item) {
+        $('#cancel_invoice_detail_status').modal('show');
+        $('.product-name').text(item.productName);
+    }
 
     $('.btn-update-status').click(function (e) {
         e.preventDefault();
-        updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus);
+        updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
     });
-})
 
-function updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus) {
-    $.ajax({
-        type: "POST",
-        url: '/Invoice/UpdateInvoiceDetailStatus',
-        data: {
-            invoiceId: invoiceId,
-            productId: productId,
-            updatedInvoiceDetailStatus: updatedInvoiceDetailStatus
-        },
-        success: function (res) {
-            location.reload();
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-}
+    function updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount) {
+        $.ajax({
+            type: "POST",
+            url: '/Invoice/UpdateInvoiceDetailStatus',
+            data: {
+                invoiceId: invoiceId,
+                productId: productId,
+                updatedInvoiceDetailStatus: updatedInvoiceDetailStatus,
+                prepaymentAmount: prepaymentAmount
+            },
+            success: function (res) {
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+})
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
