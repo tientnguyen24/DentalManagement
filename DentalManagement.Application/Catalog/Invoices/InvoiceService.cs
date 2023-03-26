@@ -35,7 +35,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                     ItemDiscountAmount = item.ItemDiscountAmount,
                     ItemAmount = item.ItemAmount,
                     Quantity = item.Quantity,
-                    CompletedDate = null,
+                    CompletedDate = item.CompletedDate,
                     Status = item.Status
                 });
             }
@@ -73,34 +73,27 @@ namespace DentalManagement.Application.Catalog.Invoices
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Update(InvoiceUpdateRequest request)
+        public async Task<ApiResult<bool>> Update(InvoiceUpdateRequest request)
         {
             var invoice = await _context.Invoices.FindAsync(request.Id);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn {request.Id}");
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             else
             {
-                //get invoice detail list
-                var query = from id in _context.InvoiceDetails
-                            where id.InvoiceId == invoice.Id
-                            select id;
-
-                foreach (var item in query)
-                {
-                    item.ItemAmount = request.TotalInvoiceAmount;
-                }
-
                 invoice.TotalDiscountPercent = request.TotalDiscountPercent;
-                invoice.TotalDiscountAmount = request.TotalDiscountPercent;
-                invoice.TotalInvoiceAmount = request.TotalDiscountPercent;
-                invoice.ModifiedDate = DateTime.Now;
+                invoice.TotalDiscountAmount = request.TotalDiscountAmount;
+                invoice.TotalInvoiceAmount = request.TotalInvoiceAmount;
+                invoice.ModifiedDate = request.ModifiedDate;
                 invoice.ModifiedBy = request.ModifiedBy;
                 invoice.Description = request.Description;
-
+                invoice.PaymentStatus = request.PaymentStatus;
+                invoice.PrepaymentAmount = request.PrepaymentAmount;
+                invoice.RemainAmount = request.RemainAmount;
             }
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
 
         public async Task<bool> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus)
@@ -139,68 +132,6 @@ namespace DentalManagement.Application.Catalog.Invoices
             }).ToListAsync();
             return data;
         }
-
-        public async Task<List<InvoiceViewModel>> GetAllByCustomerId(int customerId)
-        {
-            var query = from c in _context.Customers
-                        join i in _context.Invoices on c.Id equals i.CustomerId
-                        select new { c, i };
-            if (customerId > 0)
-            {
-                query = query.Where(x => x.c.Id == customerId);
-                if (!query.Any())
-                {
-                    var data = await query.Select(x => new InvoiceViewModel()
-                    {
-                        Id = x.i.Id,
-                        CreatedDate = x.i.CreatedDate,
-                        CreatedBy = x.i.CreatedBy,
-                        TotalDiscountPercent = x.i.TotalDiscountPercent,
-                        TotalDiscountAmount = x.i.TotalDiscountAmount,
-                        TotalInvoiceAmount = x.i.TotalInvoiceAmount,
-                        ModifiedDate = x.i.ModifiedDate,
-                        ModifiedBy = x.i.ModifiedBy,
-                        Description = x.i.Description,
-                        PaymentStatus = x.i.PaymentStatus,
-                    }).ToListAsync();
-                    return data;
-                }
-                else
-                {
-                    throw new DentalManagementException($"Không có hoá đơn cho khách hàng {customerId}");
-                }
-
-            }
-            else
-            {
-                throw new DentalManagementException($"Khách hàng không tồn tại");
-            }
-        }
-
-        public async Task<List<InvoiceDetailViewModel>> GetInvoiceDetailsByInvoiceId(int invoiceId)
-        {
-            var query = from inv in _context.Invoices
-                        join invd in _context.InvoiceDetails on inv.Id equals invd.InvoiceId
-                        select new {inv, invd};
-            if (invoiceId > 0)
-            {
-                query = query.Where(x => x.invd.InvoiceId == invoiceId);
-                var data = await query.Select(x => new InvoiceDetailViewModel()
-                {
-                    ProductId = x.invd.ProductId,
-                    ItemDiscountPercent = x.invd.ItemDiscountPercent,
-                    ItemDiscountAmount = x.invd.ItemDiscountAmount,
-                    ItemAmount = x.invd.ItemAmount,
-                    Quantity = x.invd.Quantity
-                }).ToListAsync();
-                return data;
-            }
-            else
-            {
-                throw new DentalManagementException($"Không hợp lệ");
-            }
-        }
-
         public async Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request)
         {
             //select invoice record
@@ -263,6 +194,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                     TotalDiscountAmount = invoice.TotalDiscountAmount,
                     TotalInvoiceAmount = invoice.TotalInvoiceAmount,
                     PrepaymentAmount = invoice.PrepaymentAmount,
+                    RemainAmount = invoice.RemainAmount,
                     ModifiedDate = invoice.ModifiedDate,
                     ModifiedBy = invoice.ModifiedBy,
                     Description = invoice.Description,
@@ -277,14 +209,16 @@ namespace DentalManagement.Application.Catalog.Invoices
                         UnitPrice = item.Product.UnitPrice,
                         ItemDiscountPercent = item.ItemDiscountPercent,
                         ItemDiscountAmount = item.ItemDiscountAmount,
-                        ItemAmount = item.ItemAmount
+                        ItemAmount = item.ItemAmount,
+                        Status = item.Status,
+                        CompletedDate = item.CompletedDate
                     }).ToList()
                 };
                 return new ApiSuccessResult<InvoiceViewModel>(invoiceViewModel);
             }
         }
 
-        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
             var invoiceDetail = await _context.InvoiceDetails.FirstOrDefaultAsync(i => i.InvoiceId == invoiceId && i.ProductId == productId);
             if (invoiceDetail == null || invoiceDetail.Status == updatedInvoiceDetailStatus)
@@ -314,11 +248,32 @@ namespace DentalManagement.Application.Catalog.Invoices
                                 .Include(x => x.InvoiceDetails)
                                 .AsSplitQuery()
                                 .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            //update total invoice if prepayment changes
+            if (prepaymentAmount > 0)
+            {
+                var request = new InvoiceUpdateRequest()
+                {
+                    Id = invoiceId,
+                    TotalDiscountPercent = invoice.TotalDiscountPercent,
+                    TotalDiscountAmount = invoice.TotalDiscountAmount,
+                    TotalInvoiceAmount = invoice.TotalInvoiceAmount,
+                    ModifiedDate = DateTime.Now,
+                    ModifiedBy = invoice.ModifiedBy,
+                    Description = invoice.Description,
+                    PaymentStatus = invoice.PaymentStatus,
+                    PrepaymentAmount = invoice.PrepaymentAmount + prepaymentAmount,
+                    RemainAmount = invoice.TotalInvoiceAmount - invoice.PrepaymentAmount - prepaymentAmount
+                };
+                _ = await Update(request);
+            }
+            //if there is no processing status in invoice detail then completing invoice
             if (!invoice.InvoiceDetails.Any(inv => inv.Status == Status.Processing))
             {
-                await UpdatePaymentStatus(invoiceId, PaymentStatus.Completed);
+                _ = await UpdatePaymentStatus(invoiceId, PaymentStatus.Completed);
             }
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
+
+
     }
 }

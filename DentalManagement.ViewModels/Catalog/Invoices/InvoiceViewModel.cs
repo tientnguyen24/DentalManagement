@@ -16,6 +16,7 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? CreatedDate { get; set; }
+
         public string CreatedBy { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
@@ -29,8 +30,11 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? ModifiedDate { get; set; }
+
         public string ModifiedBy { get; set; }
+
         public string Description { get; set; }
+
         public PaymentStatus PaymentStatus { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]

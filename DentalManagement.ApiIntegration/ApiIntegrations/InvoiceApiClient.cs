@@ -71,16 +71,16 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             return invoice;
         }
 
-        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus)
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
             //issue here
-            var json = JsonConvert.SerializeObject(new { invoiceId, productId, updatedInvoiceDetailStatus });
+            var json = JsonConvert.SerializeObject(new { invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount });
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.PatchAsync($"/api/invoices/{invoiceId}/{productId}/{updatedInvoiceDetailStatus}", httpContent);
+            var response = await client.PatchAsync($"/api/invoices/{invoiceId}/{productId}/{updatedInvoiceDetailStatus}/{prepaymentAmount}", httpContent);
             if (!response.IsSuccessStatusCode)
             {
                 return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
