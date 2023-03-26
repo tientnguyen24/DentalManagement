@@ -47,11 +47,11 @@ namespace DentalManagement.Application.Catalog.Invoices
                 TotalDiscountPercent = request.TotalDiscountPercent,
                 TotalDiscountAmount = request.TotalDiscountAmount,
                 TotalInvoiceAmount = request.TotalInvoiceAmount,
-                CustomerId = request.CustomerId,
                 Description = request.Description,
+                CustomerId = request.CustomerId,
+                PaymentStatus = request.PaymentStatus,
                 PrepaymentAmount = request.PrepaymentAmount,
                 RemainAmount = request.RemainAmount,
-                PaymentStatus = request.PaymentStatus,
                 InvoiceDetails = invoiceDetails
             };
             _context.Invoices.Add(invoice);
@@ -220,36 +220,16 @@ namespace DentalManagement.Application.Catalog.Invoices
 
         public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
-            var invoiceDetail = await _context.InvoiceDetails.FirstOrDefaultAsync(i => i.InvoiceId == invoiceId && i.ProductId == productId);
+            var invoice = await _context.Invoices
+                    .Include(x => x.InvoiceDetails)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            var invoiceDetail = invoice.InvoiceDetails.SingleOrDefault(i => i.ProductId == productId);
             if (invoiceDetail == null || invoiceDetail.Status == updatedInvoiceDetailStatus)
             {
                 return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             else
-            {
-                if (updatedInvoiceDetailStatus == Status.Cancelled)
-                {
-                    invoiceDetail.Status = updatedInvoiceDetailStatus;
-                    invoiceDetail.CompletedDate = null;
-                }
-                if (updatedInvoiceDetailStatus == Status.Completed)
-                {
-                    invoiceDetail.Status = updatedInvoiceDetailStatus;
-                    invoiceDetail.CompletedDate = DateTime.Now;
-                }
-                if (updatedInvoiceDetailStatus == Status.Processing)
-                {
-                    invoiceDetail.Status = updatedInvoiceDetailStatus;
-                    invoiceDetail.CompletedDate = null;
-                }
-            }
-            await _context.SaveChangesAsync();
-            var invoice = await _context.Invoices
-                                .Include(x => x.InvoiceDetails)
-                                .AsSplitQuery()
-                                .FirstOrDefaultAsync(x => x.Id == invoiceId);
-            //update total invoice if prepayment changes
-            if (prepaymentAmount > 0)
             {
                 var request = new InvoiceUpdateRequest()
                 {
@@ -261,19 +241,45 @@ namespace DentalManagement.Application.Catalog.Invoices
                     ModifiedBy = invoice.ModifiedBy,
                     Description = invoice.Description,
                     PaymentStatus = invoice.PaymentStatus,
-                    PrepaymentAmount = invoice.PrepaymentAmount + prepaymentAmount,
-                    RemainAmount = invoice.TotalInvoiceAmount - invoice.PrepaymentAmount - prepaymentAmount
+                    PrepaymentAmount = invoice.PrepaymentAmount,
+                    RemainAmount = invoice.RemainAmount
                 };
-                _ = await Update(request);
+                switch (updatedInvoiceDetailStatus)
+                {
+                    case Status.Cancelled:
+                        request.TotalInvoiceAmount -= invoiceDetail.ItemAmount;
+                        request.RemainAmount = request.TotalInvoiceAmount - request.PrepaymentAmount;
+                        _ = await Update(request);
+                        invoiceDetail.Status = updatedInvoiceDetailStatus;
+                        invoiceDetail.CompletedDate = null;
+                        invoiceDetail.ItemAmount = 0;
+                        break;
+
+                    case Status.Completed:
+                        if (prepaymentAmount > 0)
+                        {
+                            request.PrepaymentAmount += prepaymentAmount;
+                            request.RemainAmount = request.TotalInvoiceAmount - request.PrepaymentAmount;
+                            _ = await Update(request);
+                        }
+                        invoiceDetail.Status = updatedInvoiceDetailStatus;
+                        invoiceDetail.CompletedDate = DateTime.Now;
+                        //update total invoice if prepayment changes
+                        break;
+
+                    default:
+                        return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
+                }
             }
             //if there is no processing status in invoice detail then completing invoice
             if (!invoice.InvoiceDetails.Any(inv => inv.Status == Status.Processing))
             {
                 _ = await UpdatePaymentStatus(invoiceId, PaymentStatus.Completed);
             }
+
+            await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-
 
     }
 }

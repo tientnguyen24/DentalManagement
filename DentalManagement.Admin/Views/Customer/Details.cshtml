@@ -176,22 +176,25 @@
                                                                             <td class="width-10-percent text-right"><span class="custom-badge">Đã hủy</span></td>
                                                                         }
                                                                         <td class="width-5-percent text-right">
-                                                                            <div class="dropdown dropdown-action">
-                                                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                                                    <i class="fa fa-ellipsis-v"></i>
-                                                                                </a>
-                                                                                <div class="dropdown-menu dropdown-menu-right">
-                                                                                    <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item">
-                                                                                        <i class="fa fa-edit"></i> Sửa
+                                                                            @if (itemDetail.Status == Status.Processing)
+                                                                            {
+                                                                                <div class="dropdown dropdown-action">
+                                                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                                                        <i class="fa fa-ellipsis-v"></i>
                                                                                     </a>
-                                                                                    <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-info">
-                                                                                        <i class="fa fa-comments-o"></i> Thêm ghi chú
-                                                                                    </a>
-                                                                                    <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Cancelled" class="dropdown-item text-danger btn-get-status">
-                                                                                        <i class="fa fa-trash"></i> Hủy
-                                                                                    </a>
+                                                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item">
+                                                                                            <i class="fa fa-edit"></i> Sửa
+                                                                                        </a>
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-info">
+                                                                                            <i class="fa fa-comments-o"></i> Thêm ghi chú
+                                                                                        </a>
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Cancelled" class="dropdown-item text-danger btn-get-status">
+                                                                                            <i class="fa fa-trash"></i> Hủy
+                                                                                        </a>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
+                                                                            }
                                                                         </td>
                                                                     </tr>
                                                                 }
@@ -402,7 +405,7 @@
                                     <tr>
                                         <th class="width-5-percent"></th>
                                         <th class="width-50-percent text-left">
-                                            Điều trị <span class="text-danger no-of-products"></span>
+                                            Điều trị <span class="text-danger no-of-products">(0)</span>
                                         </th>
                                         <th class="width-10-percent text-right">
                                             Đơn giá
@@ -427,6 +430,7 @@
                         </div>
 
                         <div class="m-t-20">
+                            <span class="text-danger txt-error-message-in-create-invoice"></span>
                             <form class="user" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
                                 <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
                                     <i class="fa fa-ban"></i> Hủy
@@ -434,7 +438,7 @@
                                 <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_medical_invoice">
                                     <i class=" fa fa-plus"></i> Thêm điều trị
                                 </a>
-                                <button type="submit" class="btn btn-success" id="btn_create_medical_invoice">
+                                <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
                                     <i class="fa fa-floppy-o"></i> Lưu
                                 </button>
                             </form>
@@ -475,7 +479,7 @@
                             <a href="#" type="button" class="btn btn-white" data-dismiss="modal">
                                 <i class="fa fa-ban"></i> Hủy
                             </a>
-                            <a href="#" type="button" class="btn btn-primary" id="btn_add_product_to_medical_invoice" data-dismiss="modal">
+                            <a href="#" type="button" class="btn btn-primary disabled" id="btn_add_product_to_medical_invoice" data-dismiss="modal">
                                 <i class="fa fa-check-square-o"></i> Tiếp tục
                             </a>
                         </div>
