@@ -12,14 +12,20 @@
                     $.each(res, function (i, item) {
                         tableProductListHtml += "<tr>"
                             + " <td class=\"width-5-percent\">"
-                            + " <input type=\"checkbox\" name=\"product\" data-id=\"" + item.id + "\"/>"
+                            + " <input type=\"checkbox\" class=\"checkbox-product-id\" name=\"product\" data-id=\"" + item.id + "\"/>"
                             + " </td>"
                             + " <td class=\"width-80-percent\">" + item.name + "</td>"
                             + " <td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
                             + " </tr>";
                     });
                     $('#table_product_list').html(tableProductListHtml);
-                    addProductToMedicalInvoice();
+                    $('.checkbox-product-id').change(function () {
+                        if (this.checked) {
+                            $('#btn_add_product_to_medical_invoice').removeClass('disabled');
+                        }
+                        addProductToMedicalInvoice();
+                    });
+                    
                 }
             },
             error: function (err) {
@@ -34,9 +40,10 @@ function addProductToMedicalInvoice() {
         let productIds = [];
         $('input[name="product"]:checked').each(function () {
             productIds.push($(this).data('id'));
+            $('#btn_add_product_to_medical_invoice').addClass('disabled');
         });
         if (productIds.length === 0) {
-            alert('Bạn chưa chọn dịch vụ !!!');
+            alert('Bạn chưa chọn dịch vụ.');
         }
         else {
             $.ajax({
@@ -55,11 +62,16 @@ function addProductToMedicalInvoice() {
 }
 
 function getMedicalInvoice(res) {
+
     let tableMedicalInvoiceHtml = '';
     if (res['invoiceDetailViewModels'] == '') {
         tableMedicalInvoiceHtml += "<tr><td class=\"width-5-percent\"></td><td colspan=\"6\"class=\"width-40-percent text-left\">Không có dữ liệu </td></tr>"
+        /*disable submit button*/
+        $("#btn_create_medical_invoice").prop("disabled", true);
     }
     else {
+        /*enabled submit button*/
+        $("#btn_create_medical_invoice").prop("disabled", false).removeAttr("disabled");;
         $.each(res['invoiceDetailViewModels'], function (i, item) {
             tableMedicalInvoiceHtml += "<tr>"
                 + "<td class=\"width-5-percent\"><a href=\"#\" type=\"button\" class=\"text-danger btn-item-remove\" data-id=\"" + item.productId + "\"><i class=\"fa fa-trash fa-sm text-danger\"></i></a></td>"
@@ -75,9 +87,9 @@ function getMedicalInvoice(res) {
             + "<tr><td colspan=\"6\" class=\"text-right\">Giảm giá (2):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-total-discount-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['totalDiscountAmount']) + "\" /></td></tr>"
             + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền (1 - 2):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount']) + "</td></tr>"
             + "<tr><td colspan=\"6\" class=\"text-right\">Thanh toán (3):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-prepayment-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['prepaymentAmount']) + "\" /></td></tr>"
-            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['remainAmount']) + "</td></tr>";
+            + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\"><span class=\"txt-remain-amount\">" + numberWithCommas(res['remainAmount']) + "</span></td></tr>";
     }
-    $('.no-of-products').text("("+res['invoiceDetailViewModels'].length+")");
+    $('.no-of-products').text("(" + res['invoiceDetailViewModels'].length + ")");
     $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
     registerEvents();
 }
@@ -136,6 +148,7 @@ function registerEvents() {
     $('body').on('keyup', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', function (e) {
         updateTextView($(this));
     });
+
 }
 
 function updateProductQuantity(productId, productQuantity) {
@@ -156,6 +169,15 @@ function updateProductQuantity(productId, productQuantity) {
 }
 
 function updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount) {
+    const remainAmount = $('.txt-remain-amount').text().replace(/,/g, '') - totalDiscountAmount.replace(/,/g, '') - prepaymentAmount.replace(/,/g, '');
+    if (remainAmount < 0) {
+        $('.txt-error-message-in-create-invoice').text('Giá trị không hợp lệ, số tiền còn lại không được âm.');
+        totalDiscountAmount = 0;
+        prepaymentAmount = 0;
+    }
+    else {
+        $('.txt-error-message-in-create-invoice').text('');
+    }
     $.ajax({
         type: "POST",
         url: '/Invoice/UpdateTotalInvoiceAmount',
@@ -165,6 +187,7 @@ function updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount) {
         },
         success: function (res) {
             getMedicalInvoice(res);
+            console.log(res);
         },
         error: function (err) {
             console.log(err)
@@ -215,7 +238,6 @@ $(document).ready(function () {
                 processingStatusCount++;
             }
         });
-        console.log(processingStatusCount);
         return processingStatusCount;
     }
 
@@ -226,9 +248,11 @@ $(document).ready(function () {
         if (processingStatusCount == 1 && remainAmount > 0) {
             alert('Điều trị cuối cùng của phiếu khám, vui lòng thanh toán tất cả dư nợ còn lại.');
             $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
+            prepaymentAmount = remainAmount;
         }
         if (remainAmount == 0) {
             $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
+            prepaymentAmount = remainAmount;
         }
         $('#complete_invoice_detail_status').on('input', '.inp-prepayment-amount', function () {
             textWithNumberOnly(this);
