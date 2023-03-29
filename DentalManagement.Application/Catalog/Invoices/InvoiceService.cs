@@ -246,6 +246,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 };
                 switch (updatedInvoiceDetailStatus)
                 {
+                    //cancel but remain still has value
                     case Status.Cancelled:
                         request.TotalInvoiceAmount -= invoiceDetail.ItemAmount;
                         request.RemainAmount = request.TotalInvoiceAmount - request.PrepaymentAmount;
@@ -256,6 +257,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                         break;
 
                     case Status.Completed:
+                        //update total invoice if prepayment changes
                         if (prepaymentAmount > 0)
                         {
                             request.PrepaymentAmount += prepaymentAmount;
@@ -264,7 +266,6 @@ namespace DentalManagement.Application.Catalog.Invoices
                         }
                         invoiceDetail.Status = updatedInvoiceDetailStatus;
                         invoiceDetail.CompletedDate = DateTime.Now;
-                        //update total invoice if prepayment changes
                         break;
 
                     default:
@@ -276,7 +277,7 @@ namespace DentalManagement.Application.Catalog.Invoices
             {
                 _ = await UpdatePaymentStatus(invoiceId, PaymentStatus.Completed);
             }
-
+            //update status payment when all invoice in detail is cancel
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }

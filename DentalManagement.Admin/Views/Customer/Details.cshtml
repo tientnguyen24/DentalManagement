@@ -5,6 +5,16 @@
     ViewData["Title"] = "Chi tiết khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+@section scripts{
+    <script>
+        function initializeCustomerController() {
+            let customerController = new CustomerController();
+            customerController.initialize();
+        }
+    </script>
+}
+
 <div class="page-wrapper">
     <div class="content">
         @*begin of content*@
@@ -92,7 +102,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" type="button" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
+                                            <a href="#" onclick="initializeCustomerController(); return false;" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Tạo phiếu khám
                                             </a>
                                         </div>
@@ -430,7 +440,6 @@
                         </div>
 
                         <div class="m-t-20">
-                            <span class="text-danger txt-error-message-in-create-invoice"></span>
                             <form class="user" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
                                 <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
                                     <i class="fa fa-ban"></i> Hủy
