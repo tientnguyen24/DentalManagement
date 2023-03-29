@@ -1,4 +1,4 @@
-﻿let CustomerController = function () {
+﻿let InvoiceController = function () {
     this.initialize = function () {
         getProductList();
         addProductToMedicalInvoice();
@@ -67,6 +67,7 @@
     }
 
     function getMedicalInvoice(res) {
+        console.log(res);
         let tableMedicalInvoiceHtml = '';
         if (res['invoiceDetailViewModels'] == null || res['invoiceDetailViewModels'] == '') {
             $('.no-of-products').text('(0)');
@@ -189,6 +190,7 @@
             }
         });
     }
+
 }
 
 $(document).ready(function () {

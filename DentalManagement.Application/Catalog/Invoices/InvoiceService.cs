@@ -248,7 +248,8 @@ namespace DentalManagement.Application.Catalog.Invoices
                 {
                     //cancel but remain still has value
                     case Status.Cancelled:
-                        request.TotalInvoiceAmount -= invoiceDetail.ItemAmount;
+                        request.TotalInvoiceAmount = invoice.TotalInvoiceAmount - invoiceDetail.ItemAmount;
+                        request.PrepaymentAmount += prepaymentAmount;
                         request.RemainAmount = request.TotalInvoiceAmount - request.PrepaymentAmount;
                         _ = await Update(request);
                         invoiceDetail.Status = updatedInvoiceDetailStatus;
