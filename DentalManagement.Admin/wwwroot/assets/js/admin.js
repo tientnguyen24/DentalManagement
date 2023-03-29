@@ -191,8 +191,6 @@
     }
 }
 
-
-
 $(document).ready(function () {
     let invoiceId;
     let productId;
@@ -218,7 +216,7 @@ $(document).ready(function () {
                             showCompleteInvoiceDetailModal(item, res['remainAmount']);
                         }
                         if (updatedInvoiceDetailStatus == 'Cancelled') {
-                            showCancelInvoiceDetailModal(item);
+                            showCancelInvoiceDetailModal(item, res['remainAmount']);
                         }
                     }
                 });
@@ -266,10 +264,14 @@ $(document).ready(function () {
         });
     }
 
-    function showCancelInvoiceDetailModal(item) {
+    function showCancelInvoiceDetailModal(item, remainAmount) {
         $('#cancel_invoice_detail_status').modal('show');
         $('.product-name').text(item.productName);
-        /*co 3 item, hoan thanh 2 item nhung chua thanh toan, khi cancel item cuoi cung nhung remain amount > 0*/
+        if (processingStatusCount == 1 && remainAmount > 0) {
+            alert('Vui lòng thanh toán tất cả dư nợ còn lại trước khi hủy.');
+            $('.remain-amount').text("Dư nợ còn lại: " + numberWithCommas(remainAmount));
+            prepaymentAmount = remainAmount;
+        }
     }
 
     $('.btn-update-status').click(function (e) {
