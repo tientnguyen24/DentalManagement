@@ -1,4 +1,4 @@
-﻿using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;
@@ -249,7 +249,10 @@ namespace DentalManagement.Application.Catalog.Invoices
                     //cancel but remain still has value
                     case Status.Cancelled:
                         request.TotalInvoiceAmount = invoice.TotalInvoiceAmount - invoiceDetail.ItemAmount;
-                        request.PrepaymentAmount += prepaymentAmount;
+                        if (prepaymentAmount > 0)
+                        {
+                            request.PrepaymentAmount += prepaymentAmount;
+                        }
                         request.RemainAmount = request.TotalInvoiceAmount - request.PrepaymentAmount;
                         _ = await Update(request);
                         invoiceDetail.Status = updatedInvoiceDetailStatus;
