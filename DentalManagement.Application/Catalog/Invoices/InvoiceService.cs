@@ -1,4 +1,4 @@
-﻿using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices;
 using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Common;
 using DentalManagement.Data.EF;

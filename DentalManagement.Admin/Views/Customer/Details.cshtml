@@ -8,9 +8,9 @@
 
 @section scripts{
     <script>
-        function initializeCustomerController() {
-            let customerController = new CustomerController();
-            customerController.initialize();
+        function initializeInvoiceController() {
+            let invoiceController = new InvoiceController();
+            invoiceController.initialize();
         }
     </script>
 }
@@ -102,7 +102,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" onclick="initializeCustomerController(); return false;" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
+                                            <a href="#" onclick="initializeInvoiceController(); return false;" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Tạo phiếu khám
                                             </a>
                                         </div>
