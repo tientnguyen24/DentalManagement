@@ -199,6 +199,7 @@ $(document).ready(function () {
     let updatedInvoiceDetailStatus;
     let prepaymentAmount;
     let processingStatusCount = 0;
+    let completedAmount = 0;
 
     $('.btn-get-status').click(function (e) {
         e.preventDefault();
@@ -212,13 +213,14 @@ $(document).ready(function () {
             url: '/Invoice/GetById/' + invoiceId,
             success: function (res) {
                 checkInvoiceDetailProcessingStatus(res['invoiceDetailViewModels']);
+                invoiceDetailCompletedAmount(res['invoiceDetailViewModels']);
                 $.each(res['invoiceDetailViewModels'], function (i, item) {
                     if (item.productId == productId) {
                         if (updatedInvoiceDetailStatus == 'Completed') {
                             showCompleteInvoiceDetailModal(item, res['remainAmount']);
                         }
                         if (updatedInvoiceDetailStatus == 'Cancelled') {
-                            showCancelInvoiceDetailModal(item, res['remainAmount']);
+                            showCancelInvoiceDetailModal(item, res['prepaymentAmount']);
                         }
                     }
                 });
@@ -237,6 +239,16 @@ $(document).ready(function () {
             }
         });
         return processingStatusCount;
+    }
+
+    function invoiceDetailCompletedAmount(res) {
+        $.each(res, function (i, item) {
+            //4 is completed status for invoice detail
+            if (item.status == '4') {
+                completedAmount += item.itemAmount;
+            }
+        });
+        return completedAmount;
     }
 
     function showCompleteInvoiceDetailModal(item, remainAmount) {
@@ -266,13 +278,13 @@ $(document).ready(function () {
         });
     }
 
-    function showCancelInvoiceDetailModal(item, remainAmount) {
+    function showCancelInvoiceDetailModal(item, currPrepaymentAmount) {
         $('#cancel_invoice_detail_status').modal('show');
         $('.product-name').text(item.productName);
-        if (processingStatusCount == 1 && remainAmount > 0) {
+        if (processingStatusCount == 1 && completedAmount > currPrepaymentAmount) {
             alert('Vui lòng thanh toán tất cả dư nợ còn lại trước khi hủy.');
-            $('.remain-amount').text("Dư nợ còn lại: " + numberWithCommas(remainAmount));
-            prepaymentAmount = remainAmount;
+            $('.remain-amount').text("Dư nợ còn lại: " + numberWithCommas(completedAmount - currPrepaymentAmount));
+            prepaymentAmount = completedAmount - currPrepaymentAmount;
         }
     }
 
