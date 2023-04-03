@@ -18,6 +18,13 @@
 <div class="page-wrapper">
     <div class="content">
         @*begin of content*@
+        @if (TempData["successMsg"] != null)
+        {
+            <div id="alert-success" class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["successMsg"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <div class="row">
             <div class="col-sm-7 col-6">
                 <h4 class="page-title">Hồ sơ khách hàng: @Html.DisplayFor(model => model.FullName)</h4>
