@@ -174,10 +174,10 @@ namespace DentalManagement.Admin.Controllers
             var result = await _invoiceApiClient.Create(invoiceCreateRequest);
             if (!result.IsSuccessed)
             {
-                TempData["errorMsg"] = "Thiếu thông tin";
+                TempData["errorMsg"] = SystemConstants.AppErrorMessage.Create;
             }
             HttpContext.Session.Remove(SystemConstants.InvoiceSession);
-            TempData["successMsg"] = "Thành công";
+            TempData["successMsg"] = "Ok";
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }
 
