@@ -199,6 +199,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                     ModifiedBy = invoice.ModifiedBy,
                     Description = invoice.Description,
                     PaymentStatus = invoice.PaymentStatus,
+                    CustomerId = invoice.CustomerId,
                     //check invoice details entity, if invoice details is null then do not create new instance InvoiceDetailViewModel and fill to list
                     InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(item => new InvoiceDetailViewModel()
                     {
