@@ -17,7 +17,7 @@ namespace DentalManagement.Utilities.Constants
         public static class AppErrorMessage
         {
             public const string Create = "Tạo mới không thành công";
-            public const string Update = "Cập nhập không thành công";
+            public const string Update = "Cập nhật không thành công";
             public const string Delete = "Xoá không thành công";
             public const string Authenticate = "Đăng nhập không thành công";
         }
@@ -25,7 +25,7 @@ namespace DentalManagement.Utilities.Constants
         public static class AppSuccessMessage
         {
             public const string Create = "Tạo mới thành công";
-            public const string Update = "Cập nhập thành công";
+            public const string Update = "Cập nhật thành công";
             public const string Delete = "Xoá thành công";
             public const string Authenticate = "Đăng nhập thành công";
         }

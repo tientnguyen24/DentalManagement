@@ -42,7 +42,7 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
 
         [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public decimal RemainAmount { get; set; }
-
+        public int CustomerId { get; set; }
         public List<InvoiceDetailViewModel> InvoiceDetailViewModels { get; set; }
     }
 }

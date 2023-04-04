@@ -344,7 +344,7 @@ function getNumber(_str) {
 // Auto-dismiss the success message after 5 seconds
 $(document).ready(function () {
     window.setTimeout(function () {
-        $("#alert-success").fadeTo(500, 0).slideUp(500, function () {
+        $("#alert-success-msg").fadeTo(500, 0).slideUp(500, function () {
             $(this).remove();
         });
     }, 5000);
