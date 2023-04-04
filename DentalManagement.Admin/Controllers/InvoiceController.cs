@@ -177,7 +177,7 @@ namespace DentalManagement.Admin.Controllers
                 TempData["errorMsg"] = SystemConstants.AppErrorMessage.Create;
             }
             HttpContext.Session.Remove(SystemConstants.InvoiceSession);
-            TempData["successMsg"] = "Ok";
+            TempData["successMsg"] = SystemConstants.AppSuccessMessage.Create;
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }
 
@@ -185,7 +185,14 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
             var result = await _invoiceApiClient.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
-            return Ok(result.Message);
+            if (!result.IsSuccessed)
+            {
+                var invoice = await _invoiceApiClient.GetbyId(invoiceId);
+                TempData["errorMsg"] = SystemConstants.AppErrorMessage.Update;
+                return RedirectToAction("Details", "Customer", new { id = invoice.Data.CustomerId });
+            }
+            TempData["successMsg"] = SystemConstants.AppSuccessMessage.Update;
+            return Ok();
         }
     }
 }
