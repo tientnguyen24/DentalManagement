@@ -1,5 +1,6 @@
 ﻿using DentalManagement.Data.Entities;
 using DentalManagement.Data.Enums;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using System;
 using System.Collections.Generic;
 using System.Text;

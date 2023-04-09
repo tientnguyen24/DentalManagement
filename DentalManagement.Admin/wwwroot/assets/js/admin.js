@@ -67,7 +67,6 @@
     }
 
     function getMedicalInvoice(res) {
-        console.log(res);
         let tableMedicalInvoiceHtml = '';
         if (res['invoiceDetailViewModels'] == null || res['invoiceDetailViewModels'] == '') {
             $('.no-of-products').text('(0)');
@@ -345,6 +344,15 @@ function getNumber(_str) {
 $(document).ready(function () {
     window.setTimeout(function () {
         $("#alert-success-msg").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 5000);
+});
+
+// Auto-dismiss the error message after 5 seconds
+$(document).ready(function () {
+    window.setTimeout(function () {
+        $("#alert-error-msg").fadeTo(500, 0).slideUp(500, function () {
             $(this).remove();
         });
     }, 5000);

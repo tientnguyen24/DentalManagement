@@ -21,7 +21,19 @@
         @if (TempData["successMsg"] != null)
         {
             <div id="alert-success-msg" class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["successMsg"]
+                <strong>@TempData["successMsg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (TempData["errorMsg"] != null)
+        {
+            <div id="alert-error-msg" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>@TempData["errorMsg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         }
         <div class="row">
@@ -108,7 +120,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" onclick="initializeInvoiceController(); return false;" class="btn btn-primary btn-block" id="btn_product_list" data-toggle="modal" data-target="#create_medical_invoice">
+                                            <a href="#" onclick="initializeInvoiceController(); return false;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Tạo phiếu khám
                                             </a>
                                         </div>
@@ -124,7 +136,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
+                                            <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#update_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Thêm điều trị
                                             </a>
                                         </div>
@@ -450,7 +462,7 @@
                                 <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
                                     <i class="fa fa-ban"></i> Hủy
                                 </a>
-                                <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_product_medical_invoice">
+                                <a href="#" type="button" class="btn btn-primary" id="btn_product_list" data-toggle="modal" data-target="#add_product_medical_invoice">
                                     <i class=" fa fa-plus"></i> Thêm điều trị
                                 </a>
                                 <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
@@ -508,7 +520,7 @@
                 <div class="modal-content">
                     <div class="modal-body text-center">
                         <img src="~/assets/img/complete.png" alt="delete" width="50" height="46">
-                        <h3>Hoàn thành điều trị?<br/><span class="text-info product-name"></span></h3>
+                        <h3>Hoàn thành điều trị?<br /><span class="text-info product-name"></span></h3>
                         <br />
                         <div class="row d-flex align-items-center">
                             <div class="col-md-6">
@@ -541,7 +553,7 @@
                 <div class="modal-content">
                     <div class="modal-body text-center">
                         <img src="~/assets/img/delete.png" alt="delete" width="50" height="46">
-                        <h3>Hủy điều trị?<br/><span class="text-info product-name"></span></h3>
+                        <h3>Hủy điều trị?<br /><span class="text-info product-name"></span></h3>
                         <br />
                         <div class="row d-flex align-items-center">
                             <div class="col-md-12">
