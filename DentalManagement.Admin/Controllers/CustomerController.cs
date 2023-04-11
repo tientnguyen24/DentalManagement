@@ -50,6 +50,11 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var result = await _customerApiClient.GetById(id);
+            if (!result.IsSuccessed)
+            {
+                TempData["errorMsg"] = SystemConstants.AppErrorMessage.NotFound;
+                return RedirectToAction("Index");
+            }
             return View(result.Data);
         }
 

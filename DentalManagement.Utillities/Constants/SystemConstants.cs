@@ -20,6 +20,7 @@ namespace DentalManagement.Utilities.Constants
             public const string Update = "Cập nhật không thành công";
             public const string Delete = "Xoá không thành công";
             public const string Authenticate = "Đăng nhập không thành công";
+            public const string NotFound = "Không tìm thấy";
         }
 
         public static class AppSuccessMessage
