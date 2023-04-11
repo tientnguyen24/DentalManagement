@@ -8,9 +8,12 @@
 
 @section scripts{
     <script>
-        function initializeInvoiceController() {
-            let invoiceController = new InvoiceController();
-            invoiceController.initialize();
+        let invoiceController = new InvoiceController();
+        function createInitializeInvoiceController() {
+            invoiceController.createInitialize();
+        }
+        function updateInitializeInvoiceController() {
+            invoiceController.updateInitialize();
         }
     </script>
 }
@@ -120,7 +123,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" onclick="initializeInvoiceController(); return false;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
+                                            <a href="#" onclick="createInitializeInvoiceController(); return false;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Tạo phiếu khám
                                             </a>
                                         </div>
@@ -136,7 +139,7 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" class="btn btn-warning btn-block text-white" data-toggle="modal" data-target="#update_medical_invoice">
+                                            <a href="#" onclick="updateInitializeInvoiceController(); return false;" class="btn btn-warning btn-block text-white update-medical-invoice" data-toggle="modal" data-target="#update_medical_invoice">
                                                 <i class="fa fa-pencil-square-o"></i> Cập nhật
                                             </a>
                                         </div>
@@ -462,7 +465,7 @@
                                 <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
                                     <i class="fa fa-ban"></i> Hủy
                                 </a>
-                                <a href="#" type="button" class="btn btn-primary" id="btn_product_list" data-toggle="modal" data-target="#add_product_medical_invoice">
+                                <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
                                     <i class=" fa fa-plus"></i> Thêm điều trị
                                 </a>
                                 <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
@@ -474,6 +477,123 @@
                 </div>
             </div>
         </div>
+        @*invoice update modal*@
+        @foreach (var item in Model.InvoiceViewModels)
+        {
+            if (item.PaymentStatus == PaymentStatus.Processing)
+            {
+                var no_of_products = item.InvoiceDetailViewModels.Count(x => x.Status == Status.Processing);
+                <div id="update_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Cập nhật phiếu khám</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
+                                    <table class="table table-striped custom-table">
+                                        <thead class="sticky-top">
+                                            <tr>
+                                                <th class="width-5-percent"></th>
+                                                <th class="width-50-percent text-left">
+                                                    Điều trị <span class="text-danger no-of-products">(@no_of_products)</span>
+                                                </th>
+                                                <th class="width-10-percent text-right">
+                                                    Đơn giá
+                                                </th>
+                                                <th class="width-5-percent"></th>
+                                                <th class="width-10-percent text-right">
+                                                    Số lượng
+                                                </th>
+                                                <th class="width-5-percent"></th>
+                                                <th class="width-15-percent text-right">
+                                                    Thành tiền
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var itemDetail in item.InvoiceDetailViewModels)
+                                            {
+                                                if (itemDetail.Status == Status.Processing)
+                                                {
+                                                    <tr>
+                                                        <td class="width-5-percent">
+                                                            <a href="#" type="button" class="text-danger btn-item-remove" data-id="@itemDetail.ProductId">
+                                                                <i class="fa fa-trash fa-sm text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="width-50-percent text-left">@itemDetail.ProductName</td>
+                                                        <td class="width-10-percent text-right">@itemDetail.UnitPrice.ToString("N0")</td>
+                                                        <td class="width-5-percent">
+                                                            <a href="#" type="button" class="text-danger btn-quantity-minus" data-id="@itemDetail.ProductId">
+                                                                <i class="fa fa-minus-circle fa-sm"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="width-10-percent">
+                                                            <input class="form-control border-1 small text-right inp-product-quantity" data-id="@itemDetail.ProductId" id="quantity_@itemDetail.ProductId" placeholder="@itemDetail.Quantity.ToString("N0")" value="@itemDetail.Quantity.ToString("N0")" />
+                                                        </td>
+                                                        <td class="width-5-percent">
+                                                            <a href="#" type="button" class="text-success btn-quantity-plus" data-id="@itemDetail.ProductId">
+                                                                <i class="fa fa-plus-circle fa-sm"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="width-10-percent text-right">@itemDetail.ItemAmount.ToString("N0")</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            <tr>
+                                                <td colspan="5" class="text-right">Tạm tính (1):</td>
+                                                @{
+                                                    var tempTotalInvoiceAmount = item.TotalInvoiceAmount + item.TotalDiscountAmount;
+                                                }
+                                                <td colspan="2" class="width-10-percent text-right">@tempTotalInvoiceAmount.ToString("N0")</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right">Giảm giá (2):</td>
+                                                <td colspan="2" class="width-10-percent text-right">
+                                                    <input type="text" class="form-control border-1 small text-center inp_total_discount_amount" id="inp_total_discount_amount" placeholder="Nhập số tiền" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right text-danger">Thành tiền (1 - 2):</td>
+                                                <td colspan="2" class="width-10-percent text-right">@item.TotalInvoiceAmount.ToString("N0")</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right">Thanh toán (3):</td>
+                                                <td colspan="2" class="width-10-percent text-right">
+                                                    <input type="text" class="form-control border-1 small text-center inp_prepayment_amount" id="inp_prepayment_amount" placeholder="Nhập số tiền" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right text-danger">Còn lại (1 - 2 - 3):</td>
+                                                <td colspan="2" class="width-10-percent text-right">@item.RemainAmount.ToString("N0")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="m-t-20">
+                                    <form class="user" asp-action="Update" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
+                                        <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                                            <i class="fa fa-ban"></i> Hủy
+                                        </a>
+                                        <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
+                                            <i class=" fa fa-plus"></i> Thêm điều trị
+                                        </a>
+                                        <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
+                                            <i class="fa fa-floppy-o"></i> Lưu
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
         @*add product to invoice modal*@
         <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -574,64 +694,7 @@
                 </div>
             </div>
         </div>
-        @*invoice update modal*@
-        <div id="update_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Cập nhật phiếu khám</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='/Customer/Details/@Model.Id'">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
-                            <table class="table table-striped custom-table">
-                                <thead class="sticky-top">
-                                    <tr>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-50-percent text-left">
-                                            Điều trị <span class="text-danger no-of-products">(0)</span>
-                                        </th>
-                                        <th class="width-10-percent text-right">
-                                            Đơn giá
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-10-percent text-right">
-                                            Số lượng
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-15-percent text-right">
-                                            Thành tiền
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table_medical_invoice">
-                                    <tr>
-                                        <td class="width-5-percent"></td>
-                                        <td colspan="6" class="text-left">Không có dữ liệu</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="m-t-20">
-                            <form class="user" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                                <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
-                                    <i class="fa fa-ban"></i> Hủy
-                                </a>
-                                <a href="#" type="button" class="btn btn-primary" id="btn_product_list" data-toggle="modal" data-target="#add_product_medical_invoice">
-                                    <i class=" fa fa-plus"></i> Thêm điều trị
-                                </a>
-                                <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
-                                    <i class="fa fa-floppy-o"></i> Lưu
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         @*end of content*@
     </div>
 </div>
