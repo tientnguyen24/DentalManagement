@@ -1,12 +1,20 @@
 ﻿let InvoiceController = function () {
-    this.initialize = function () {
+    this.createInitialize = function () {
         getProductList();
         addProductToMedicalInvoice();
         registerEvents();
     }
+    this.updateInitialize = function () {
+        /*code here*/
+        getProductList();
+        $('.update-medical-invoice').click(function (e) {
+            e.preventDefault();
+            alert('ok');
+        });
+    }
 
     function getProductList() {
-        $('body').on('click', '#btn_product_list', function (e) {
+        $('body').on('click', '.btn-product-list', function (e) {
             $.ajax({
                 type: "GET",
                 url: '/Product/GetProductList',
