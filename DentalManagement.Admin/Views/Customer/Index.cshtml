@@ -7,6 +7,25 @@
 }
 <div class="page-wrapper">
     <div class="content">
+        @*begin of content*@
+        @if (TempData["successMsg"] != null)
+        {
+            <div id="alert-success-msg" class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@TempData["successMsg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (TempData["errorMsg"] != null)
+        {
+            <div id="alert-error-msg" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>@TempData["errorMsg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
         <div class="row">
             <div class="col-md-6 col-xs-12">
                 <h4 class="page-title">QUẢN LÝ KHÁCH HÀNG</h4>
@@ -133,6 +152,7 @@
                 @await Component.InvokeAsync("Pager", Model)
             </div>
         </div>
+        @*end of content*@
     </div>
 </div>
 <div id="delete_customer" class="modal fade delete-modal" role="dialog">
