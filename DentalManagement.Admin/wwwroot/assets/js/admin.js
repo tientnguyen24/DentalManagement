@@ -20,8 +20,8 @@
                 type: "GET",
                 url: '/Invoice/GetCurrentInvoiceProcessingList/' + invoiceId,
                 success: function (res) {
-                    console.log(res);
                     getMedicalInvoice(res);
+                    $('#update_medical_invoice').modal('show');
                 },
                 error: function (err) {
                     console.log(err);
