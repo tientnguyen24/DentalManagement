@@ -4,13 +4,30 @@
         addProductToMedicalInvoice();
         registerEvents();
     }
+
     this.updateInitialize = function () {
-        /*code here*/
+        getCurrentInvoiceProcessingList();
         getProductList();
-        $('.update-medical-invoice').click(function (e) {
+        updateCurrentInvoiceProcessingList();
+        registerEvents();
+    }
+
+    function getCurrentInvoiceProcessingList() {
+        $('body').on('click', '.update-medical-invoice', function (e) {
             e.preventDefault();
-            alert('ok');
-        });
+            const invoiceId = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                url: '/Invoice/GetCurrentInvoiceProcessingList/' + invoiceId,
+                success: function (res) {
+                    console.log(res);
+                    getMedicalInvoice(res);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        })
     }
 
     function getProductList() {
@@ -20,7 +37,7 @@
                 url: '/Product/GetProductList',
                 success: function (res) {
                     if (res.length === 0) {
-                        $('#table_product_list').hide();
+                        $('.table-product-list').hide();
                     }
                     else {
                         let tableProductListHtml = '';
@@ -33,10 +50,10 @@
                                 + " <td class=\"width-15-percent text-right\">" + numberWithCommas(item.unitPrice) + "</td>"
                                 + " </tr>";
                         });
-                        $('#table_product_list').html(tableProductListHtml);
+                        $('.table-product-list').html(tableProductListHtml);
                         $('.checkbox-product-id').change(function () {
                             if (this.checked) {
-                                $('#btn_add_product_to_medical_invoice').removeClass('disabled');
+                                $('.btn-add-product-to-medical-invoice').removeClass('disabled');
                             }
                         });
                     }
@@ -49,11 +66,11 @@
     }
 
     function addProductToMedicalInvoice() {
-        $('#btn_add_product_to_medical_invoice').click(function () {
+        $('.btn-add-product-to-medical-invoice').click(function () {
             let productIds = [];
             $('input[name="product"]:checked').each(function () {
                 productIds.push($(this).data('id'));
-                $('#btn_add_product_to_medical_invoice').addClass('disabled');
+                $('.btn-add-product-to-medical-invoice').addClass('disabled');
             });
             if (productIds.length === 0) {
                 alert('Bạn chưa chọn dịch vụ.');
@@ -62,6 +79,32 @@
                 $.ajax({
                     type: "POST",
                     url: '/Invoice/AddProductToMedicalInvoice',
+                    data: { productIds: productIds },
+                    success: function (res) {
+                        getMedicalInvoice(res);
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+    }
+
+    function updateCurrentInvoiceProcessingList() {
+        $('.btn-add-product-to-medical-invoice').click(function () {
+            let productIds = [];
+            $('input[name="product"]:checked').each(function () {
+                productIds.push($(this).data('id'));
+                $('.btn-add-product-to-medical-invoice').addClass('disabled');
+            });
+            if (productIds.length === 0) {
+                alert('Bạn chưa chọn dịch vụ.');
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '/Invoice/UpdateCurrentInvoiceProcessingList',
                     data: { productIds: productIds },
                     success: function (res) {
                         getMedicalInvoice(res);
@@ -103,7 +146,7 @@
                 + "<tr><td colspan=\"6\" class=\"text-right\">Thanh toán (3):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-prepayment-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['prepaymentAmount']) + "\" /></td></tr>"
                 + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['remainAmount']) + "</td></tr>";
         }
-        $('#table_medical_invoice').html(tableMedicalInvoiceHtml);
+        $('.table-medical-invoice').html(tableMedicalInvoiceHtml);
     }
 
     function registerEvents() {
