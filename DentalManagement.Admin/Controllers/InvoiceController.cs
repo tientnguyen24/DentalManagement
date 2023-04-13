@@ -49,15 +49,66 @@ namespace DentalManagement.Admin.Controllers
             return Ok(invoice.Data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentInvoiceProcessingList(int id)
+        {
+            var invoice = await _invoiceApiClient.GetbyId(id);
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            var currentInvoice = new InvoiceViewModel();
+            if (invoiceSessionKey != null)
+            {
+                currentInvoice = invoice.Data;
+            }
+            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
+            return Ok(currentInvoice);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddProductToMedicalInvoice(int[] productIds)
         {
             var currentInvoice = new InvoiceViewModel();
             var currentInvoiceDetailList = new List<InvoiceDetailViewModel>();
-            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
-            if (invoiceSession != null)
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            if (invoiceSessionKey != null)
             {
-                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
+            }
+
+            foreach (var id in productIds)
+            {
+                var product = await _productApiClient.GetById(id);
+                decimal quantity = 1;
+                if (currentInvoiceDetailList.Any(x => x.ProductId == id))
+                {
+                    quantity = currentInvoiceDetailList.First(x => x.ProductId == id).Quantity + 1;
+                    currentInvoiceDetailList.Remove(currentInvoiceDetailList.Single(x => x.ProductId == id));
+                }
+                var item = new InvoiceDetailViewModel()
+                {
+                    ProductId = id,
+                    ProductName = product.Data.Name,
+                    UnitPrice = product.Data.UnitPrice,
+                    Quantity = quantity,
+                    ItemAmount = product.Data.UnitPrice * quantity,
+                };
+                currentInvoiceDetailList.Add(item);
+            }
+            currentInvoice.InvoiceDetailViewModels = currentInvoiceDetailList;
+            currentInvoice.TotalInvoiceAmount = currentInvoiceDetailList.Sum(x => x.ItemAmount) - currentInvoice.TotalDiscountAmount;
+            currentInvoice.RemainAmount = currentInvoice.TotalInvoiceAmount - currentInvoice.PrepaymentAmount;
+            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
+            return Ok(currentInvoice);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCurrentInvoiceProcessingList(int[] productIds)
+        {
+            var currentInvoice = new InvoiceViewModel();
+            var currentInvoiceDetailList = new List<InvoiceDetailViewModel>();
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            if (invoiceSessionKey != null)
+            {
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
             }
 
             foreach (var id in productIds)
@@ -89,11 +140,11 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateProductQuantity(int productId, int productQuantity)
         {
-            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
             var currentInvoice = new InvoiceViewModel();
-            if (invoiceSession != null)
+            if (invoiceSessionKey != null)
             {
-                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
             }
             foreach (var item in currentInvoice.InvoiceDetailViewModels)
             {
@@ -120,11 +171,11 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public IActionResult UpdateTotalInvoiceAmount(decimal totalDiscountAmount, decimal prepaymentAmount)
         {
-            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
             var currentInvoice = new InvoiceViewModel();
-            if (invoiceSession != null)
+            if (invoiceSessionKey != null)
             {
-                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
             }
             var totalInvoiceAmount = currentInvoice.InvoiceDetailViewModels.Sum(x => x.ItemAmount);
             currentInvoice.TotalDiscountAmount = totalDiscountAmount;
@@ -138,11 +189,11 @@ namespace DentalManagement.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int customerId)
         {
-            var invoiceSession = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
             var currentInvoice = new InvoiceViewModel();
-            if (invoiceSession != null)
+            if (invoiceSessionKey != null)
             {
-                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSession);
+                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
             }
             var currentInvoiceDetailList = new List<InvoiceDetailCreateRequest>();
             foreach (var item in currentInvoice.InvoiceDetailViewModels)
