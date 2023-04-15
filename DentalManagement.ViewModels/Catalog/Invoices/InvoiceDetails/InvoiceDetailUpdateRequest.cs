@@ -9,6 +9,7 @@ namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
 {
     public class InvoiceDetailUpdateRequest
     {
+        public int InvoiceId { get; set; }
         public int ProductId { get; set; }
         public decimal ItemDiscountPercent { get; set; }
         public decimal ItemDiscountAmount { get; set; }
