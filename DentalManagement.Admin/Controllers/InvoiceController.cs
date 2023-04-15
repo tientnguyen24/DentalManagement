@@ -54,14 +54,8 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> GetCurrentInvoiceProcessingList(int id)
         {
             var invoice = await _invoiceApiClient.GetbyId(id);
-            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
-            var currentInvoice = new InvoiceViewModel();
-            if (invoiceSessionKey != null)
-            {
-                currentInvoice = invoice.Data;
-            }
-            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(currentInvoice));
-            return Ok(currentInvoice);
+            HttpContext.Session.SetString(SystemConstants.InvoiceSession, JsonConvert.SerializeObject(invoice.Data));
+            return Ok(invoice.Data);
         }
 
         [HttpPost]
@@ -194,48 +188,51 @@ namespace DentalManagement.Admin.Controllers
         public async Task<IActionResult> Create(int customerId)
         {
             var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
-            var currentInvoice = new InvoiceViewModel();
-            if (invoiceSessionKey != null)
+            if (invoiceSessionKey == null)
             {
-                currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
-            }
-            var currentInvoiceDetailList = new List<InvoiceDetailCreateRequest>();
-            foreach (var item in currentInvoice.InvoiceDetailViewModels)
-            {
-                currentInvoiceDetailList.Add(new InvoiceDetailCreateRequest()
-                {
-                    ProductId = item.ProductId,
-                    ItemDiscountPercent = item.ItemDiscountPercent,
-                    ItemDiscountAmount = item.ItemDiscountAmount,
-                    ItemAmount = item.ItemAmount,
-                    Quantity = item.Quantity,
-                    CompletedDate = item.CompletedDate,
-                    Status = item.Status
-                });
-            }
-            var invoiceCreateRequest = new InvoiceCreateRequest()
-            {
-                CreatedDate = DateTime.Now,
-                CreatedBy = User.Identity.Name,
-                TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
-                TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
-                TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
-                CustomerId = customerId,
-                Description = currentInvoice.Description,
-                PrepaymentAmount = currentInvoice.PrepaymentAmount,
-                RemainAmount = currentInvoice.RemainAmount,
-                InvoiceDetails = currentInvoiceDetailList
-            };
-            var result = await _invoiceApiClient.Create(invoiceCreateRequest);
-            if (!result.IsSuccessed)
-            {
-                TempData["errorMsg"] = result.Message;
+                TempData["errorMsg"] = SystemConstants.AppErrorMessage.Create;
             }
             else
             {
-                TempData["successMsg"] = result.Message;
+                var currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
+                var currentInvoiceDetailList = new List<InvoiceDetailCreateRequest>();
+                foreach (var item in currentInvoice.InvoiceDetailViewModels)
+                {
+                    currentInvoiceDetailList.Add(new InvoiceDetailCreateRequest()
+                    {
+                        ProductId = item.ProductId,
+                        ItemDiscountPercent = item.ItemDiscountPercent,
+                        ItemDiscountAmount = item.ItemDiscountAmount,
+                        ItemAmount = item.ItemAmount,
+                        Quantity = item.Quantity,
+                        CompletedDate = item.CompletedDate,
+                        Status = item.Status
+                    });
+                }
+                var invoiceCreateRequest = new InvoiceCreateRequest()
+                {
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = User.Identity.Name,
+                    TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
+                    TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
+                    TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
+                    CustomerId = customerId,
+                    Description = currentInvoice.Description,
+                    PrepaymentAmount = currentInvoice.PrepaymentAmount,
+                    RemainAmount = currentInvoice.RemainAmount,
+                    InvoiceDetails = currentInvoiceDetailList
+                };
+                var result = await _invoiceApiClient.Create(invoiceCreateRequest);
+                if (!result.IsSuccessed)
+                {
+                    TempData["errorMsg"] = result.Message;
+                }
+                else
+                {
+                    TempData["successMsg"] = result.Message;
+                }
+                HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             }
-            HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }
 
@@ -286,9 +283,9 @@ namespace DentalManagement.Admin.Controllers
                 }
                 else
                 {
-                    HttpContext.Session.Remove(SystemConstants.InvoiceSession);
                     TempData["successMsg"] = result.Message;
                 }
+                HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             }
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }

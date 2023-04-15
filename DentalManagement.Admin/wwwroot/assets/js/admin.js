@@ -310,8 +310,8 @@ $(document).ready(function () {
             $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
             prepaymentAmount = remainAmount;
         }
-        if (remainAmount == 0) {
-            $('.inp-prepayment-amount').val(numberWithCommas(remainAmount)).prop('readonly', true);
+        if (remainAmount <= 0) {
+            $('.inp-prepayment-amount').val(0).prop('readonly', true);
             prepaymentAmount = remainAmount;
         }
         $('#complete_invoice_detail_status').on('input', '.inp-prepayment-amount', function () {
@@ -321,7 +321,7 @@ $(document).ready(function () {
         $('#complete_invoice_detail_status').on('focusout', '.inp-prepayment-amount', function () {
             //remove commas out of prepayment amount after user input
             prepaymentAmount = $(this).val().replace(/,/g, '');
-            if (remainAmount < prepaymentAmount) {
+            if (remainAmount > 0 && remainAmount < prepaymentAmount) {
                 alert('Giá trị không hợp lệ, số tiền cần thanh toán vượt mức dư nợ.');
                 $(this).val('0');
             }
