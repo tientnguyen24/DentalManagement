@@ -37,11 +37,19 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync($"/api/invoices/", httpContent);
-            if (!response.IsSuccessStatusCode)
-            {
-                return new ApiErrorResult<bool>("Tạo mới không thành công");
-            }
-            return new ApiSuccessResult<bool>();
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Create,response.IsSuccessStatusCode);
+        }
+
+        public async Task<ApiResult<bool>> Update(InvoiceUpdateRequest request)
+        {
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.PutAsync($"/api/invoices/", httpContent);
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update,response.IsSuccessStatusCode);
         }
 
         public async Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request)
@@ -56,7 +64,8 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
                 var data = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<ApiSuccessResult<PagedResult<InvoiceViewModel>>>(data);
             }
-            return new ApiErrorResult<PagedResult<InvoiceViewModel>>("Không tìm thấy hoá đơn");
+            return new ApiErrorResult<PagedResult<InvoiceViewModel>>(SystemConstants.AppErrorMessage
+                .NotFound);
         }
 
         public async Task<ApiResult<InvoiceViewModel>> GetbyId(int id)

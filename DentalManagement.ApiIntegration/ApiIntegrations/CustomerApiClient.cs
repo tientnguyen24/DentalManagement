@@ -35,7 +35,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync($"/api/customers/", httpContent);
-            return new ApiSuccessResult<bool>(response.IsSuccessStatusCode);
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Create,response.IsSuccessStatusCode);
         }
 
         public async Task<List<CustomerViewModel>> GetAll()
@@ -83,12 +83,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PutAsync($"/api/customers/", httpContent);
-            var result = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
-            }
-            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update,response.IsSuccessStatusCode);
         }
     }
 }
