@@ -25,7 +25,6 @@ namespace DentalManagement.Application.Catalog.Invoices
         public async Task<ApiResult<int>> Create(InvoiceCreateRequest request)
         {
             var invoiceDetails = new List<InvoiceDetail>();
-
             foreach (var item in request.InvoiceDetails)
             {
                 invoiceDetails.Add(new InvoiceDetail()
@@ -75,13 +74,62 @@ namespace DentalManagement.Application.Catalog.Invoices
 
         public async Task<ApiResult<bool>> Update(InvoiceUpdateRequest request)
         {
-            var invoice = await _context.Invoices.FindAsync(request.Id);
+            var invoice = await _context.Invoices
+                .Include(i => i.InvoiceDetails)
+                .FirstOrDefaultAsync(i => i.Id == request.Id);
             if (invoice == null)
             {
                 return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             else
             {
+                if (request.InvoiceDetails != null)
+                {
+                    var invoiceDetails = new List<InvoiceDetail>();
+                    foreach (var existingItem in invoice.InvoiceDetails)
+                    {
+                        var updateItem = request.InvoiceDetails.FirstOrDefault(x => x.ProductId == existingItem.ProductId);
+                        if (updateItem == null)
+                        {
+                            // item not found in request, update its properties
+                            existingItem.ItemAmount = 0;
+                            existingItem.Status = Status.Cancelled;
+                            existingItem.CompletedDate = null;
+                            invoiceDetails.Add(existingItem);
+                        }
+                        else
+                        {
+                            // item found in request, update its properties
+                            existingItem.ItemDiscountPercent = updateItem.ItemDiscountPercent;
+                            existingItem.ItemDiscountAmount = updateItem.ItemDiscountAmount;
+                            existingItem.ItemAmount = updateItem.ItemAmount;
+                            existingItem.Quantity = updateItem.Quantity;
+                            existingItem.CompletedDate = updateItem.CompletedDate;
+                            existingItem.Status = updateItem.Status;
+                            invoiceDetails.Add(existingItem);
+                        }
+                    }
+
+                    // add any new items in request that don't exist in invoice.InvoiceDetails
+                    var newItems = request.InvoiceDetails.Where(x => !invoice.InvoiceDetails.Any(y => y.ProductId == x.ProductId));
+                    foreach (var item in newItems)
+                    {
+                        invoiceDetails.Add(new InvoiceDetail()
+                        {
+                            InvoiceId = item.InvoiceId,
+                            ProductId = item.ProductId,
+                            ItemDiscountPercent = item.ItemDiscountPercent,
+                            ItemDiscountAmount = item.ItemDiscountAmount,
+                            ItemAmount = item.ItemAmount,
+                            Quantity = item.Quantity,
+                            CompletedDate = item.CompletedDate,
+                            Status = item.Status
+                        });
+                    }
+
+                    // set the updated list of invoice details
+                    invoice.InvoiceDetails = invoiceDetails;
+                }
                 invoice.TotalDiscountPercent = request.TotalDiscountPercent;
                 invoice.TotalDiscountAmount = request.TotalDiscountAmount;
                 invoice.TotalInvoiceAmount = request.TotalInvoiceAmount;
@@ -181,7 +229,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                 .FirstOrDefaultAsync(i => i.Id == invoiceId);
             if (invoice == null)
             {
-                return new ApiErrorResult<InvoiceViewModel>("Không tìm thấy hóa đơn");
+                return new ApiErrorResult<InvoiceViewModel>(SystemConstants.AppErrorMessage.NotFound);
             }
             else
             {
@@ -243,7 +291,7 @@ namespace DentalManagement.Application.Catalog.Invoices
                     Description = invoice.Description,
                     PaymentStatus = invoice.PaymentStatus,
                     PrepaymentAmount = invoice.PrepaymentAmount,
-                    RemainAmount = invoice.RemainAmount
+                    RemainAmount = invoice.RemainAmount,
                 };
                 switch (updatedInvoiceDetailStatus)
                 {

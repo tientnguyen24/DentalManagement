@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using DentalManagement.Data.Entities;
 
 namespace DentalManagement.BackendAPI.Controllers
 {
@@ -56,7 +57,7 @@ namespace DentalManagement.BackendAPI.Controllers
             var result = await _invoiceService.Create(request);
             if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
             var invoice = await _invoiceService.GetById(result.Data);
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, invoice);
@@ -68,9 +69,9 @@ namespace DentalManagement.BackendAPI.Controllers
             var result = await _invoiceService.Update(request);
             if (!result.IsSuccessed)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         //http://localhost:port/invoice/{invoiceId}/{updatedPaymentStatus}

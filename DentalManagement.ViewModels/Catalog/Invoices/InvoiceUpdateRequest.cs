@@ -19,5 +19,6 @@ namespace DentalManagement.ViewModels.Catalog.Invoices
         public PaymentStatus PaymentStatus { get; set; }
         public decimal PrepaymentAmount { get; set; }
         public decimal RemainAmount { get; set; }
+        public List<InvoiceDetailUpdateRequest> InvoiceDetails { get; set; }
     }
 }
