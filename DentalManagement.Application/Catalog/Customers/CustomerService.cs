@@ -178,7 +178,7 @@ namespace DentalManagement.Application.Catalog.Customers
                 return new ApiErrorResult<CustomerViewModel>("Không tìm thấy khách hàng");
             }
 
-            var invoiceViewModels = customer.Invoices?.OrderBy(inv => inv.PaymentStatus).Select(inv => new InvoiceViewModel()
+            var invoiceViewModels = customer.Invoices?.OrderByDescending(inv => inv.Id).Select(inv => new InvoiceViewModel()
             {
                 Id = inv.Id,
                 CreatedDate = inv.CreatedDate,
