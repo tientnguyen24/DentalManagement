@@ -126,6 +126,99 @@
                                             <a href="#" onclick="createInitializeInvoiceController(); return false;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
                                                 <i class=" fa fa-plus"></i> Tạo phiếu khám
                                             </a>
+                                            @*invoice create modal*@
+                                            <div id="create_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title">Tạo phiếu khám</h3>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
+                                                                <table class="table table-striped custom-table">
+                                                                    <thead class="sticky-top">
+                                                                        <tr>
+                                                                            <th class="width-5-percent"></th>
+                                                                            <th class="width-50-percent text-left">
+                                                                                Điều trị <span class="text-danger no-of-products">(0)</span>
+                                                                            </th>
+                                                                            <th class="width-10-percent text-right">
+                                                                                Đơn giá
+                                                                            </th>
+                                                                            <th class="width-5-percent"></th>
+                                                                            <th class="width-10-percent text-right">
+                                                                                Số lượng
+                                                                            </th>
+                                                                            <th class="width-5-percent"></th>
+                                                                            <th class="width-15-percent text-right">
+                                                                                Thành tiền
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="table-medical-invoice">
+                                                                        <tr>
+                                                                            <td class="width-5-percent"></td>
+                                                                            <td colspan="6" class="text-left">Không có dữ liệu</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                            <div class="m-t-20">
+                                                                <form class="user create-medical-invoice-form" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
+                                                                    <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
+                                                                        <i class="fa fa-ban"></i> Hủy
+                                                                    </a>
+                                                                    <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
+                                                                        <i class=" fa fa-plus"></i> Thêm điều trị
+                                                                    </a>
+                                                                    <button type="submit" class="btn btn-success btn-create-medical-invoice" disabled>
+                                                                        <i class="fa fa-floppy-o"></i> Lưu
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*add product to invoice modal*@
+                                            <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
+                                                                <table class="table table-striped custom-table text-left">
+                                                                    <thead class="sticky-top">
+                                                                        <tr>
+                                                                            <th class="width-5-percent"></th>
+                                                                            <th class="width-80-percent">
+                                                                                Điều trị
+                                                                            </th>
+                                                                            <th class="width-15-percent text-right">
+                                                                                Đơn giá
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="table-product-list">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="m-t-20">
+                                                                <a href="#" type="button" class="btn btn-white" data-dismiss="modal">
+                                                                    <i class="fa fa-ban"></i> Hủy
+                                                                </a>
+                                                                <a href="#" type="button" class="btn btn-primary btn-add-product-to-medical-invoice">
+                                                                    <i class="fa fa-check-square-o"></i> Tiếp tục
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 }
@@ -147,6 +240,161 @@
                                                     <a href="#" onclick="updateInitializeInvoiceController(); return false;" class="btn btn-warning btn-block text-white update-medical-invoice" data-id="@item.Id">
                                                         <i class="fa fa-pencil-square-o"></i> Cập nhật
                                                     </a>
+                                                    @*invoice update modal*@
+                                                    <div id="update_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h3 class="modal-title">Cập nhật phiếu khám</h3>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
+                                                                        <table class="table table-striped custom-table">
+                                                                            <thead class="sticky-top">
+                                                                                <tr>
+                                                                                    <th class="width-5-percent"></th>
+                                                                                    <th class="width-50-percent text-left">
+                                                                                        Điều trị <span class="text-danger no-of-products">(0)</span>
+                                                                                    </th>
+                                                                                    <th class="width-10-percent text-right">
+                                                                                        Đơn giá
+                                                                                    </th>
+                                                                                    <th class="width-5-percent"></th>
+                                                                                    <th class="width-10-percent text-right">
+                                                                                        Số lượng
+                                                                                    </th>
+                                                                                    <th class="width-5-percent"></th>
+                                                                                    <th class="width-15-percent text-right">
+                                                                                        Thành tiền
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="table-medical-invoice">
+                                                                                <tr>
+                                                                                    <td class="width-5-percent"></td>
+                                                                                    <td colspan="6" class="text-left">Không có dữ liệu</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                    <div class="m-t-20">
+                                                                        <form class="user update-medical-invoice-form" asp-action="Update" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
+                                                                            <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
+                                                                                <i class="fa fa-ban"></i> Hủy
+                                                                            </a>
+                                                                            <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
+                                                                                <i class=" fa fa-plus"></i> Thêm điều trị
+                                                                            </a>
+                                                                            <button type="submit" class="btn btn-success btn-update-medical-invoice">
+                                                                                <i class="fa fa-floppy-o"></i> Lưu
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*add product to invoice modal*@
+                                                    <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
+                                                                        <table class="table table-striped custom-table text-left">
+                                                                            <thead class="sticky-top">
+                                                                                <tr>
+                                                                                    <th class="width-5-percent"></th>
+                                                                                    <th class="width-80-percent">
+                                                                                        Điều trị
+                                                                                    </th>
+                                                                                    <th class="width-15-percent text-right">
+                                                                                        Đơn giá
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="table-product-list">
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="m-t-20">
+                                                                        <a href="#" type="button" class="btn btn-white" data-dismiss="modal">
+                                                                            <i class="fa fa-ban"></i> Hủy
+                                                                        </a>
+                                                                        <a href="#" type="button" class="btn btn-primary btn-add-product-to-medical-invoice">
+                                                                            <i class="fa fa-check-square-o"></i> Tiếp tục
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*complete status modal*@
+                                                    <div id="complete_invoice_detail_status" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <img src="~/assets/img/complete.png" alt="delete" width="50" height="46">
+                                                                    <h3>Hoàn thành điều trị?<br /><span class="text-info product-name"></span></h3>
+                                                                    <br />
+                                                                    <div class="row d-flex align-items-center">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group">
+                                                                                <label class=" text-danger remain-amount"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-group form-focus">
+                                                                                <label class="focus-label">Số tiền thanh toán</label>
+                                                                                <input type="text" class="form-control floating width-15-percent inp-prepayment-amount" placeholder="0" value="0" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="m-t-20">
+                                                                        <a href="#" type="button" class="btn btn-white btn-close-status-modal">
+                                                                            <i class="fa fa-ban"></i> Hủy
+                                                                        </a>
+                                                                        <a href="#" type="button" class="btn btn-success btn-update-status">
+                                                                            <i class="fa fa-floppy-o"></i> Lưu
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*cancel status modal*@
+                                                    <div id="cancel_invoice_detail_status" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <img src="~/assets/img/delete.png" alt="delete" width="50" height="46">
+                                                                    <h3>Hủy điều trị?<br /><span class="text-info product-name"></span></h3>
+                                                                    <br />
+                                                                    <div class="row d-flex align-items-center">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label class="text-danger remain-amount"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="m-t-20">
+                                                                        <a href="#" type="button" class="btn btn-white btn-close-status-modal">
+                                                                            <i class="fa fa-ban"></i> Hủy
+                                                                        </a>
+                                                                        <a href="#" type="button" class="btn btn-danger btn-update-status">
+                                                                            <i class="fa fa-floppy-o"></i> Lưu
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -285,9 +533,6 @@
                                         <div class="col-sm-6 col-md-3">
                                         </div>
                                         <div class="col-sm-6 col-md-3">
-                                            <a href="#" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#create_medical_invoice">
-                                                <i class=" fa fa-plus"></i> Tạo phiếu khám
-                                            </a>
                                         </div>
                                     </div>
                                 }
@@ -414,216 +659,6 @@
                                     </div>
                                 }
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*invoice create modal*@
-        <div id="create_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Tạo phiếu khám</h3>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
-                            <table class="table table-striped custom-table">
-                                <thead class="sticky-top">
-                                    <tr>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-50-percent text-left">
-                                            Điều trị <span class="text-danger no-of-products">(0)</span>
-                                        </th>
-                                        <th class="width-10-percent text-right">
-                                            Đơn giá
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-10-percent text-right">
-                                            Số lượng
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-15-percent text-right">
-                                            Thành tiền
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-medical-invoice">
-                                    <tr>
-                                        <td class="width-5-percent"></td>
-                                        <td colspan="6" class="text-left">Không có dữ liệu</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="m-t-20">
-                            <form class="user create-medical-invoice-form" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                                <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
-                                    <i class="fa fa-ban"></i> Hủy
-                                </a>
-                                <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
-                                    <i class=" fa fa-plus"></i> Thêm điều trị
-                                </a>
-                                <button type="submit" class="btn btn-success btn-create-medical-invoice" disabled>
-                                    <i class="fa fa-floppy-o"></i> Lưu
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*invoice update modal*@
-        <div id="update_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Cập nhật phiếu khám</h3>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
-                            <table class="table table-striped custom-table">
-                                <thead class="sticky-top">
-                                    <tr>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-50-percent text-left">
-                                            Điều trị <span class="text-danger no-of-products">(0)</span>
-                                        </th>
-                                        <th class="width-10-percent text-right">
-                                            Đơn giá
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-10-percent text-right">
-                                            Số lượng
-                                        </th>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-15-percent text-right">
-                                            Thành tiền
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-medical-invoice">
-                                    <tr>
-                                        <td class="width-5-percent"></td>
-                                        <td colspan="6" class="text-left">Không có dữ liệu</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="m-t-20">
-                            <form class="user update-medical-invoice-form" asp-action="Update" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                                <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
-                            <i class="fa fa-ban"></i> Hủy
-                            </a>
-                                <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
-                                    <i class=" fa fa-plus"></i> Thêm điều trị
-                                </a>
-                                <button type="submit" class="btn btn-success btn-update-medical-invoice">
-                                    <i class="fa fa-floppy-o"></i> Lưu
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*add product to invoice modal*@
-        <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
-                            <table class="table table-striped custom-table text-left">
-                                <thead class="sticky-top">
-                                    <tr>
-                                        <th class="width-5-percent"></th>
-                                        <th class="width-80-percent">
-                                            Điều trị
-                                        </th>
-                                        <th class="width-15-percent text-right">
-                                            Đơn giá
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-product-list">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="m-t-20">
-                            <a href="#" type="button" class="btn btn-white" data-dismiss="modal">
-                                <i class="fa fa-ban"></i> Hủy
-                            </a>
-                            <a href="#" type="button" class="btn btn-primary disabled btn-add-product-to-medical-invoice" data-dismiss="modal">
-                                <i class="fa fa-check-square-o"></i> Tiếp tục
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*complete status modal*@
-        <div id="complete_invoice_detail_status" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <img src="~/assets/img/complete.png" alt="delete" width="50" height="46">
-                        <h3>Hoàn thành điều trị?<br /><span class="text-info product-name"></span></h3>
-                        <br />
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class=" text-danger remain-amount"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-focus">
-                                    <label class="focus-label">Số tiền thanh toán</label>
-                                    <input type="text" class="form-control floating width-15-percent inp-prepayment-amount" placeholder="0" value="0" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-t-20">
-                            <a href="#" type="button" class="btn btn-white btn-close-status-modal">
-                                <i class="fa fa-ban"></i> Hủy
-                            </a>
-                            <a href="#" type="button" class="btn btn-success btn-update-status">
-                                <i class="fa fa-floppy-o"></i> Lưu
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*cancel status modal*@
-        <div id="cancel_invoice_detail_status" class="modal fade delete-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <img src="~/assets/img/delete.png" alt="delete" width="50" height="46">
-                        <h3>Hủy điều trị?<br /><span class="text-info product-name"></span></h3>
-                        <br />
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="text-danger remain-amount"></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-t-20">
-                            <a href="#" type="button" class="btn btn-white btn-close-status-modal">
-                                <i class="fa fa-ban"></i> Hủy
-                            </a>
-                            <a href="#" type="button" class="btn btn-danger btn-update-status">
-                                <i class="fa fa-floppy-o"></i> Lưu
-                            </a>
                         </div>
                     </div>
                 </div>

@@ -297,7 +297,7 @@ namespace DentalManagement.Admin.Controllers
                 }
                 else
                 {
-                    //handle when invoice detail is empty, it will be remove
+                    //handle when invoice detail is empty, it will be deleted
                     TempData["errorMsg"] = SystemConstants.AppErrorMessage.Update;
                 }
             }
