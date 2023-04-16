@@ -51,11 +51,6 @@
                                 + " </tr>";
                         });
                         $('.table-product-list').html(tableProductListHtml);
-                        $('.checkbox-product-id').change(function () {
-                            if (this.checked) {
-                                $('.btn-add-product-to-medical-invoice').removeClass('disabled');
-                            }
-                        });
                     }
                 },
                 error: function (err) {
@@ -70,7 +65,6 @@
             let productIds = [];
             $('input[name="product"]:checked').each(function () {
                 productIds.push($(this).data('id'));
-                $('.btn-add-product-to-medical-invoice').addClass('disabled');
             });
             if (productIds.length === 0) {
                 alert('Bạn chưa chọn dịch vụ.');
@@ -82,6 +76,7 @@
                     data: { productIds: productIds },
                     success: function (res) {
                         getMedicalInvoice(res);
+                        $('#add_product_medical_invoice').modal('hide');
                     },
                     error: function (err) {
                         console.log(err);
@@ -96,7 +91,6 @@
             let productIds = [];
             $('input[name="product"]:checked').each(function () {
                 productIds.push($(this).data('id'));
-                $('.btn-add-product-to-medical-invoice').addClass('disabled');
             });
             if (productIds.length === 0) {
                 alert('Bạn chưa chọn dịch vụ.');
@@ -108,6 +102,7 @@
                     data: { productIds: productIds },
                     success: function (res) {
                         getMedicalInvoice(res);
+                        $('#add_product_medical_invoice').modal('hide');
                     },
                     error: function (err) {
                         console.log(err);
