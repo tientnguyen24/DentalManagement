@@ -123,11 +123,11 @@
             $('.no-of-products').text('(0)');
             tableMedicalInvoiceHtml += "<tr><td class=\"width-5-percent\"></td><td colspan=\"6\"class=\"width-40-percent text-left\">Không có dữ liệu </td></tr>"
             /*disable submit button*/
-            $("#btn_create_medical_invoice").prop("disabled", true);
+            $('.btn-create-medical-invoice').prop("disabled", true);
         }
         else {
             /*enabled submit button*/
-            $("#btn_create_medical_invoice").prop("disabled", false).removeAttr("disabled");
+            $('.btn-create-medical-invoice').prop("disabled", false).removeAttr("disabled");
             $('.no-of-products').text('(' + res['invoiceDetailViewModels'].length + ')');
             $.each(res['invoiceDetailViewModels'], function (i, item) {
                 tableMedicalInvoiceHtml += "<tr>"
@@ -147,64 +147,102 @@
                 + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['remainAmount']) + "</td></tr>";
         }
         $('.table-medical-invoice').html(tableMedicalInvoiceHtml);
+        $('.btn-update-medical-invoice').data('res', res['invoiceDetailViewModels'].length);
     }
 
     function registerEvents() {
-        $('body').on('click', '.btn-quantity-plus', function (e) {
-            e.preventDefault();
-            const productId = $(this).data('id');
-            const productQuantity = parseInt($('#quantity_' + productId).val()) + 1;
-            updateProductQuantity(productId, productQuantity);
-        });
+        $('body').on('click', '.btn-quantity-plus, .btn-quantity-minus, .btn-item-remove', handleProductQuantityChange);
+        $('body').on('focusout', '.inp-product-quantity', handleProductQuantityFocusOut);
+        $('body').on('focusout', '.inp-total-discount-amount, .inp-prepayment-amount', handleDiscountPrepaymentFocusOut);
+        $('body').on('click', '.btn-close-invoice-modal', handleCloseModalClick);
+        $('.btn-create-medical-invoice').on('click', handleCreateMedicalInvoiceClick);
+        $('.btn-update-medical-invoice').on('click', handleUpdateMedicalInvoiceClick);
+        $('body').on('input', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', handleNumericInput);
+        $('body').on('keyup', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', handleTextViewUpdate);
+    }
 
-        $('body').on('click', '.btn-quantity-minus', function (e) {
-            e.preventDefault();
-            const productId = $(this).data('id');
-            const productQuantity = parseInt($('#quantity_' + productId).val()) - 1;
-            updateProductQuantity(productId, productQuantity);
-        });
-
-        $('body').on('click', '.btn-item-remove', function (e) {
-            e.preventDefault();
-            const productId = $(this).data('id');
-            updateProductQuantity(productId, 0);
-        });
-
-        $('body').on('focusout', '.inp-product-quantity', function (e) {
-            e.preventDefault();
-            const productId = $(this).data('id');
-            const productQuantity = $('#quantity_' + productId).val();
-            if (productQuantity == '') {
-                updateProductQuantity(productId, 1);
+    function handleProductQuantityChange(e) {
+        e.preventDefault();
+        const productId = $(this).data('id');
+        let productQuantity = parseInt($('#quantity_' + productId).val());
+        if ($(this).hasClass('btn-quantity-plus')) {
+            productQuantity += 1;
+        } else if ($(this).hasClass('btn-quantity-minus')) {
+            if (productQuantity == 1) {
+                if (confirm('Hủy điều trị?')) {
+                    updateProductQuantity(productId, 0);
+                }
+                return;
             }
-            else {
-                updateProductQuantity(productId, productQuantity);
-            }
-        });
+            productQuantity -= 1;
+        } else if (confirm('Hủy điều trị?')) {
+            productQuantity = 0;
+        }
+        updateProductQuantity(productId, productQuantity);
+    }
 
-        $('body').on('focusout', '.inp-total-discount-amount', function (e) {
-            e.preventDefault();
-            const totalDiscountAmount = $(this).val();
-            const prepaymentAmount = $('.inp-prepayment-amount').val();
-            updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount);
-            
-        });
+    function handleProductQuantityFocusOut(e) {
+        e.preventDefault();
+        const productId = $(this).data('id');
+        const productQuantity = $('#quantity_' + productId).val() || 1;
+        updateProductQuantity(productId, productQuantity);
+    }
 
-        $('body').on('focusout', '.inp-prepayment-amount', function (e) {
-            e.preventDefault();
-            const totalDiscountAmount = $('.inp-total-discount-amount').val();
-            const prepaymentAmount = $(this).val();
-            updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount);
-        });
+    function handleDiscountPrepaymentFocusOut(e) {
+        e.preventDefault();
+        const totalDiscountAmount = $('.inp-total-discount-amount').val();
+        const prepaymentAmount = $('.inp-prepayment-amount').val();
+        updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount);
+    }
 
-        $('body').on('input', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', function (e) {
-            textWithNumberOnly(this);
-        });
+    function handleCloseModalClick(e) {
+        e.preventDefault();
+        const modal = $(this).closest('.modal');
+        if (confirm('Xác nhận hủy?')) {
+            closeModal(modal);
+        }
+    }
 
-        $('body').on('keyup', '.inp-product-quantity, .inp-total-discount-amount, .inp-prepayment-amount', function (e) {
-            updateTextView($(this));
-        });
+    function handleCreateMedicalInvoiceClick(e) {
+        e.preventDefault();
+        const form = $(this).closest('form');
+        if (confirm('Xác nhận tạo phiếu khám?')) {
+            form.submit();
+        }
+    }
 
+    function handleUpdateMedicalInvoiceClick(e) {
+        e.preventDefault();
+        const form = $(this).closest('form');
+        const res = $(this).data('res');
+        const confirmMessage = (res === 0) ? 'CHÚ Ý: Không có điều trị, phiếu khám sẽ bị xóa.' : 'Xác nhận cập nhật phiếu khám?';
+        if (confirm(confirmMessage)) {
+            form.submit();
+        }
+    }
+
+    function handleNumericInput(e) {
+        textWithNumberOnly(this);
+    }
+
+    function handleTextViewUpdate(e) {
+        updateTextView($(this));
+    }
+
+    function closeModal(modal) {
+        $(modal).on('hidden.bs.modal', function () {
+            $.ajax({
+                type: "GET",
+                url: '/Invoice/RemoveInvoiceSession',
+                success: function (res) {
+                    location.reload();
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            });
+        });
+        $(modal).modal('hide');
     }
 
     function updateProductQuantity(productId, productQuantity) {
@@ -240,7 +278,6 @@
             }
         });
     }
-
 }
 
 $(document).ready(function () {
@@ -361,6 +398,26 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('body').on('click', '.btn-close-status-modal', function (e) {
+        e.preventDefault();
+        let modal = $(this).closest('.modal');
+        if (confirm('Xác nhận hủy')) {
+            $(modal).on('hidden.bs.modal', function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/Invoice/RemoveInvoiceSession',
+                    success: function (res) {
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            });
+            $(modal).modal('hide');
+        }
+    });
 })
 
 function numberWithCommas(x) {

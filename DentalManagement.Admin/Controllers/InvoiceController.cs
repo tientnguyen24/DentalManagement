@@ -195,44 +195,51 @@ namespace DentalManagement.Admin.Controllers
             else
             {
                 var currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
-                var currentInvoiceDetailList = new List<InvoiceDetailCreateRequest>();
-                foreach (var item in currentInvoice.InvoiceDetailViewModels)
+                if (currentInvoice.InvoiceDetailViewModels.Any())
                 {
-                    currentInvoiceDetailList.Add(new InvoiceDetailCreateRequest()
+                    var currentInvoiceDetailList = new List<InvoiceDetailCreateRequest>();
+                    foreach (var item in currentInvoice.InvoiceDetailViewModels)
                     {
-                        ProductId = item.ProductId,
-                        ItemDiscountPercent = item.ItemDiscountPercent,
-                        ItemDiscountAmount = item.ItemDiscountAmount,
-                        ItemAmount = item.ItemAmount,
-                        Quantity = item.Quantity,
-                        CompletedDate = item.CompletedDate,
-                        Status = item.Status
-                    });
-                }
-                var invoiceCreateRequest = new InvoiceCreateRequest()
-                {
-                    CreatedDate = DateTime.Now,
-                    CreatedBy = User.Identity.Name,
-                    TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
-                    TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
-                    TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
-                    CustomerId = customerId,
-                    Description = currentInvoice.Description,
-                    PrepaymentAmount = currentInvoice.PrepaymentAmount,
-                    RemainAmount = currentInvoice.RemainAmount,
-                    InvoiceDetails = currentInvoiceDetailList
-                };
-                var result = await _invoiceApiClient.Create(invoiceCreateRequest);
-                if (!result.IsSuccessed)
-                {
-                    TempData["errorMsg"] = result.Message;
+                        currentInvoiceDetailList.Add(new InvoiceDetailCreateRequest()
+                        {
+                            ProductId = item.ProductId,
+                            ItemDiscountPercent = item.ItemDiscountPercent,
+                            ItemDiscountAmount = item.ItemDiscountAmount,
+                            ItemAmount = item.ItemAmount,
+                            Quantity = item.Quantity,
+                            CompletedDate = item.CompletedDate,
+                            Status = item.Status
+                        });
+                    }
+                    var invoiceCreateRequest = new InvoiceCreateRequest()
+                    {
+                        CreatedDate = DateTime.Now,
+                        CreatedBy = User.Identity.Name,
+                        TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
+                        TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
+                        TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
+                        CustomerId = customerId,
+                        Description = currentInvoice.Description,
+                        PrepaymentAmount = currentInvoice.PrepaymentAmount,
+                        RemainAmount = currentInvoice.RemainAmount,
+                        InvoiceDetails = currentInvoiceDetailList
+                    };
+                    var result = await _invoiceApiClient.Create(invoiceCreateRequest);
+                    if (!result.IsSuccessed)
+                    {
+                        TempData["errorMsg"] = result.Message;
+                    }
+                    else
+                    {
+                        TempData["successMsg"] = result.Message;
+                    }
                 }
                 else
                 {
-                    TempData["successMsg"] = result.Message;
+                    TempData["errorMsg"] = SystemConstants.AppErrorMessage.Create;
                 }
-                HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             }
+            RemoveInvoiceSession();
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }
 
@@ -247,46 +254,54 @@ namespace DentalManagement.Admin.Controllers
             else
             {
                 var currentInvoice = JsonConvert.DeserializeObject<InvoiceViewModel>(invoiceSessionKey);
-                var updateInvoiceDetailList = new List<InvoiceDetailUpdateRequest>();
-                foreach (var item in currentInvoice.InvoiceDetailViewModels)
+                if (currentInvoice.InvoiceDetailViewModels.Any())
                 {
-                    updateInvoiceDetailList.Add(new InvoiceDetailUpdateRequest()
+                    var updateInvoiceDetailList = new List<InvoiceDetailUpdateRequest>();
+                    foreach (var item in currentInvoice.InvoiceDetailViewModels)
                     {
-                        InvoiceId = item.InvoiceId,
-                        ProductId = item.ProductId,
-                        ItemDiscountPercent = item.ItemDiscountPercent,
-                        ItemDiscountAmount = item.ItemDiscountAmount,
-                        ItemAmount = item.ItemAmount,
-                        Quantity = item.Quantity,
-                        CompletedDate = item.CompletedDate,
-                        Status = item.Status
-                    });
-                }
-                var invoiceUpdateRequest = new InvoiceUpdateRequest()
-                {
-                    Id = currentInvoice.Id,
-                    TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
-                    TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
-                    TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
-                    ModifiedDate = DateTime.Now,
-                    ModifiedBy = User.Identity.Name,
-                    Description = currentInvoice.Description,
-                    PaymentStatus = currentInvoice.PaymentStatus,
-                    PrepaymentAmount = currentInvoice.PrepaymentAmount,
-                    RemainAmount = currentInvoice.RemainAmount,
-                    InvoiceDetails = updateInvoiceDetailList
-                };
-                var result = await _invoiceApiClient.Update(invoiceUpdateRequest);
-                if (!result.IsSuccessed)
-                {
-                    TempData["errorMsg"] = result.Message;
+                        updateInvoiceDetailList.Add(new InvoiceDetailUpdateRequest()
+                        {
+                            InvoiceId = item.InvoiceId,
+                            ProductId = item.ProductId,
+                            ItemDiscountPercent = item.ItemDiscountPercent,
+                            ItemDiscountAmount = item.ItemDiscountAmount,
+                            ItemAmount = item.ItemAmount,
+                            Quantity = item.Quantity,
+                            CompletedDate = item.CompletedDate,
+                            Status = item.Status
+                        });
+                    }
+                    var invoiceUpdateRequest = new InvoiceUpdateRequest()
+                    {
+                        Id = currentInvoice.Id,
+                        TotalDiscountPercent = currentInvoice.TotalDiscountPercent,
+                        TotalDiscountAmount = currentInvoice.TotalDiscountAmount,
+                        TotalInvoiceAmount = currentInvoice.TotalInvoiceAmount,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedBy = User.Identity.Name,
+                        Description = currentInvoice.Description,
+                        PaymentStatus = currentInvoice.PaymentStatus,
+                        PrepaymentAmount = currentInvoice.PrepaymentAmount,
+                        RemainAmount = currentInvoice.RemainAmount,
+                        InvoiceDetails = updateInvoiceDetailList
+                    };
+                    var result = await _invoiceApiClient.Update(invoiceUpdateRequest);
+                    if (!result.IsSuccessed)
+                    {
+                        TempData["errorMsg"] = result.Message;
+                    }
+                    else
+                    {
+                        TempData["successMsg"] = result.Message;
+                    }
                 }
                 else
                 {
-                    TempData["successMsg"] = result.Message;
+                    //handle when invoice detail is empty, it will be remove
+                    TempData["errorMsg"] = SystemConstants.AppErrorMessage.Update;
                 }
-                HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             }
+            RemoveInvoiceSession();
             return RedirectToAction("Details", "Customer", new { id = customerId });
         }
 
@@ -296,11 +311,24 @@ namespace DentalManagement.Admin.Controllers
             var result = await _invoiceApiClient.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
             if (!result.IsSuccessed)
             {
-                var invoice = await _invoiceApiClient.GetbyId(invoiceId);
                 TempData["errorMsg"] = result.Message;
-                return RedirectToAction("Details", "Customer", new { id = invoice.Data.CustomerId });
             }
-            TempData["successMsg"] = result.Message;
+            else
+            {
+                TempData["successMsg"] = result.Message;
+            }
+            RemoveInvoiceSession();
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult RemoveInvoiceSession()
+        {
+            var invoiceSessionKey = HttpContext.Session.GetString(SystemConstants.InvoiceSession);
+            if (invoiceSessionKey != null)
+            {
+                HttpContext.Session.Remove(SystemConstants.InvoiceSession);
+            }
             return Ok();
         }
     }
