@@ -425,9 +425,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title">Tạo phiếu khám</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='/Customer/Details/@Model.Id'">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body text-center">
                         <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
@@ -461,14 +458,14 @@
                         </div>
 
                         <div class="m-t-20">
-                            <form class="user" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                                <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                            <form class="user create-medical-invoice-form" asp-action="Create" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
+                                <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
                                     <i class="fa fa-ban"></i> Hủy
                                 </a>
                                 <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
                                     <i class=" fa fa-plus"></i> Thêm điều trị
                                 </a>
-                                <button type="submit" class="btn btn-success" id="btn_create_medical_invoice" disabled>
+                                <button type="submit" class="btn btn-success btn-create-medical-invoice" disabled>
                                     <i class="fa fa-floppy-o"></i> Lưu
                                 </button>
                             </form>
@@ -483,9 +480,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title">Cập nhật phiếu khám</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='/Customer/Details/@Model.Id'">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body text-center">
                         <div class="table-responsive" style="height: 300px; overflow-y: scroll;">
@@ -519,14 +513,14 @@
                         </div>
 
                         <div class="m-t-20">
-                            <form class="user" asp-action="Update" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
-                                <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
-                                    <i class="fa fa-ban"></i> Hủy
-                                </a>
+                            <form class="user update-medical-invoice-form" asp-action="Update" asp-controller="Invoice" asp-route-customerId="@Model.Id" method="post">
+                                <a href="#" type="button" class="btn btn-white btn-close-invoice-modal">
+                            <i class="fa fa-ban"></i> Hủy
+                            </a>
                                 <a href="#" type="button" class="btn btn-primary btn-product-list" data-toggle="modal" data-target="#add_product_medical_invoice">
                                     <i class=" fa fa-plus"></i> Thêm điều trị
                                 </a>
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-success btn-update-medical-invoice">
                                     <i class="fa fa-floppy-o"></i> Lưu
                                 </button>
                             </form>
@@ -597,7 +591,7 @@
                             </div>
                         </div>
                         <div class="m-t-20">
-                            <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                            <a href="#" type="button" class="btn btn-white btn-close-status-modal">
                                 <i class="fa fa-ban"></i> Hủy
                             </a>
                             <a href="#" type="button" class="btn btn-success btn-update-status">
@@ -624,7 +618,7 @@
                             </div>
                         </div>
                         <div class="m-t-20">
-                            <a href="#" type="button" class="btn btn-white" data-dismiss="modal" onclick="window.location.href='/Customer/Details/@Model.Id'">
+                            <a href="#" type="button" class="btn btn-white btn-close-status-modal">
                                 <i class="fa fa-ban"></i> Hủy
                             </a>
                             <a href="#" type="button" class="btn btn-danger btn-update-status">
@@ -635,7 +629,6 @@
                 </div>
             </div>
         </div>
-
         @*end of content*@
     </div>
 </div>
