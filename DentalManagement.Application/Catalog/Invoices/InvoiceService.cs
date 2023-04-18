@@ -223,10 +223,10 @@ namespace DentalManagement.Application.Catalog.Invoices
         public async Task<ApiResult<InvoiceViewModel>> GetById(int invoiceId)
         {
             var invoice = await _context.Invoices
-                .Include(i => i.InvoiceDetails)
-                .ThenInclude(i => i.Product)
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.Product)
                 .AsSplitQuery()
-                .FirstOrDefaultAsync(i => i.Id == invoiceId);
+                .FirstOrDefaultAsync(x => x.Id == invoiceId);
             if (invoice == null)
             {
                 return new ApiErrorResult<InvoiceViewModel>(SystemConstants.AppErrorMessage.NotFound);
@@ -331,6 +331,5 @@ namespace DentalManagement.Application.Catalog.Invoices
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-
     }
 }
