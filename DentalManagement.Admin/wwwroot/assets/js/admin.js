@@ -210,7 +210,7 @@
         e.preventDefault();
         const form = $(this).closest('form');
         const res = $(this).data('res');
-        const confirmMessage = (res === 0) ? 'CHÚ Ý: Không có điều trị, phiếu khám sẽ bị xóa.' : 'Xác nhận cập nhật phiếu khám?';
+        const confirmMessage = (res === 0) ? 'CHÚ Ý: Không có điều trị, phiếu khám sẽ bị hủy.' : 'Xác nhận cập nhật phiếu khám?';
         if (confirm(confirmMessage)) {
             form.submit();
         }

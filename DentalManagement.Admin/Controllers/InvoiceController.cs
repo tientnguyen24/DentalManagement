@@ -297,7 +297,7 @@ namespace DentalManagement.Admin.Controllers
                 }
                 else
                 {
-                    //handle when invoice detail is empty, it will be deleted
+                    //handle when invoice detail is empty, it will be cancelled
                     TempData["errorMsg"] = SystemConstants.AppErrorMessage.Update;
                 }
             }
@@ -330,6 +330,12 @@ namespace DentalManagement.Admin.Controllers
                 HttpContext.Session.Remove(SystemConstants.InvoiceSession);
             }
             return Ok();
+        }
+
+        [HttpGet]
+        public Task<IActionResult> GetInvoiceDetail(int invoiceId, int productId)
+        {
+
         }
     }
 }
