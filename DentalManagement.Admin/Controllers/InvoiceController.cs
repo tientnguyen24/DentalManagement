@@ -335,7 +335,7 @@ namespace DentalManagement.Admin.Controllers
         [HttpGet]
         public Task<IActionResult> GetInvoiceDetail(int invoiceId, int productId)
         {
-
+            //check invoice detail in database with an update
         }
     }
 }
