@@ -249,18 +249,18 @@ namespace DentalManagement.Application.Catalog.Invoices
                     PaymentStatus = invoice.PaymentStatus,
                     CustomerId = invoice.CustomerId,
                     //check invoice details entity, if invoice details is null then do not create new instance InvoiceDetailViewModel and fill to list
-                    InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(item => new InvoiceDetailViewModel()
+                    InvoiceDetailViewModels = invoice.InvoiceDetails?.Select(invoiceDetail => new InvoiceDetailViewModel()
                     {
-                        InvoiceId = item.InvoiceId,
-                        ProductId = item.ProductId,
-                        ProductName = item.Product.Name,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.Product.UnitPrice,
-                        ItemDiscountPercent = item.ItemDiscountPercent,
-                        ItemDiscountAmount = item.ItemDiscountAmount,
-                        ItemAmount = item.ItemAmount,
-                        Status = item.Status,
-                        CompletedDate = item.CompletedDate
+                        InvoiceId = invoiceDetail.InvoiceId,
+                        ProductId = invoiceDetail.ProductId,
+                        ProductName = invoiceDetail.Product.Name,
+                        UnitPrice = invoiceDetail.Product.UnitPrice,
+                        ItemDiscountPercent = invoiceDetail.ItemDiscountPercent,
+                        ItemDiscountAmount = invoiceDetail.ItemDiscountAmount,
+                        ItemAmount = invoiceDetail.ItemAmount,
+                        Quantity = invoiceDetail.Quantity,
+                        Status = invoiceDetail.Status,
+                        CompletedDate = invoiceDetail.CompletedDate
                     }).ToList()
                 };
                 return new ApiSuccessResult<InvoiceViewModel>(invoiceViewModel);
@@ -330,6 +330,44 @@ namespace DentalManagement.Application.Catalog.Invoices
             //update status payment when all invoice in detail is cancel
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
+        }
+
+        public async Task<ApiResult<InvoiceDetailViewModel>> GetInvoiceDetailById(int invoiceId, int productId)
+        {
+            var invoice = await _context.Invoices
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.Product)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            if (invoice == null)
+            {
+                return new ApiErrorResult<InvoiceDetailViewModel>(SystemConstants.AppErrorMessage.NotFound);
+            }
+            else
+            {
+                var invoiceDetail = invoice.InvoiceDetails?.FirstOrDefault(x => x.ProductId == productId);
+                if (invoiceDetail == null)
+                {
+                    return new ApiErrorResult<InvoiceDetailViewModel>(SystemConstants.AppErrorMessage.NotFound);
+                }
+                else
+                {
+                    var invoiceDetailViewModel = new InvoiceDetailViewModel
+                    {
+                        InvoiceId = invoiceDetail.InvoiceId,
+                        ProductId = invoiceDetail.ProductId,
+                        ProductName = invoiceDetail.Product.Name,
+                        UnitPrice = invoiceDetail.Product.UnitPrice,
+                        ItemDiscountPercent = invoiceDetail.ItemDiscountPercent,
+                        ItemDiscountAmount = invoiceDetail.ItemDiscountAmount,
+                        ItemAmount = invoiceDetail.ItemAmount,
+                        Quantity = invoiceDetail.Quantity,
+                        Status = invoiceDetail.Status,
+                        CompletedDate = invoiceDetail.CompletedDate
+                    };
+                    return new ApiSuccessResult<InvoiceDetailViewModel>(invoiceDetailViewModel);
+                }
+            }
         }
     }
 }

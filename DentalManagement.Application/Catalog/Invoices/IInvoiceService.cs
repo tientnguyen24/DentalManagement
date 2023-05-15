@@ -20,5 +20,6 @@ namespace DentalManagement.Application.Catalog.Invoices
         Task<ApiResult<InvoiceViewModel>> GetById(int invoiceId);
         Task<ApiResult<PagedResult<InvoiceViewModel>>> GetAllPaging(GetInvoicePagingRequest request);
         Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount);
+        Task<ApiResult<InvoiceDetailViewModel>> GetInvoiceDetailById(int invoiceId, int productId);
     }
 }

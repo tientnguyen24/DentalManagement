@@ -2,6 +2,7 @@
 using DentalManagement.Utilities.Constants;
 using DentalManagement.ViewModels.Catalog.Customers;
 using DentalManagement.ViewModels.Catalog.Invoices;
+using DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails;
 using DentalManagement.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +69,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
                 .NotFound);
         }
 
-        public async Task<ApiResult<InvoiceViewModel>> GetbyId(int id)
+        public async Task<ApiResult<InvoiceViewModel>> GetbyId(int invoiceId)
         {
             var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var client = _httpClientFactory.CreateClient();
@@ -95,6 +96,18 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
                 return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
             }
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
+        }
+
+        public async Task<ApiResult<InvoiceDetailViewModel>> GetInvoiceDetailById(int invoiceId, int productId)
+        {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.GetAsync($"/api/invoices/{invoiceId}/{productId}");
+            var data = await response.Content.ReadAsStringAsync();
+            var invoice = JsonConvert.DeserializeObject<ApiSuccessResult<InvoiceDetailViewModel>>(data);
+            return invoice;
         }
     }
 }
