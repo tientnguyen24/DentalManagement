@@ -91,11 +91,11 @@ namespace DentalManagement.BackendAPI.Controllers
         public async Task<IActionResult> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
             var result = await _invoiceService.UpdateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount);
-            if (!result.IsSuccessed)
+            if (result == null)
             {
-                return BadRequest(result.Message);
+                return BadRequest();
             }
-            return Ok(result.Message);
+            return Ok(result);
         }
 
         [HttpDelete]
@@ -113,12 +113,12 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpGet("{invoiceId}/{productId}")]
         public async Task<IActionResult> GetInvoiceDetailById(int invoiceId, int productId)
         {
-            var data = await _invoiceService.GetInvoiceDetailById(invoiceId, productId);
-            if (data == null)
+            var result = await _invoiceService.GetInvoiceDetailById(invoiceId, productId);
+            if (result == null)
             {
                 return BadRequest();
             }
-            return Ok(data);
+            return Ok(result);
         }
     }
 }
