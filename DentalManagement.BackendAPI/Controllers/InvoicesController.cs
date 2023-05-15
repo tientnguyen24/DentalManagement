@@ -27,28 +27,28 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var invoices = await _invoiceService.GetAll();
-            return Ok(invoices);
+            var data = await _invoiceService.GetAll();
+            return Ok(data);
         }
 
         //http://localhost:port/invoice/search
         [HttpGet("search")]
         public async Task<IActionResult> GetAllPaging([FromQuery] GetInvoicePagingRequest request)
         {
-            var invoices = await _invoiceService.GetAllPaging(request);
-            return Ok(invoices);
+            var data = await _invoiceService.GetAllPaging(request);
+            return Ok(data);
         }
 
-        //http://localhost:port/invoice/{id}
+        //http://localhost:port/invoice/{invoiceId}
         [HttpGet("{invoiceId}")]
         public async Task<IActionResult> GetById(int invoiceId)
         {
-            var invoice = await _invoiceService.GetById(invoiceId);
-            if (invoice == null)
+            var data = await _invoiceService.GetById(invoiceId);
+            if (data == null)
             {
                 return BadRequest();
             }
-            return Ok(invoice);
+            return Ok(data);
         }
 
         [HttpPost]
@@ -78,8 +78,8 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpPatch("{invoiceId}/{updatedPaymentStatus}")]
         public async Task<IActionResult> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus)
         {
-            var affectedResult = await _invoiceService.UpdatePaymentStatus(invoiceId, updatedPaymentStatus);
-            if (!affectedResult)
+            var result = await _invoiceService.UpdatePaymentStatus(invoiceId, updatedPaymentStatus);
+            if (!result)
             {
                 return BadRequest();
             }
@@ -101,13 +101,24 @@ namespace DentalManagement.BackendAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] int invoiceId)
         {
-            var affectedResult = await _invoiceService.Delete(invoiceId);
-            if (affectedResult == 0)
+            var result = await _invoiceService.Delete(invoiceId);
+            if (result == 0)
             {
                 return BadRequest();
             }
             return Ok();
         }
 
+        //http://localhost:port/invoice/{invoiceId}/{productId}
+        [HttpGet("{invoiceId}/{productId}")]
+        public async Task<IActionResult> GetInvoiceDetailById(int invoiceId, int productId)
+        {
+            var data = await _invoiceService.GetInvoiceDetailById(invoiceId, productId);
+            if (data == null)
+            {
+                return BadRequest();
+            }
+            return Ok(data);
+        }
     }
 }

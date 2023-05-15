@@ -39,15 +39,15 @@ namespace DentalManagement.Admin.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var invoices = await _invoiceApiClient.GetAllPaging(request);
-            return View(invoices.Data);
+            var result = await _invoiceApiClient.GetAllPaging(request);
+            return View(result.Data);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int invoiceId)
         {
-            var invoice = await _invoiceApiClient.GetbyId(id);
-            return Ok(invoice.Data);
+            var result = await _invoiceApiClient.GetbyId(invoiceId);
+            return Ok(result.Data);
         }
 
         [HttpGet]
@@ -331,11 +331,12 @@ namespace DentalManagement.Admin.Controllers
             }
             return Ok();
         }
-
+        
         [HttpGet]
-        public Task<IActionResult> GetInvoiceDetail(int invoiceId, int productId)
+        public async Task<IActionResult> GetInvoiceDetailById(int invoiceId, int productId)
         {
-            //check invoice detail in database with an update
+            var result = await _invoiceApiClient.GetInvoiceDetailById(invoiceId, productId);
+            return Ok(result.Data);
         }
     }
 }

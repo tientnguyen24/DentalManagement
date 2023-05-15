@@ -394,6 +394,28 @@ $(document).ready(function () {
         });
     }
 
+    $('.add-description').click(function (e) {
+        e.preventDefault();
+        let data = $(this).data('id');
+        let values = data.split(" ");
+        invoiceId = values[0];
+        productId = values[1];
+        $.ajax({
+            type: "GET",
+            url: '/Invoice/GetInvoiceDetailById/' + invoiceId + '/' + productId,
+            success: function (res) {
+                console.log(res);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    });
+
+    function showAddDescriptionInvoiceDetailModal(item) {
+
+    }
+
     $('body').on('click', '.btn-close-status-modal', function (e) {
         e.preventDefault();
         let modal = $(this).closest('.modal');
