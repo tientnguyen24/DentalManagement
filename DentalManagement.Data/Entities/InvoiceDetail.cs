@@ -15,6 +15,7 @@ namespace DentalManagement.Data.Entities
         public decimal Quantity { get; set; }
         public DateTime? CompletedDate { get; set; }
         public Status Status { get; set; }
+        public string Description { get; set; }
         public Invoice Invoice { get; set; }
         public Product Product { get; set; }
     }

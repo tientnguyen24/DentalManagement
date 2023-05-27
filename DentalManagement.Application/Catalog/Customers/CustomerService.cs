@@ -203,8 +203,8 @@ namespace DentalManagement.Application.Catalog.Customers
                     ItemAmount = item.ItemAmount,
                     Quantity = item.Quantity,
                     CompletedDate = item.CompletedDate,
-                    Status = item.Status
-
+                    Status = item.Status,
+                    Description = item.Description
                 }).ToList()
             }).ToList();
             var customerViewModel = new CustomerViewModel()

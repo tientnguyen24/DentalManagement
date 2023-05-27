@@ -128,7 +128,7 @@
                                             </a>
                                             @*invoice create modal*@
                                             <div id="create_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-dialog modal-dialog-centered modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h3 class="modal-title">Tạo phiếu khám</h3>
@@ -184,7 +184,7 @@
 
                                             @*add product to invoice modal*@
                                             <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-dialog modal-dialog-centered modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
@@ -238,11 +238,11 @@
                                                 </div>
                                                 <div class="col-sm-6 col-md-3">
                                                     <a href="#" onclick="updateInitializeInvoiceController(); return false;" class="btn btn-warning btn-block text-white update-medical-invoice" data-id="@item.Id">
-                                                        <i class="fa fa-pencil-square-o"></i> Cập nhật
+                                                        <i class="fa fa-pencil-square-o"></i> Cập nhật phiếu khám
                                                     </a>
                                                     @*invoice update modal*@
                                                     <div id="update_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                        <div class="modal-dialog modal-dialog-centered modal-xl">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h3 class="modal-title">Cập nhật phiếu khám</h3>
@@ -298,7 +298,7 @@
 
                                                     @*add product to invoice modal*@
                                                     <div id="add_product_medical_invoice" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
-                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                        <div class="modal-dialog modal-dialog-centered modal-xl">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h3 class="modal-title">Chọn kế hoạch điều trị</h3>
@@ -356,7 +356,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="m-t-20">
-                                                                        <a href="#" type="button" class="btn btn-white btn-close-status-modal">
+                                                                        <a href="#" type="button" class="btn btn-white btn-close-modal">
                                                                             <i class="fa fa-ban"></i> Hủy
                                                                         </a>
                                                                         <a href="#" type="button" class="btn btn-success btn-update-status">
@@ -384,10 +384,38 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="m-t-20">
-                                                                        <a href="#" type="button" class="btn btn-white btn-close-status-modal">
+                                                                        <a href="#" type="button" class="btn btn-white btn-close-modal">
                                                                             <i class="fa fa-ban"></i> Hủy
                                                                         </a>
                                                                         <a href="#" type="button" class="btn btn-danger btn-update-status">
+                                                                            <i class="fa fa-floppy-o"></i> Lưu
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*description modal*@
+                                                    <div id="description_invoice_detail" class="modal fade create-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+                                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <img src="~/assets/img/edit.png" alt="edit" width="50" height="46">
+                                                                    <h3>Thêm ghi chú?<br /><span class="text-info product-name"></span></h3>
+                                                                    <br />
+                                                                    <div class="row d-flex align-items-center">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <textarea class="form-control invoice-description" rows="4" cols="4" placeholder="Nhập thông tin tại đây"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="m-t-20">
+                                                                        <a href="#" type="button" class="btn btn-white btn-close-modal">
+                                                                            <i class="fa fa-ban"></i> Hủy
+                                                                        </a>
+                                                                        <a href="#" type="button" class="btn btn-success btn-update-description">
                                                                             <i class="fa fa-floppy-o"></i> Lưu
                                                                         </a>
                                                                     </div>
@@ -433,7 +461,7 @@
                                                                         <td class="width-5-percent">
                                                                             @if (itemDetail.Status == Status.Processing)
                                                                             {
-                                                                                <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Completed" class="text-success btn-get-status">
+                                                                                <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Completed" class="text-success btn-show-status-modal">
                                                                                     <i class="fa fa-check-square-o"></i>
                                                                                 </a>
                                                                             }
@@ -462,20 +490,34 @@
                                                                                         <i class="fa fa-ellipsis-v"></i>
                                                                                     </a>
                                                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item">
-                                                                                            <i class="fa fa-edit"></i> Sửa
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-warning">
+                                                                                            <i class="fa fa-edit"></i> Cập nhật điều trị
                                                                                         </a>
-                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-info add-description">
-                                                                                            <i class="fa fa-comments-o"></i> Thêm ghi chú
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId" class="dropdown-item text-info btn-show-description-modal">
+                                                                                            <i class="fa fa-file-text-o"></i> Thêm ghi chú
                                                                                         </a>
-                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Cancelled" class="dropdown-item text-danger btn-get-status">
-                                                                                            <i class="fa fa-trash"></i> Hủy
+                                                                                        <a href="#" type="button" data-id="@itemDetail.InvoiceId @itemDetail.ProductId @Status.Cancelled" class="dropdown-item text-danger btn-show-status-modal">
+                                                                                            <i class="fa fa-trash"></i> Hủy điều trị
                                                                                         </a>
                                                                                     </div>
                                                                                 </div>
                                                                             }
                                                                         </td>
                                                                     </tr>
+                                                                    @if (!string.IsNullOrEmpty(itemDetail.Description))
+                                                                    {
+                                                                    <tr>
+                                                                        <td class="width-5-percent"></td>
+                                                                            <td class="width-50-percent" style="white-space: pre-line;">
+                                                                                @itemDetail.Description
+                                                                        </td>
+                                                                        <td class="width-10-percent text-right"></td>
+                                                                        <td class="width-10-percent text-right"></td>
+                                                                        <td class="width-10-percent text-right"></td>
+                                                                        <td class="width-10-percent text-right"></td>
+                                                                        <td class="width-5-percent"></td>
+                                                                    </tr>
+                                                                    }
                                                                 }
                                                                 <tr>
                                                                     <td colspan="4" class="text-right">Tạm tính (1):</td>
