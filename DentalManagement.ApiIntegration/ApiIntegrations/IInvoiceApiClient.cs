@@ -17,5 +17,6 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
         Task<ApiResult<bool>> Update(InvoiceUpdateRequest request);
         Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount);
         Task<ApiResult<InvoiceDetailViewModel>> GetInvoiceDetailById(int invoiceId, int productId);
+        Task<ApiResult<bool>> UpdateInvoiceDetailDescription(int invoiceId, int productId, string description);
     }
 }

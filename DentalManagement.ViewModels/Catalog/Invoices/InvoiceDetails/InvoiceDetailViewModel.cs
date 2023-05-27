@@ -39,5 +39,8 @@ namespace DentalManagement.ViewModels.Catalog.Invoices.InvoiceDetails
         [DisplayName("Ngày hoàn thành")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? CompletedDate { get; set; }
+
+        [DisplayName("Mô tả")]
+        public string Description { get; set; }
     }
 }

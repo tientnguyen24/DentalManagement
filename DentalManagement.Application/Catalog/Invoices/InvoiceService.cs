@@ -363,9 +363,46 @@ namespace DentalManagement.Application.Catalog.Invoices
                         ItemAmount = invoiceDetail.ItemAmount,
                         Quantity = invoiceDetail.Quantity,
                         Status = invoiceDetail.Status,
-                        CompletedDate = invoiceDetail.CompletedDate
+                        CompletedDate = invoiceDetail.CompletedDate,
+                        Description = invoiceDetail.Description
                     };
                     return new ApiSuccessResult<InvoiceDetailViewModel>(invoiceDetailViewModel);
+                }
+            }
+        }
+    
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailDescription(int invoiceId, int productId, string description)
+        {
+            var invoice = await _context.Invoices
+                .Include(x => x.InvoiceDetails)
+                .ThenInclude(x => x.Product)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(x => x.Id == invoiceId);
+            if (invoice == null)
+            {
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.NotFound);
+            }
+            else
+            {
+                var invoiceDetail = invoice.InvoiceDetails?.FirstOrDefault(x => x.ProductId == productId);
+                if (invoiceDetail == null)
+                {
+                    return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.NotFound);
+                }
+                else
+                {
+                    var currentDateTime = DateTime.Now;
+                    var currentDateTimeStr = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    if (invoiceDetail.Description == null)
+                    {
+                        invoiceDetail.Description = "- " + currentDateTimeStr + "\n" + description;
+                    }
+                    else
+                    {
+                        invoiceDetail.Description += "\n- " + currentDateTimeStr + "\n" + description;
+                    }
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
                 }
             }
         }
