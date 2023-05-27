@@ -338,5 +338,21 @@ namespace DentalManagement.Admin.Controllers
             var result = await _invoiceApiClient.GetInvoiceDetailById(invoiceId, productId);
             return Ok(result.Data);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateInvoiceDetailDescription(int invoiceId, int productId, string description)
+        {
+            var result = await _invoiceApiClient.UpdateInvoiceDetailDescription(invoiceId, productId, description);
+            if (!result.IsSuccessed)
+            {
+                TempData["errorMsg"] = result.Message;
+            }
+            else
+            {
+                TempData["successMsg"] = result.Message;
+            }
+            RemoveInvoiceSession();
+            return Ok();
+        }
     }
 }

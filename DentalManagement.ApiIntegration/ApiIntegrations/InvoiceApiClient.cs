@@ -75,7 +75,7 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
-            var response = await client.GetAsync($"/api/invoices/{id}");
+            var response = await client.GetAsync($"/api/invoices/{invoiceId}");
             var data = await response.Content.ReadAsStringAsync();
             var invoice = JsonConvert.DeserializeObject<ApiSuccessResult<InvoiceViewModel>>(data);
             return invoice;
@@ -83,7 +83,6 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
 
         public async Task<ApiResult<bool>> UpdateInvoiceDetailStatus(int invoiceId, int productId, Status updatedInvoiceDetailStatus, decimal prepaymentAmount)
         {
-            //issue here
             var json = JsonConvert.SerializeObject(new { invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount });
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
@@ -108,6 +107,22 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             var data = await response.Content.ReadAsStringAsync();
             var invoice = JsonConvert.DeserializeObject<ApiSuccessResult<InvoiceDetailViewModel>>(data);
             return invoice;
+        }
+
+        public async Task<ApiResult<bool>> UpdateInvoiceDetailDescription(int invoiceId, int productId, string description)
+        {
+            var json = JsonConvert.SerializeObject(new { invoiceId, productId, description });
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var response = await client.PatchAsync($"/api/invoices/{invoiceId}/{productId}/{description}", httpContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Update);
+            }
+            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
     }
 }

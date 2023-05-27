@@ -17,7 +17,7 @@
             e.preventDefault();
             const invoiceId = $(this).data('id');
             $.ajax({
-                type: "GET",
+                type: 'GET',
                 url: '/Invoice/GetCurrentInvoiceProcessingList/' + invoiceId,
                 success: function (res) {
                     getMedicalInvoice(res);
@@ -33,7 +33,7 @@
     function getProductList() {
         $('body').on('click', '.btn-product-list', function (e) {
             $.ajax({
-                type: "GET",
+                type: 'GET',
                 url: '/Product/GetProductList',
                 success: function (res) {
                     if (res.length === 0) {
@@ -71,7 +71,7 @@
             }
             else {
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '/Invoice/AddProductToMedicalInvoice',
                     data: { productIds: productIds },
                     success: function (res) {
@@ -97,7 +97,7 @@
             }
             else {
                 $.ajax({
-                    type: "POST",
+                    type: 'POST',
                     url: '/Invoice/UpdateCurrentInvoiceProcessingList',
                     data: { productIds: productIds },
                     success: function (res) {
@@ -201,7 +201,7 @@
     function handleCreateMedicalInvoiceClick(e) {
         e.preventDefault();
         const form = $(this).closest('form');
-        if (confirm('Xác nhận tạo phiếu khám?')) {
+        if (confirm('Xác nhận lưu?')) {
             form.submit();
         }
     }
@@ -210,7 +210,7 @@
         e.preventDefault();
         const form = $(this).closest('form');
         const res = $(this).data('res');
-        const confirmMessage = (res === 0) ? 'CHÚ Ý: Không có điều trị, phiếu khám sẽ bị hủy.' : 'Xác nhận cập nhật phiếu khám?';
+        const confirmMessage = (res === 0) ? 'CHÚ Ý: Không có điều trị, phiếu khám sẽ bị hủy. Xác nhận hủy?' : 'Xác nhận lưu?';
         if (confirm(confirmMessage)) {
             form.submit();
         }
@@ -227,7 +227,7 @@
     function closeModal(modal) {
         $(modal).on('hidden.bs.modal', function () {
             $.ajax({
-                type: "GET",
+                type: 'GET',
                 url: '/Invoice/RemoveInvoiceSession',
                 success: function (res) {
                     location.reload();
@@ -242,7 +242,7 @@
 
     function updateProductQuantity(productId, productQuantity) {
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: '/Invoice/UpdateProductQuantity',
             data: {
                 productId: productId,
@@ -259,7 +259,7 @@
 
     function updateTotalInvoiceAmount(totalDiscountAmount, prepaymentAmount) {
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: '/Invoice/UpdateTotalInvoiceAmount',
             data: {
                 totalDiscountAmount: totalDiscountAmount,
@@ -282,17 +282,21 @@ $(document).ready(function () {
     let prepaymentAmount;
     let processingStatusCount = 0;
     let completedAmount = 0;
+    let description;
 
-    $('.btn-get-status').click(function (e) {
+    $('.btn-show-status-modal').click(function (e) {
         e.preventDefault();
         let data = $(this).data('id');
-        let values = data.split(" ");
+        let values = data.split(' ');
         invoiceId = values[0];
         productId = values[1];
         updatedInvoiceDetailStatus = values[2];
         $.ajax({
-            type: "GET",
-            url: '/Invoice/GetById/' + invoiceId,
+            type: 'GET',
+            url: '/Invoice/GetById/',
+            data: {
+                invoiceId: invoiceId
+            },
             success: function (res) {
                 checkInvoiceDetailProcessingStatus(res['invoiceDetailViewModels']);
                 invoiceDetailCompletedAmount(res['invoiceDetailViewModels']);
@@ -376,35 +380,41 @@ $(document).ready(function () {
     });
 
     function updateInvoiceDetailStatus(invoiceId, productId, updatedInvoiceDetailStatus, prepaymentAmount) {
-        $.ajax({
-            type: "POST",
-            url: '/Invoice/UpdateInvoiceDetailStatus',
-            data: {
-                invoiceId: invoiceId,
-                productId: productId,
-                updatedInvoiceDetailStatus: updatedInvoiceDetailStatus,
-                prepaymentAmount: prepaymentAmount
-            },
-            success: function (res) {
-                location.reload();
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
+        if (confirm('Xác nhận lưu?')) {
+            $.ajax({
+                type: 'POST',
+                url: '/Invoice/UpdateInvoiceDetailStatus',
+                data: {
+                    invoiceId: invoiceId,
+                    productId: productId,
+                    updatedInvoiceDetailStatus: updatedInvoiceDetailStatus,
+                    prepaymentAmount: prepaymentAmount
+                },
+                success: function (res) {
+                    location.reload();
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
     }
 
-    $('.add-description').click(function (e) {
+    $('.btn-show-description-modal').click(function (e) {
         e.preventDefault();
         let data = $(this).data('id');
-        let values = data.split(" ");
+        let values = data.split(' ');
         invoiceId = values[0];
         productId = values[1];
         $.ajax({
-            type: "GET",
-            url: '/Invoice/GetInvoiceDetailById/' + invoiceId + '/' + productId,
+            type: 'GET',
+            url: '/Invoice/GetInvoiceDetailById/',
+            data: {
+                invoiceId: invoiceId,
+                productId: productId
+            },
             success: function (res) {
-                console.log(res);
+                showDescriptionModal(res);
             },
             error: function (err) {
                 console.log(err);
@@ -412,17 +422,49 @@ $(document).ready(function () {
         });
     });
 
-    function showAddDescriptionInvoiceDetailModal(item) {
-
+    function showDescriptionModal(res) {
+        $('#description_invoice_detail').modal('show');
+        $('.product-name').text(res['productName']);
     }
 
-    $('body').on('click', '.btn-close-status-modal', function (e) {
+    $('.btn-update-description').click(function (e) {
+        e.preventDefault();
+        description = $('.invoice-description').val();
+        updateInvoiceDescription(invoiceId, productId, description);
+    });
+
+    function updateInvoiceDescription(invoiceId, productId, description) {
+        if (description == '') {
+            alert('Chưa nhập thông tin, không thể lưu.');
+        }
+        else {
+            if (confirm('Xác nhận lưu?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Invoice/UpdateInvoiceDetailDescription/',
+                    data: {
+                        invoiceId: invoiceId,
+                        productId: productId,
+                        description: description
+                    },
+                    success: function (res) {
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
+    }
+
+    $('body').on('click', '.btn-close-modal', function (e) {
         e.preventDefault();
         let modal = $(this).closest('.modal');
-        if (confirm('Xác nhận hủy')) {
+        if (confirm('Xác nhận hủy?')) {
             $(modal).on('hidden.bs.modal', function () {
                 $.ajax({
-                    type: "GET",
+                    type: 'GET',
                     url: '/Invoice/RemoveInvoiceSession',
                     success: function (res) {
                         location.reload();

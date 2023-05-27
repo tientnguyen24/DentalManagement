@@ -20,6 +20,7 @@ namespace DentalManagement.Data.Configurations
             builder.Property(x => x.Quantity).HasMaxLength(100).HasColumnType("decimal(18,2)");
             builder.Property(x => x.CompletedDate);
             builder.Property(x => x.Status).HasDefaultValue(Status.Processing);
+            builder.Property(x => x.Description).HasMaxLength(300);
             builder.HasOne(x => x.Invoice).WithMany(x => x.InvoiceDetails).HasForeignKey(x => x.InvoiceId);
             builder.HasOne(x => x.Product).WithMany(x => x.InvoiceDetails).HasForeignKey(x => x.ProductId);
         }

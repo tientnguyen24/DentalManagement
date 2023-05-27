@@ -120,5 +120,17 @@ namespace DentalManagement.BackendAPI.Controllers
             }
             return Ok(result);
         }
+
+        //http://localhost:port/invoice/{invoiceId}/{productId}/{description}
+        [HttpPatch("{invoiceId}/{productId}/{description}")]
+        public async Task<IActionResult> UpdateInvoiceDetailDescription(int invoiceId, int productId, string description)
+        {
+            var result = await _invoiceService.UpdateInvoiceDetailDescription(invoiceId, productId, description);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
+        }
     }
 }
