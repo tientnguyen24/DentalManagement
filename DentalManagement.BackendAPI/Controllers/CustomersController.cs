@@ -81,8 +81,8 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromForm]int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _customerService.Delete(id);
             if (result == 0)

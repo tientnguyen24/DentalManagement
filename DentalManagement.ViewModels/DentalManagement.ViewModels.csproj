@@ -13,4 +13,8 @@
     <ProjectReference Include="..\DentalManagement.Data\DentalManagement.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalog\Reports\" />
+  </ItemGroup>
+
 </Project>
