@@ -297,8 +297,15 @@ namespace DentalManagement.Admin.Controllers
                 }
                 else
                 {
-                    //handle when invoice detail is empty, it will be cancelled
-                    TempData["errorMsg"] = SystemConstants.AppErrorMessage.Update;
+                    var result = await _invoiceApiClient.Delete(currentInvoice.Id);
+                    if (!result.IsSuccessed)
+                    {
+						TempData["errorMsg"] = result.Message;
+					}
+                    else
+                    {
+						TempData["successMsg"] = result.Message;
+					}
                 }
             }
             RemoveInvoiceSession();

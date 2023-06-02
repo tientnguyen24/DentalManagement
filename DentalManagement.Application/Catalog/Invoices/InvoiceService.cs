@@ -58,18 +58,19 @@ namespace DentalManagement.Application.Catalog.Invoices
             return new ApiSuccessResult<int>(invoice.Id);
         }
 
-        public async Task<int> Delete(int invoiceId)
+        public async Task<ApiResult<bool>> Delete(int invoiceId)
         {
             var invoice = await _context.Invoices.FindAsync(invoiceId);
             if (invoice == null)
             {
-                throw new DentalManagementException($"Không tìm thấy hoá đơn: {invoiceId}");
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.NotFound);
             }
             else
             {
                 _context.Invoices.Remove(invoice);
-            }
-            return await _context.SaveChangesAsync();
+				await _context.SaveChangesAsync();
+                return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Delete);
+			}
         }
 
         public async Task<ApiResult<bool>> Update(InvoiceUpdateRequest request)

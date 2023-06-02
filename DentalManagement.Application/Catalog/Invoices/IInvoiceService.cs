@@ -14,7 +14,7 @@ namespace DentalManagement.Application.Catalog.Invoices
     {
         Task<ApiResult<int>> Create(InvoiceCreateRequest request);
         Task<ApiResult<bool>> Update(InvoiceUpdateRequest request);
-        Task<int> Delete(int invoiceId);
+        Task<ApiResult<bool>> Delete(int invoiceId);
         Task<bool> UpdatePaymentStatus(int invoiceId, PaymentStatus updatedPaymentStatus);
         Task<List<InvoiceViewModel>> GetAll();
         Task<ApiResult<InvoiceViewModel>> GetById(int invoiceId);

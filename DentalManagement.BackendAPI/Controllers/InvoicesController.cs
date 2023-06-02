@@ -98,15 +98,16 @@ namespace DentalManagement.BackendAPI.Controllers
             return Ok(result);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] int invoiceId)
+		//http://localhost:port/invoice/{invoiceId}
+		[HttpDelete("{invoiceId}")]
+        public async Task<IActionResult> Delete(int invoiceId)
         {
             var result = await _invoiceService.Delete(invoiceId);
-            if (result == 0)
+            if (!result.IsSuccessed)
             {
-                return BadRequest();
+                return BadRequest(result.Message);
             }
-            return Ok();
+            return Ok(result);
         }
 
         //http://localhost:port/invoice/{invoiceId}/{productId}

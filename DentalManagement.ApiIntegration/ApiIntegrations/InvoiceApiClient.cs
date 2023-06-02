@@ -38,7 +38,14 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync($"/api/invoices/", httpContent);
-            return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Create,response.IsSuccessStatusCode);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Create);
+            }
+            else
+            {
+				return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Create);
+			}
         }
 
         public async Task<ApiResult<bool>> Update(InvoiceUpdateRequest request)
@@ -124,5 +131,22 @@ namespace DentalManagement.ApiIntegration.ApiIntegrations
             }
             return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Update);
         }
-    }
+
+		public async Task<ApiResult<bool>> Delete(int invoiceId)
+		{
+			var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+			var client = _httpClientFactory.CreateClient();
+			client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+			var response = await client.DeleteAsync($"/api/invoices/{invoiceId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiErrorResult<bool>(SystemConstants.AppErrorMessage.Delete);
+            }
+            else
+            {
+				return new ApiSuccessResult<bool>(SystemConstants.AppSuccessMessage.Delete);
+			}
+		}
+	}
 }
