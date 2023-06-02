@@ -137,9 +137,9 @@
             });
             tableMedicalInvoiceHtml += "<tr><td colspan=\"6\" class=\"text-right\">Tạm tính (1):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['totalInvoiceAmount'] + res['totalDiscountAmount']) + "</td></tr>"
                 + "<tr><td colspan=\"6\" class=\"text-right\">Giảm giá (2):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-total-discount-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['totalDiscountAmount']) + "\" /></td></tr>"
-                + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền (1 - 2):</td><td class=\"text-right width-15-percent\"><span class=\"txt-total-invoice-amount\">" + numberWithCommas(res['totalInvoiceAmount']) + "<span></td></tr>"
+                + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Thành tiền (1 - 2):</td><td class=\"text-right width-15-percent\"><span class=\"txt-total-invoice-amount\">" + numberWithCommas(res['totalInvoiceAmount']) + "</span></td></tr>"
                 + "<tr><td colspan=\"6\" class=\"text-right\">Thanh toán (3):</td><td><input type =\"text\" class=\"form-control width-15-percent border-1 small text-right inp-prepayment-amount\" placeholder=\"0\" value=\"" + numberWithCommas(res['prepaymentAmount']) + "\" /></td></tr>"
-                + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\">" + numberWithCommas(res['remainAmount']) + "</td></tr>";
+                + "<tr><td colspan=\"6\" class=\"text-right text-danger\">Còn lại (1 - 2 - 3):</td><td class=\"text-right width-15-percent\"><span class=\"txt-remaining-amount\">" + numberWithCommas(res['remainAmount']) + "</span></td></tr>";
         }
         $('.table-medical-invoice').html(tableMedicalInvoiceHtml);
         $('.btn-update-medical-invoice').data('res', res['invoiceDetailViewModels'].length);
